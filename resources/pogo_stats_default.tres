@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="PogoStats" format=3 uid="uid://bn4kypulci4cd"]
+
+[ext_resource type="Script" uid="uid://b8mfdkqib753d" path="res://scripts/pogo_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+gravity = 1100.0
+terminal_velocity = 1300.0

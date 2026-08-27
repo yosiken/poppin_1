@@ -1,0 +1,16 @@
+78098b89c88a74ebe8c20117b8754620
+::res://::1787503091
+::res://docs/::1787405338
+pogo_game_spec_v0.2.md::TextFile::-1::1787405338::0::1::::<><><>0<>0<><>::
+talk1.txt::TextFile::-1::1787402771::0::1::::<><><>0<>0<><>::
+::res://resources/::1787406668
+pogo_stats_default.tres::Resource/PogoStats::3359393454085788539::1787406668::0::1::::<><><>0<>0<><>::uid://b8mfdkqib753d::::res://scripts/pogo_stats.gd
+::res://scenes/::1787525231
+AutoplayDebug.tscn::PackedScene::-1::1787405406::0::1::::<><><>0<>0<><>::res://scenes/Main.tscn<>res://scripts/autoplay_debug.gd
+Main.tscn::PackedScene::4391294097712746466::1787524613::0::1::::<><><>0<>0<><>::uid://drj5kj2bh55u3::::res://scripts/pogo_player.gd<>uid://d15fu4kny1x64::::res://scripts/pogo_tuner.gd<>uid://bn4kypulci4cd::::res://resources/pogo_stats_default.tres<>uid://rbtayp8ewgx5::::res://scripts/terrain_polygon.gd
+::res://scripts/::1787525231
+autoplay_debug.gd::GDScript::6538993156100920260::1787405402::0::1::::<>Node2D<><>0<>0<><>::
+pogo_player.gd::GDScript::8372891674910309372::1787525180::0::1::::PogoPlayer<>CharacterBody2D<><>0<>1<><>::
+pogo_stats.gd::GDScript::4727734549458919235::1787435803::0::1::::PogoStats<>Resource<><>0<>1<><>::
+pogo_tuner.gd::GDScript::9046444158380849159::1787402283::0::1::::PogoTuner<>CanvasLayer<><>0<>0<><>::
+terrain_polygon.gd::GDScript::1196429627701229588::1787405702::0::1::::TerrainPolygon<>CollisionPolygon2D<><>0<>1<><>::

@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://b3tf8b44sn8la"]
+
+[ext_resource type="Script" uid="uid://drj5kj2bh55u3" path="res://scripts/pogo_player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://d15fu4kny1x64" path="res://scripts/pogo_tuner.gd" id="2_tuner"]
+[ext_resource type="Resource" uid="uid://bn4kypulci4cd" path="res://resources/pogo_stats_default.tres" id="3_stats"]
+[ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="4_terrain"]
+
+[node name="Main" type="Node2D" unique_id=377847871]
+
+[node name="Terrain" type="StaticBody2D" parent="." unique_id=1309323891]
+
+[node name="Ground" type="CollisionPolygon2D" parent="Terrain" unique_id=190881242]
+position = Vector2(1400, 1025)
+polygon = PackedVector2Array(-1500, -75, 1500, -75, 1500, 75, -1500, 75)
+script = ExtResource("4_terrain")
+
+[node name="Ramp" type="CollisionPolygon2D" parent="Terrain" unique_id=1392852862]
+position = Vector2(649, 572)
+rotation = 0.43536407
+polygon = PackedVector2Array(-57.437744, 180.01642, 63.218567, 121.6897, 97.08411, 189.75677, -34.558228, 241.0617)
+script = ExtResource("4_terrain")
+
+[node name="Ramp2" type="CollisionPolygon2D" parent="Terrain" unique_id=393039764]
+position = Vector2(680, 905)
+rotation = 0.39974138
+polygon = PackedVector2Array(-220, 130, 180, -170, 220, -130, -180, 170)
+script = ExtResource("4_terrain")
+
+[node name="Ramp3" type="CollisionPolygon2D" parent="Terrain" unique_id=1386318989]
+position = Vector2(924.0001, 641.00006)
+rotation = 1.2264192
+scale = Vector2(1.5152081, 1.5152081)
+polygon = PackedVector2Array(-220, 130, 180, -170, 220, -130, -180, 170)
+script = ExtResource("4_terrain")
+
+[node name="Ramp4" type="CollisionPolygon2D" parent="Terrain" unique_id=798017933]
+position = Vector2(288.00006, 591)
+rotation = 1.3214948
+scale = Vector2(0.40452358, 0.40452358)
+polygon = PackedVector2Array(383.3501, -52.903076, 439.8966, -234.92627, 539.8585, -196.72144, 482.74646, -22.49524)
+script = ExtResource("4_terrain")
+
+[node name="Platform" type="CollisionPolygon2D" parent="Terrain" unique_id=257042953]
+position = Vector2(118, 613)
+polygon = PackedVector2Array(-225, -30, 225, -30, 225, 30, -225, 30)
+script = ExtResource("4_terrain")
+
+[node name="Platform2" type="CollisionPolygon2D" parent="Terrain" unique_id=1629290052]
+position = Vector2(356, 930)
+build_mode = 1
+polygon = PackedVector2Array(-38, -69, 111, -70, 231, -28, 215, 20, -235, 20, -233, -16, -192, -17, -170, -52, -62, -53)
+script = ExtResource("4_terrain")
+
+[node name="Wall" type="CollisionPolygon2D" parent="Terrain" unique_id=585937085]
+position = Vector2(2875, 575)
+polygon = PackedVector2Array(-25, -375, 25, -375, 25, 375, -25, 375)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Ceiling" type="CollisionPolygon2D" parent="Terrain" unique_id=938517476]
+position = Vector2(52, 357)
+polygon = PackedVector2Array(-200, -20, 200, -20, 200, 20, -200, 20)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.32, 0.32, 1)
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1859720644 groups=["player"]]
+position = Vector2(0, 800)
+collision_layer = 2
+safe_margin = 0.4
+script = ExtResource("1_player")
+stats = ExtResource("3_stats")
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1924607058]
+zoom = Vector2(1.4, 1.4)
+limit_left = -150
+limit_top = -100
+limit_right = 2950
+limit_bottom = 1150
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+
+[node name="Tuner" type="CanvasLayer" parent="." unique_id=390471932]
+script = ExtResource("2_tuner")
+target = NodePath("../Player")
