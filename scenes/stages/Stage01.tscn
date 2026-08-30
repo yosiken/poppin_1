@@ -1,11 +1,11 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dp6ae0v3cpq6o"]
 
-[ext_resource type="Script" path="res://scripts/stage.gd" id="1_4upp5"]
-[ext_resource type="Script" path="res://scripts/terrain_polygon.gd" id="2_0tami"]
-[ext_resource type="Script" path="res://scripts/goal.gd" id="3_uam3y"]
-[ext_resource type="Texture2D" path="res://resources/texture/osake.png" id="4_oexkw"]
-[ext_resource type="Resource" path="res://resources/cutscene/stage01_intro.tres" id="cut_intro"]
-[ext_resource type="Resource" path="res://resources/cutscene/stage01_outro.tres" id="cut_outro"]
+[ext_resource type="Script" uid="uid://1iu2pnnffu6i" path="res://scripts/stage.gd" id="1_4upp5"]
+[ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_0tami"]
+[ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_uam3y"]
+[ext_resource type="Texture2D" uid="uid://ef420ly1sjgx" path="res://resources/texture/osake.png" id="4_oexkw"]
+[ext_resource type="Resource" uid="uid://b4uxbkvyq781p" path="res://resources/cutscene/stage01_intro.tres" id="cut_intro"]
+[ext_resource type="Resource" uid="uid://bsh8ibbmcgf6o" path="res://resources/cutscene/stage01_outro.tres" id="cut_outro"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qmy6f"]
 size = Vector2(109.2, 212.8)
@@ -51,7 +51,7 @@ polygon = PackedVector2Array(-220, 130, 180, -170, 220, -130, -180, 170)
 script = ExtResource("2_0tami")
 
 [node name="Ramp3" type="CollisionPolygon2D" parent="Terrain" unique_id=75849226]
-position = Vector2(1250.0001, 712)
+position = Vector2(1723, 663)
 rotation = 2.2136226
 scale = Vector2(1.5152081, 1.5152081)
 polygon = PackedVector2Array(-220, 130, 180, -170, 220, -130, -180, 170)
@@ -105,5 +105,5 @@ position = Vector2(-1160, -2)
 texture = ExtResource("4_oexkw")
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=339032093]
-position = Vector2(-1167, 41)
+position = Vector2(-1160, -2)
 shape = SubResource("RectangleShape2D_qmy6f")

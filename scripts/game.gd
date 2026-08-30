@@ -25,8 +25,11 @@ signal player_fell(from_position: Vector2)
 @export var stages: Array[PackedScene] = []
 ## 最初に読み込むステージ番号 (0 始まり)
 @export var start_index := 0
-## クリア表示を出してから次のステージへ移るまでの秒数
-@export_range(0.0, 5.0, 0.1) var next_stage_delay := 1.6
+## ゴール到達からイベント開始までの待ち時間 (秒)。
+## クリアSEを鳴らし切るための間で、この間はクリア表示が出たままになる。
+## ストリームの長さから自動で取らないのは、ファイル末尾の無音や
+## 尺の違う差し替えでそのまま待たされてしまうため
+@export_range(0.0, 15.0, 0.1) var next_stage_delay := 4.0
 
 @export_group("Event")
 ## 最初のステージに入る前に再生するイベント（OP）
@@ -220,6 +223,7 @@ func _on_goal_reached(clear_time: float) -> void:
 		sfx_goal.play()
 	var is_last := _index >= stages.size() - 1
 	_show_clear(clear_time, is_last)
+	# クリアSEが鳴り終わるまでイベントを始めない
 	await get_tree().create_timer(next_stage_delay).timeout
 	if not _advancing:                    # 待機中に手動で切り替えられていたら何もしない
 		return
