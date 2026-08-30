@@ -43,6 +43,7 @@ stream = ExtResource("15_fall")
 
 [node name="SfxGoal" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("16_goal")
+volume_linear = 0.6
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1859720644 groups=["player"]]
 position = Vector2(0, 800)
