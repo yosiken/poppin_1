@@ -41,6 +41,10 @@ signal player_fell(from_position: Vector2)
 ## ステージセレクトで飛んだときも intro を再生するか
 @export var play_intro_on_select := false
 
+@export_group("Stage title")
+## ステージ開始時に出す見出しの表示秒数。0 で出さない
+@export_range(0.0, 5.0, 0.1) var stage_title_duration := 1.0
+
 @export_group("Fall")
 ## ステージ範囲の下端からこの距離だけ下へ出たら場外落下とみなす (px)
 @export_range(0.0, 2000.0, 10.0) var fall_margin := 400.0
@@ -178,6 +182,8 @@ func load_stage(index: int, manual := true) -> void:
 	if _stage.intro and (manual or play_intro_on_select):
 		await cutscene.play(_stage.intro)
 
+	await _show_stage_title()
+
 
 func _reset_player() -> void:
 	if player == null:
@@ -198,6 +204,34 @@ func _apply_camera_bounds() -> void:
 	cam.limit_right = int(r.end.x)
 	cam.limit_bottom = int(r.end.y)
 	cam.reset_smoothing()
+
+
+## ステージ開始の見出しを出して、指定秒数だけ待つ。
+## 待っている間はツリーを止める。止めないと、開始位置に置いたプレイヤーが
+## 見出しの裏で落ち始めてしまう
+func _show_stage_title() -> void:
+	if stage_title_duration <= 0.0:
+		return
+
+	var layer := CanvasLayer.new()
+	layer.layer = 48                      # イベント(32)より上、クリア表示(64)より下
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(layer)
+
+	var label := Label.new()
+	label.text = "STAGE %d" % (_index + 1)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	label.add_theme_font_size_override("font_size", 72)
+	label.add_theme_color_override("font_color", Color(1.0, 0.95, 0.8))
+	layer.add_child(label)
+
+	var was_paused := get_tree().paused
+	get_tree().paused = true
+	await get_tree().create_timer(stage_title_duration, true, false, true).timeout
+	get_tree().paused = was_paused
+	layer.queue_free()
 
 
 # ═══════════════════════════════ デバッグ
