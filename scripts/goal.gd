@@ -30,7 +30,8 @@ var _sprite: Sprite2D
 var _shape_node: CollisionShape2D
 var _rect: RectangleShape2D
 var _reached := false
-var _start_msec := 0
+## 経過時間。実時間ではなく物理ステップの積算で測る
+var _elapsed := 0.0
 var _overlay: CanvasLayer
 
 
@@ -38,10 +39,20 @@ var _overlay: CanvasLayer
 
 func _ready() -> void:
 	_apply_shape()
+	set_physics_process(not Engine.is_editor_hint())
 	if Engine.is_editor_hint():
 		return
-	_start_msec = Time.get_ticks_msec()
 	body_entered.connect(_on_body_entered)
+
+
+## クリアタイムは実時間ではなく物理ステップの積算で測る。
+##   - 表示FPSや処理落ちでタイムが変わらない（非力なマシンが不利にならない）
+##   - ツリーを止めている間は進まないので、イベント・見出し・復帰の暗転が
+##     自動的にタイムから除外される
+func _physics_process(delta: float) -> void:
+	if _reached:
+		return
+	_elapsed += delta
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -65,7 +76,7 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	_reached = true
 
-	var clear_time := (Time.get_ticks_msec() - _start_msec) / 1000.0
+	var clear_time := _elapsed
 	print("[Goal] クリア %.2f 秒" % clear_time)
 
 	# プレイヤーを止める。velocity を残すと見た目側が振れ続ける
