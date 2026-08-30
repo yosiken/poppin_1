@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="CutsceneData" format=3]
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://biaua5542h66b"]
 
-[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_cgvsy"]
-[ext_resource type="Texture2D" path="res://resources/texture/ob_san.png" id="2_mr3mf"]
-[ext_resource type="Texture2D" path="res://resources/texture/kanie.png" id="3_q6lt2"]
-[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_fhkv8"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_cgvsy"]
+[ext_resource type="Texture2D" uid="uid://c3ingcb43hgfg" path="res://resources/texture/ob_san.png" id="2_mr3mf"]
+[ext_resource type="Texture2D" uid="uid://cv1fmvshh8vxl" path="res://resources/texture/kanie.png" id="3_q6lt2"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_fhkv8"]
 
 [sub_resource type="Resource" id="Resource_u8a0j"]
 script = ExtResource("1_cgvsy")

@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="CutsceneData" format=3]
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://chj2dx3pijim5"]
 
-[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_3jl66"]
-[ext_resource type="Texture2D" path="res://resources/texture/ob_san.png" id="2_k0l5e"]
-[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="3_5a5rl"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_3jl66"]
+[ext_resource type="Texture2D" uid="uid://c3ingcb43hgfg" path="res://resources/texture/ob_san.png" id="2_k0l5e"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_5a5rl"]
 
 [sub_resource type="Resource" id="Resource_7h71w"]
 script = ExtResource("1_3jl66")
