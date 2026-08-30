@@ -61,7 +61,7 @@ const GROUPS := {
 ## 1.0 にすると従来どおり bounce_add にしかチャージが効かず、
 ## 進入速度を溜めてからチャージしても高く飛べない。
 ## 1.0 より大きくすると「速度を稼いでから溜める」が報われるようになる
-@export_range(1.0, 3.0, 0.05) var charge_restitution_mult := 1.7
+@export_range(1.0, 3.0, 0.05) var charge_restitution_mult := 1.45
 ## スーパージャンプ倍率（スキル解放時のみ有効）
 @export_range(1.0, 4.0, 0.05) var super_mult := 1.8
 ## スーパージャンプのクールタイム (秒)
