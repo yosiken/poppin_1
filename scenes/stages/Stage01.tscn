@@ -19,6 +19,17 @@ outro = ExtResource("cut_outro")
 [node name="Spawn" type="Marker2D" parent="." unique_id=1695150916]
 position = Vector2(0, 800)
 
+[node name="RecoveryPoints" type="Node2D" parent="."]
+
+[node name="Point1" type="Marker2D" parent="RecoveryPoints"]
+position = Vector2(700, 900)
+
+[node name="Point2" type="Marker2D" parent="RecoveryPoints"]
+position = Vector2(1400, 900)
+
+[node name="Point3" type="Marker2D" parent="RecoveryPoints"]
+position = Vector2(2100, 900)
+
 [node name="Terrain" type="StaticBody2D" parent="." unique_id=609452137]
 
 [node name="Ground" type="CollisionPolygon2D" parent="Terrain" unique_id=486011228]

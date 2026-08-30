@@ -27,6 +27,19 @@ extends Node2D
 @export var outro: CutsceneData
 
 
+## 復帰地点の一覧。RecoveryPoints の下に Marker2D を進行順に並べる。
+## 無ければ空。その場合は落下時に Spawn へ戻る
+func get_recovery_points() -> Array[Marker2D]:
+	var out: Array[Marker2D] = []
+	var host := get_node_or_null(^"RecoveryPoints")
+	if host == null:
+		return out
+	for c in host.get_children():
+		if c is Marker2D:
+			out.append(c as Marker2D)
+	return out
+
+
 ## プレイヤーの開始位置。Spawn が無ければ原点
 func get_spawn_position() -> Vector2:
 	var marker := get_node_or_null(^"Spawn") as Marker2D
