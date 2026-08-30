@@ -9,6 +9,10 @@ extends CanvasLayer
 ##   - UI のノードはここで実行時に組み立てる。PogoTuner などと同じ方式
 ##   - 再生中はツリー全体を pause し、このノードだけ PROCESS_MODE_ALWAYS で動かす
 ##
+## 操作:
+##   Space / クリック / チャージボタン … 送り（表示途中なら残りを一括表示）
+##   Enter                          … このイベントを最後までスキップ
+##
 
 signal finished
 
@@ -40,6 +44,7 @@ var _name_label: Label
 var _text_label: RichTextLabel
 var _playing := false
 var _advance := false
+var _skip := false
 
 
 func _ready() -> void:
@@ -52,10 +57,22 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not _playing:
 		return
+
+	# Enter はイベント全体のスキップ。送りとは別扱いにする
+	if event is InputEventKey:
+		var key := event as InputEventKey
+		var is_enter := key.keycode == KEY_ENTER or key.keycode == KEY_KP_ENTER
+		if key.pressed and not key.echo and is_enter:
+			_skip = true
+			_advance = true          # 待機中のループも抜けさせる
+			get_viewport().set_input_as_handled()
+			return
+
+	# 送りは Space / クリック / チャージボタン
 	var pressed := event.is_action_pressed(&"pogo_charge")
 	if not pressed and event is InputEventKey:
 		var k := event as InputEventKey
-		pressed = k.pressed and not k.echo and (k.keycode == KEY_ENTER or k.keycode == KEY_SPACE)
+		pressed = k.pressed and not k.echo and k.keycode == KEY_SPACE
 	if not pressed and event is InputEventMouseButton:
 		pressed = (event as InputEventMouseButton).pressed
 	if pressed:
@@ -70,13 +87,17 @@ func play(data: CutsceneData) -> void:
 		return
 
 	_playing = true
+	_skip = false
 	visible = true
 	get_tree().paused = true
 
 	for line in data.lines:
+		if _skip:
+			break
 		if line != null:
 			await _play_line(line)
 
+	_skip = false                    # 以降の待ちは飛ばさない
 	if data.clear_on_finish:
 		await _clear_all()
 
@@ -89,6 +110,8 @@ func play(data: CutsceneData) -> void:
 func _play_line(line: CutsceneLine) -> void:
 	if line.delay > 0.0:
 		await _wait(line.delay)
+	if _skip:
+		return
 
 	_apply_visuals(line)
 
@@ -114,6 +137,8 @@ func _play_line(line: CutsceneLine) -> void:
 			if _advance:
 				_advance = false
 				break
+			if _skip:
+				return
 			await get_tree().process_frame
 			shown += get_process_delta_time() / maxf(type_speed, 0.001)
 			_text_label.visible_characters = mini(int(shown), total)
@@ -123,13 +148,23 @@ func _play_line(line: CutsceneLine) -> void:
 		await _wait(line.auto_advance)
 	else:
 		_advance = false
-		while not _advance:
+		while not _advance and not _skip:
 			await get_tree().process_frame
 		_advance = false
 
 
-## pause 中でも進むタイマー待ち
+## pause 中でも進む待ち。スキップされたら途中で抜ける
 func _wait(sec: float) -> void:
+	var elapsed := 0.0
+	while elapsed < sec:
+		if _skip:
+			return
+		await get_tree().process_frame
+		elapsed += get_process_delta_time()
+
+
+## スキップに影響されない待ち。終了時のフェードなど、必ず見せたいものに使う
+func _wait_fixed(sec: float) -> void:
 	await get_tree().create_timer(sec, true, false, true).timeout
 
 
@@ -214,7 +249,7 @@ func _clear_all() -> void:
 	_window.visible = false
 	for r in [_left, _right, _bg]:
 		_fade_texture(r, null)
-	await _wait(fade_time)
+	await _wait_fixed(fade_time)
 
 
 func _screen() -> Vector2:
