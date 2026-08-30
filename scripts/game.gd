@@ -11,6 +11,7 @@ extends Node2D
 ## 操作:
 ##   F2 … ステージセレクト（デバッグ）の表示切替
 ##   F3 … 現在のステージを即クリア（デバッグ）
+##   F4 … レベルデザイン用の方眼の表示切替
 ##   R  … 現在のステージをやり直し
 ##   数字 1〜9 / 0 … ステージへ直接ジャンプ
 ##
@@ -161,6 +162,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif key == KEY_F3:
 			clear_stage()
+			get_viewport().set_input_as_handled()
+		elif key == KEY_F4:
+			var grid := get_node_or_null(^"DesignGrid")
+			if grid:
+				grid.visible = not grid.visible
 			get_viewport().set_input_as_handled()
 		elif key >= KEY_1 and key <= KEY_9 or key == KEY_0:
 			# 1〜9 でステージ1〜9、0 で10番目
@@ -458,6 +464,7 @@ func _build_select_ui() -> void:
 	scroll.add_child(box)
 	_add_label(box, "STAGE SELECT  [F2]", 13, Color(0.55, 0.85, 1.0))
 	_add_hint(box, "[F1] チューナー    [F3] このステージをクリア")
+	_add_hint(box, "[F4] 方眼(250px)")
 	_add_hint(box, "[R] やり直し    数字 1〜9 / 0 でステージ移動")
 
 	for i in stages.size():

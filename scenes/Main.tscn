@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b3tf8b44sn8la"]
 
 [ext_resource type="Script" uid="uid://c45rwpy51ubv7" path="res://scripts/game.gd" id="14_game"]
+[ext_resource type="Script" path="res://scripts/design_grid.gd" id="19_grid"]
 [ext_resource type="PackedScene" path="res://scenes/stages/Stage01.tscn" id="st01"]
 [ext_resource type="PackedScene" path="res://scenes/stages/Stage02.tscn" id="st02"]
 [ext_resource type="PackedScene" path="res://scenes/stages/Stage03.tscn" id="st03"]
@@ -35,6 +36,10 @@ sfx_fall = NodePath("SfxFall")
 opening = ExtResource("17_op")
 ending = ExtResource("18_ed")
 sfx_goal = NodePath("SfxGoal")
+
+[node name="DesignGrid" type="Node2D" parent="."]
+z_index = -100
+script = ExtResource("19_grid")
 
 [node name="StageHost" type="Node2D" parent="."]
 
