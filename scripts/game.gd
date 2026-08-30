@@ -25,11 +25,13 @@ signal player_fell(from_position: Vector2)
 @export var stages: Array[PackedScene] = []
 ## 最初に読み込むステージ番号 (0 始まり)
 @export var start_index := 0
-## ゴール到達からイベント開始までの待ち時間 (秒)。
-## クリアSEを鳴らし切るための間で、この間はクリア表示が出たままになる。
-## ストリームの長さから自動で取らないのは、ファイル末尾の無音や
-## 尺の違う差し替えでそのまま待たされてしまうため
+## ゴール到達からイベント開始までの最低待ち時間 (秒)。
+## この間はクリア表示が出たままになる
 @export_range(0.0, 15.0, 0.1) var next_stage_delay := 4.0
+## 上の時間を過ぎてもクリアSEが鳴っていれば、鳴り終わるまで待つ上限 (秒)。
+## mp3 はエンコード時に尺が伸びることがあるので秒数を決め打ちにせず実測で待つ。
+## 長いファイルに差し替わっても止まらないよう上限を設けている
+@export_range(0.0, 30.0, 0.5) var goal_sfx_max_wait := 8.0
 
 @export_group("Event")
 ## 最初のステージに入る前に再生するイベント（OP）
@@ -223,8 +225,7 @@ func _on_goal_reached(clear_time: float) -> void:
 		sfx_goal.play()
 	var is_last := _index >= stages.size() - 1
 	_show_clear(clear_time, is_last)
-	# クリアSEが鳴り終わるまでイベントを始めない
-	await get_tree().create_timer(next_stage_delay).timeout
+	await _wait_after_goal()
 	if not _advancing:                    # 待機中に手動で切り替えられていたら何もしない
 		return
 	_clear_overlay_hide()
@@ -240,6 +241,18 @@ func _on_goal_reached(clear_time: float) -> void:
 		_show_clear(clear_time, true)
 		return
 	load_stage(_index + 1)
+
+
+## クリアSEが鳴り終わるまでイベントを始めないための待ち
+func _wait_after_goal() -> void:
+	var elapsed := 0.0
+	while elapsed < next_stage_delay:
+		await get_tree().process_frame
+		elapsed += get_process_delta_time()
+	# まだ鳴っていれば上限まで待つ
+	while sfx_goal and sfx_goal.playing and elapsed < goal_sfx_max_wait:
+		await get_tree().process_frame
+		elapsed += get_process_delta_time()
 
 
 # ═══════════════════════════════ UI
