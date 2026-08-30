@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://1iu2pnnffu6i" path="res://scripts/stage.gd" id="1_thbjj"]
 [ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_4rvt0"]
 [ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_bfomk"]
-[ext_resource type="Texture2D" uid="uid://ef420ly1sjgx" path="res://resources/texture/osake.png" id="4_gi1yo"]
+[ext_resource type="Texture2D" uid="uid://bnq1smnkjlq34" path="res://resources/texture/goal.png" id="tex_goal"]
 [ext_resource type="Resource" path="res://resources/cutscene/stage10_outro.tres" id="cut_outro"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
@@ -100,7 +100,7 @@ collision_mask = 2
 script = ExtResource("3_bfomk")
 
 [node name="Sprite" type="Sprite2D" parent="Goal"]
-texture = ExtResource("4_gi1yo")
+texture = ExtResource("tex_goal")
 
 [node name="Hit" type="CollisionShape2D" parent="Goal"]
 position = Vector2(98, 30)

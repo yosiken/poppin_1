@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://1iu2pnnffu6i" path="res://scripts/stage.gd" id="1_4upp5"]
 [ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_0tami"]
 [ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_uam3y"]
-[ext_resource type="Texture2D" uid="uid://ef420ly1sjgx" path="res://resources/texture/osake.png" id="4_oexkw"]
+[ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 [ext_resource type="Resource" uid="uid://b4uxbkvyq781p" path="res://resources/cutscene/stage01_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://bsh8ibbmcgf6o" path="res://resources/cutscene/stage01_outro.tres" id="cut_outro"]
 
@@ -102,7 +102,10 @@ script = ExtResource("3_uam3y")
 
 [node name="Sprite" type="Sprite2D" parent="Goal" unique_id=911081339]
 position = Vector2(-1160, -2)
-texture = ExtResource("4_oexkw")
+texture = ExtResource("tex_goal")
+hframes = 3
+vframes = 3
+frame = 0
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=339032093]
 position = Vector2(-1160, -2)

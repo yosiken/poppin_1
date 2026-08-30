@@ -112,7 +112,11 @@ func _apply_shape() -> void:
 		_rect = RectangleShape2D.new()
 		_shape_node.shape = _rect
 
-	_rect.size = _sprite.texture.get_size() * _sprite.scale * hit_scale
+	# スプライトシートの場合、見えているのは1コマぶんなので frame の大きさで測る
+	var frame_size := _sprite.texture.get_size()
+	frame_size.x /= float(maxi(_sprite.hframes, 1))
+	frame_size.y /= float(maxi(_sprite.vframes, 1))
+	_rect.size = frame_size * _sprite.scale * hit_scale
 	_shape_node.position = _sprite.position
 
 
