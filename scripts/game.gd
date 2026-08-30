@@ -72,6 +72,9 @@ var _clear_overlay: CanvasLayer
 var _select: PanelContainer
 var _advancing := false
 var _respawning := false
+## 読み込みの世代。演出の待機中に別のステージへ切り替えられたら、
+## 古い側の続きを止めるために使う
+var _load_gen := 0
 ## 復帰地点。到達した中で最も進んだものの番号（-1 なら Spawn）
 var _checkpoint := -1
 var _points: Array[Marker2D] = []
@@ -143,13 +146,7 @@ func _check_fall() -> void:
 	if player.global_position.y <= bounds.end.y + fall_margin:
 		return
 
-	_fall_count += 1
-	_total_falls += 1
-	var from := player.global_position
-	print("[Game] 落下 (このステージ %d回目) → 復帰地点 %s へ"
-		% [_fall_count, "Spawn" if _checkpoint < 0 else str(_checkpoint + 1)])
-	player_fell.emit(from)
-	_respawn()
+	_kill(player.global_position, "場外")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -183,6 +180,8 @@ func load_stage(index: int, manual := true) -> void:
 
 	_clear_overlay_hide()
 	_advancing = false
+	_load_gen += 1
+	var gen := _load_gen
 	_index = index
 
 	if _stage:
@@ -195,6 +194,9 @@ func load_stage(index: int, manual := true) -> void:
 		push_error("Game: ステージ %d のルートが Stage ではありません" % index)
 		return
 	stage_host.add_child(_stage)
+
+	for h in _stage.get_hazards():
+		h.touched.connect(_on_hazard_touched)
 
 	var goal := _stage.get_goal()
 	if goal:
@@ -215,8 +217,10 @@ func load_stage(index: int, manual := true) -> void:
 
 	if _stage.intro and (manual or play_intro_on_select):
 		await cutscene.play(_stage.intro)
+		if gen != _load_gen:
+			return          # 待っている間に別のステージへ切り替わった
 
-	await _show_stage_title()
+	await _show_stage_title(gen)
 
 
 func _reset_player() -> void:
@@ -243,7 +247,7 @@ func _apply_camera_bounds() -> void:
 ## ステージ開始の見出しを出して、指定秒数だけ待つ。
 ## 待っている間はツリーを止める。止めないと、開始位置に置いたプレイヤーが
 ## 見出しの裏で落ち始めてしまう
-func _show_stage_title() -> void:
+func _show_stage_title(gen: int) -> void:
 	if stage_title_duration <= 0.0:
 		return
 
@@ -261,11 +265,29 @@ func _show_stage_title() -> void:
 	label.add_theme_color_override("font_color", Color(1.0, 0.95, 0.8))
 	layer.add_child(label)
 
-	var was_paused := get_tree().paused
 	get_tree().paused = true
 	await get_tree().create_timer(stage_title_duration, true, false, true).timeout
-	get_tree().paused = was_paused
 	layer.queue_free()
+	# 元の状態を復元すると、演出中に別のステージへ切り替えられたときに
+	# paused=true を復元して固まる。見出しの後は必ず遊べる状態にする
+	if gen == _load_gen:
+		get_tree().paused = false
+
+
+## 死亡して復帰地点へ戻す。落下床と場外の両方から呼ぶ
+func _kill(from: Vector2, cause: String) -> void:
+	if _advancing or _respawning or _stage == null:
+		return
+	_fall_count += 1
+	_total_falls += 1
+	print("[Game] 死亡:%s (このステージ %d回目) → 復帰地点 %s へ"
+		% [cause, _fall_count, "Spawn" if _checkpoint < 0 else str(_checkpoint + 1)])
+	player_fell.emit(from)
+	_respawn()
+
+
+func _on_hazard_touched(body: Node2D) -> void:
+	_kill(body.global_position, "落下床")
 
 
 ## 落下からの復帰。暗転させてから戻す。この間だけツリーを止める

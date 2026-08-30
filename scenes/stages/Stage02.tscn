@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 [ext_resource type="Resource" path="res://resources/cutscene/stage02_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" path="res://resources/cutscene/stage02_outro.tres" id="cut_outro"]
+[ext_resource type="Script" path="res://scripts/hazard.gd" id="hz_script"]
 
 [node name="Stage02" type="Node2D" unique_id=1066997681]
 script = ExtResource("1_hlboq")
@@ -67,3 +68,14 @@ texture = ExtResource("tex_goal")
 hframes = 3
 vframes = 3
 frame = 1
+
+
+[node name="Hazards" type="Area2D" parent="."]
+collision_mask = 2
+script = ExtResource("hz_script")
+
+[node name="Deadly1" type="CollisionPolygon2D" parent="Hazards"]
+position = Vector2(1500, 1150)
+polygon = PackedVector2Array(-800, -60, 800, -60, 800, 60, -800, 60)
+script = ExtResource("2_tq1ty")
+fill_color = Color(0.62, 0.16, 0.19, 1)

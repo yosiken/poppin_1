@@ -40,6 +40,20 @@ func get_recovery_points() -> Array[Marker2D]:
 	return out
 
 
+## 触れると死亡する床の一覧
+func get_hazards() -> Array[Hazard]:
+	var out: Array[Hazard] = []
+	_collect_hazards(self, out)
+	return out
+
+
+func _collect_hazards(n: Node, out: Array[Hazard]) -> void:
+	if n is Hazard:
+		out.append(n as Hazard)
+	for c in n.get_children():
+		_collect_hazards(c, out)
+
+
 ## プレイヤーの開始位置。Spawn が無ければ原点
 func get_spawn_position() -> Vector2:
 	var marker := get_node_or_null(^"Spawn") as Marker2D
