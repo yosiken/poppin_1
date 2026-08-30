@@ -25,6 +25,8 @@ extends Node2D
 @export var intro: CutsceneData
 ## ゴール到達後に再生するイベント
 @export var outro: CutsceneData
+## クリアデモの後の「時間経過」に出す文言。空なら TimePassage の既定を使う
+@export var time_passage_text := ""
 
 
 ## 復帰地点の一覧。RecoveryPoints の下に Marker2D を進行順に並べる。

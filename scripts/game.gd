@@ -65,6 +65,9 @@ signal player_fell(from_position: Vector2)
 @export var sfx_goal: AudioStreamPlayer
 ## イベント再生用。未設定なら実行時に作る
 @export var cutscene: Cutscene
+## クリアデモと次のステージの冒頭デモの間に挟む時間経過の演出。
+## 未設定なら実行時に作る
+@export var time_passage: TimePassage
 
 # ─────────────────────────────── 内部状態
 var _index := -1
@@ -103,6 +106,12 @@ func _ready() -> void:
 		cutscene = Cutscene.new()
 		cutscene.name = "Cutscene"
 		add_child(cutscene)
+	if time_passage == null:
+		time_passage = get_node_or_null(^"TimePassage") as TimePassage
+	if time_passage == null:
+		time_passage = TimePassage.new()
+		time_passage.name = "TimePassage"
+		add_child(time_passage)
 	if stages.is_empty():
 		push_warning("Game: stages が空です")
 		return
@@ -182,6 +191,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func load_stage(index: int, manual := true) -> void:
 	if index < 0 or index >= stages.size():
 		push_warning("Game: ステージ番号が範囲外です: %d" % index)
+		await _reveal()
 		return
 
 	_clear_overlay_hide()
@@ -198,6 +208,7 @@ func load_stage(index: int, manual := true) -> void:
 	_stage = (stages[index].instantiate()) as Stage
 	if _stage == null:
 		push_error("Game: ステージ %d のルートが Stage ではありません" % index)
+		await _reveal()
 		return
 	stage_host.add_child(_stage)
 
@@ -221,12 +232,26 @@ func load_stage(index: int, manual := true) -> void:
 		% [index + 1, stages.size(), _stage.get_display_name()])
 	stage_loaded.emit(index, _stage)
 
+	# 時間経過の演出で暗転したままここへ来ている。差し替えが済んでから明ける。
+	# 冒頭デモより先に明けるので「時間が飛んで、次の場所にいる」順に見える
+	await _reveal()
+	if gen != _load_gen:
+		return
+
 	if _stage.intro and (manual or play_intro_on_select):
 		await cutscene.play(_stage.intro)
 		if gen != _load_gen:
 			return          # 待っている間に別のステージへ切り替わった
 
 	await _show_stage_title(gen)
+
+
+## 時間経過の演出で暗転していたら明ける。暗転していなければ何もしない。
+## 読み込みに失敗して途中で戻る経路からも必ず通す。通し忘れると
+## 画面が暗いまま操作を受け付けなくなり、原因が追いにくい
+func _reveal() -> void:
+	if time_passage:
+		await time_passage.fade_in()
 
 
 func _reset_player() -> void:
@@ -390,6 +415,11 @@ func _on_goal_reached(clear_time: float) -> void:
 		all_cleared.emit()
 		_show_clear(clear_time, true)
 		return
+
+	# 時間経過。暗転したまま次のステージへ移り、load_stage の中で明ける
+	if time_passage:
+		var caption := _stage.time_passage_text if _stage else ""
+		await time_passage.fade_out(caption)
 	load_stage(_index + 1)
 
 
