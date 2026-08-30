@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_3jl66"]
+[ext_resource type="Texture2D" path="res://resources/texture/ob_san.png" id="2_k0l5e"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="3_5a5rl"]
+
+[sub_resource type="Resource" id="Resource_7h71w"]
+script = ExtResource("1_3jl66")
+speaker = "ルイ"
+text = "う、うぅ……頭が、割れるように痛い……。身体が重い……。……あれ？ 私、戎橋の上で倒れてる……？"
+speaking = 2
+right = ExtResource("2_k0l5e")
+
+[sub_resource type="Resource" id="Resource_oc4by"]
+script = ExtResource("1_3jl66")
+speaker = "ルイ"
+text = "手になにか抱きしめて……。あ、私のシマエナガのぬいぐるみ。……ただの、綿の塊に戻っちゃってる。……なんだ、やっぱり、ぜんぶ酔っ払って見てた夢だったのかな。"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_1xhdg"]
+script = ExtResource("1_3jl66")
+text = "川に落ちたのも、ただ滑り落ちそうになって腰抜かして寝てただけみたいだし……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_0bwdq"]
+script = ExtResource("1_3jl66")
+speaker = "ルイ"
+text = "あ、スマホ……。画面が通知で真っ赤なんだけど！？『ルイ姉、生きてる！？』『配信が急にガサガサって鳴って切れたぞ！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_bcojw"]
+script = ExtResource("1_3jl66")
+text = "』『ひっかけ橋の近くでルイ姉っぽい人が寝てるってツイート見たんだけどｗｗ』って、リスナーのみんな大騒ぎじゃん！あはは……。夢か現実かなんて、どうでもいっか。みんな、今からゲリラ朝雑談配信、枠取るからね。"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_pmutk"]
+script = ExtResource("1_3jl66")
+text = "今回のタイトルは……これだ！『【緊急配信】道頓堀川に落ちてシマエナガと異世界転生（？）してきたから聞いて【二日酔い限界】』！……よし、配信スタート！"
+speaking = 2
+
+[resource]
+script = ExtResource("3_5a5rl")
+lines = Array[ExtResource("1_3jl66")]([SubResource("Resource_7h71w"), SubResource("Resource_oc4by"), SubResource("Resource_1xhdg"), SubResource("Resource_0bwdq"), SubResource("Resource_bcojw"), SubResource("Resource_pmutk")])

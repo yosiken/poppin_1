@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_7ayey"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie.png" id="2_x8uju"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="3_hgvhn"]
+
+[sub_resource type="Resource" id="Resource_5qr67"]
+script = ExtResource("1_7ayey")
+speaker = "シマエナガ"
+text = "ビールにたこ焼き。早くも炭水化物の波が押し寄せている。ここで、お前の脳裏にわずかな『良心』と『焦り』が過った。そしてお前が注文した、ビールよりは少しだけヘルシーなつもりの飲み物は何だ？"
+speaking = 1
+left = ExtResource("2_x8uju")
+
+[resource]
+script = ExtResource("3_hgvhn")
+lines = Array[ExtResource("1_7ayey")]([SubResource("Resource_5qr67")])

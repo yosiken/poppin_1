@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_6fv87"]
+[ext_resource type="Texture2D" path="res://resources/texture/ob_san.png" id="2_giu38"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie.png" id="3_m8t05"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_4l7bd"]
+
+[sub_resource type="Resource" id="Resource_nw7jn"]
+script = ExtResource("1_6fv87")
+speaker = "ルイ"
+text = "良心……焦り……？ あ、そういえば私、『最近ちょっと糖質が気になるんだよね〜, ダイエット中だし！』とかリスナーに言ってた気がする！ ということは、2杯目に頼んだのは……これ！『ハイボール』！"
+speaking = 2
+right = ExtResource("2_giu38")
+
+[sub_resource type="Resource" id="Resource_3pw8k"]
+script = ExtResource("1_6fv87")
+speaker = "シマエナガ"
+text = "ハイボールだな。……しかし、糖質を気にしてハイボールにしたところで、すでにたこ焼きをドカ食いしている。お前の『ダイエット中』という言葉は、世界で一番信用できないな"
+speaking = 1
+left = ExtResource("3_m8t05")
+
+[sub_resource type="Resource" id="Resource_5m2qt"]
+script = ExtResource("1_6fv87")
+speaker = "ルイ"
+text = "うるさーい！ 気持ちの問題なの！ 炭酸で流し込むハイボールは実質カロリーゼロなの！"
+speaking = 2
+
+[resource]
+script = ExtResource("4_4l7bd")
+lines = Array[ExtResource("1_6fv87")]([SubResource("Resource_nw7jn"), SubResource("Resource_3pw8k"), SubResource("Resource_5m2qt")])

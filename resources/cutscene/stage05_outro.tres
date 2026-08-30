@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_cgvsy"]
+[ext_resource type="Texture2D" path="res://resources/texture/ob_san.png" id="2_mr3mf"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie.png" id="3_q6lt2"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_fhkv8"]
+
+[sub_resource type="Resource" id="Resource_u8a0j"]
+script = ExtResource("1_cgvsy")
+speaker = "ルイ"
+text = "え？ 日本酒の後にまた粉もん……？ たこ焼きを食べた後なのに……？ 嘘でしょ、そんなバカな……あ！ でも頼んでる！ キャベツと豚肉とソースが鉄板の上で焦げる、あの幸せな匂い！『お好み焼き』だ！"
+speaking = 2
+right = ExtResource("2_mr3mf")
+
+[sub_resource type="Resource" id="Resource_2vnfm"]
+script = ExtResource("1_cgvsy")
+speaker = "シマエナガ"
+text = "正解だ。たこ焼きを食べた次にお好み焼きを頼む。お前の胃袋は大阪の炭水化物テーマパークか？ 栄養バランスという概念をお前の実家に忘れてきたのか？"
+speaking = 1
+left = ExtResource("3_q6lt2")
+
+[sub_resource type="Resource" id="Resource_ee3wo"]
+script = ExtResource("1_cgvsy")
+speaker = "ルイ"
+text = "いいの！ 大阪に来たらたこ焼きもお好み焼きも両方食べるのが義務なの！ 法律で決まってるの！"
+speaking = 2
+
+[resource]
+script = ExtResource("4_fhkv8")
+lines = Array[ExtResource("1_cgvsy")]([SubResource("Resource_u8a0j"), SubResource("Resource_2vnfm"), SubResource("Resource_ee3wo")])

@@ -33,6 +33,9 @@ const UP := Vector2.UP
 ## スーパージャンプ解放フラグ（スキルツリーから設定）
 @export var super_jump_unlocked := false
 
+## この値以上のチャージで発射したときだけ掛け声（jump_voice）を重ねる
+@export_range(0.0, 1.0, 0.05) var voice_charge_threshold := 0.15
+
 # ─────────────────────────────── 内部状態
 var tilt_deg := 0.0            ## 現在の傾き角（右が正）
 var charge := 0.0              ## 0.0〜1.0
@@ -52,6 +55,12 @@ var _charge_hold_timer := 0.0      ## チャージ中にその場で留まれる
 var _charge_pinned := false        ## チャージでその場固定中かどうか
 var _pin_impact_velocity := Vector2.ZERO  ## 固定に入った瞬間の進入速度（解除時の反発に使う）
 
+var _sfx_land: AudioStreamPlayer    ## 着地
+var _sfx_jump: AudioStreamPlayer    ## 地面を離れる瞬間
+var _sfx_voice: AudioStreamPlayer   ## ためジャンプの掛け声
+var _was_grounded := false          ## 前フレームに接地していたか（着地音の重複防止）
+var _grounded_now := false          ## このフレームで接地したか
+
 
 # ═══════════════════════════════ ライフサイクル
 
@@ -60,6 +69,10 @@ func _ready() -> void:
 	_apex_y = global_position.y
 	if Engine.is_editor_hint():
 		set_physics_process(false)
+		return
+	_sfx_land = get_node_or_null(^"SfxLand") as AudioStreamPlayer
+	_sfx_jump = get_node_or_null(^"SfxJump") as AudioStreamPlayer
+	_sfx_voice = get_node_or_null(^"SfxVoice") as AudioStreamPlayer
 
 
 func _physics_process(delta: float) -> void:
@@ -72,8 +85,14 @@ func _physics_process(delta: float) -> void:
 	_super_cd = maxf(0.0, _super_cd - delta)
 
 	_apply_gravity(delta)
+	_apply_air_control(delta)
 	_track_apex()
 	_move_and_bounce(delta)
+
+	# 接地フラグは _move_and_bounce の結果を見てから更新する。
+	# チャージ固定中は毎フレーム _resolve_ground を通るが、接地は継続扱いなので着地音は鳴らない
+	_was_grounded = _grounded_now
+	_grounded_now = false
 
 	if debug_draw:
 		queue_redraw()
@@ -134,6 +153,26 @@ func _apply_gravity(delta: float) -> void:
 	velocity.x = lerpf(velocity.x, 0.0, _s("air_drag") * delta)
 
 
+## 空中の左右入力で水平方向へ少しだけ押す。
+## 傾き入力と同じキーなので「倒した方向へ流れる」挙動になる。
+## 上限を設けているのは、跳ね返りで既に速いときにさらに加速して
+## 発射速度の設計（max_bounce_speed）を空中制御が上書きしてしまうのを防ぐため
+func _apply_air_control(delta: float) -> void:
+	if _charge_pinned:
+		return          # チャージ固定中は地面に留まっているので効かせない
+
+	var input := Input.get_axis(&"pogo_left", &"pogo_right")
+	if absf(input) <= 0.01:
+		return
+
+	# 進行方向への加速だけ上限で止める。逆方向＝減速は常に効かせる
+	var cap := _s("air_control_max_speed")
+	if signf(input) == signf(velocity.x) and absf(velocity.x) >= cap:
+		return
+
+	velocity.x += input * _s("air_control") * delta
+
+
 func _track_apex() -> void:
 	var rising := velocity.y < 0.0
 	if rising and not _was_rising:
@@ -169,6 +208,11 @@ func _move_and_bounce(delta: float) -> void:
 
 
 func _resolve_ground(normal: Vector2, delta: float) -> void:
+	# ── 着地音。空中から接地に変わった瞬間の1回だけ鳴らす
+	if not _was_grounded:
+		_play(_sfx_land)
+	_grounded_now = true
+
 	# ── チャージ中（Space押しっぱなし）は跳ねさせず、その場で角度だけ動かせるようにする。
 	#    着地スナップより先に抜けないと、静止中は毎フレーム角度を0付近へ戻され続けて
 	#    操作不能になる。ただし charge_hold_time が尽きたら、ボタンを押し続けていても
@@ -212,10 +256,21 @@ func _resolve_ground(normal: Vector2, delta: float) -> void:
 		mult = _s("super_mult")
 		_super_cd = _s("super_cooldown")
 
-	out += normal * _s("bounce_add") * mult
+	# 最低跳躍量は法線と射出方向のブレンド方向へ入れる。純粋な法線方向（＝平地では真上）だと
+	# 傾けるほど水平成分が増えても垂直ゲタが変わらず、飛距離が傾き角にほとんど反応しなくなる
+	var kick := normal.lerp(dir, _s("bounce_add_authority")).normalized()
+	if kick.dot(normal) <= 0.0:
+		# 急斜面で傾きを逆に倒した場合、ブレンド結果が地面へ潜る向きになりうる。
+		# その時だけは最低跳躍量の役割（必ず面から離れる）を優先して法線に戻す
+		kick = normal
+	out += kick * _s("bounce_add") * mult
 	out = out.limit_length(_s("max_bounce_speed"))
 
 	velocity = out
+	# ── 地面を離れる瞬間の音。ためジャンプなら掛け声を重ねる
+	_play(_sfx_jump)
+	if c >= voice_charge_threshold:
+		_play(_sfx_voice)
 	bounced.emit(out.length(), normal)
 
 	# ── ボタンを離さず押しっぱなしにしていても、発射直後にホールド時間を満タンへ戻す。
@@ -256,12 +311,20 @@ func _s(param: StringName) -> float:
 
 # ═══════════════════════════════ 外部から呼ぶユーティリティ
 
+## 接地しているか。通常のバウンドでは接地した瞬間に跳ね返るので1フレームしか true に
+## ならないが、チャージ固定中は押している間ずっと true になる
+func is_grounded() -> bool:
+	return _grounded_now or _was_grounded
+
+
 func teleport(to: Vector2) -> void:
 	global_position = to
 	velocity = Vector2.ZERO
 	tilt_deg = 0.0
 	charge = 0.0
 	_apex_y = to.y
+	_was_grounded = false
+	_grounded_now = false
 
 
 # ═══════════════════════════════ 形状構築
@@ -299,6 +362,13 @@ func _on_stats_changed() -> void:
 
 func _now() -> float:
 	return Time.get_ticks_msec() / 1000.0
+
+
+## SE 再生。ノードが無いシーン（テスト用など）でも落ちないように握りつぶす
+func _play(player: AudioStreamPlayer) -> void:
+	if player == null:
+		return
+	player.play()
 
 
 func _draw() -> void:

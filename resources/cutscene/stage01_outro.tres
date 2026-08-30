@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_ygqeh"]
+[ext_resource type="Texture2D" path="res://resources/texture/ob_san.png" id="2_5wwyp"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie.png" id="3_1ilod"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_h1pga"]
+
+[sub_resource type="Resource" id="Resource_hbbsx"]
+script = ExtResource("1_ygqeh")
+speaker = "ルイ"
+text = "な、失礼な！ でも……うん、入店して席に着いた瞬間、喉がカラカラで……。あ、思い出した！『とりあえず生で！』"
+speaking = 2
+right = ExtResource("2_5wwyp")
+
+[sub_resource type="Resource" id="Resource_oqwq2"]
+script = ExtResource("1_ygqeh")
+speaker = "シマエナガ"
+text = "……思い出すまでもないな。当たり前すぎてクイズの体をなしていない。だが、これで最初のピースは埋まった。次に行くぞ"
+speaking = 1
+left = ExtResource("3_1ilod")
+
+[resource]
+script = ExtResource("4_h1pga")
+lines = Array[ExtResource("1_ygqeh")]([SubResource("Resource_hbbsx"), SubResource("Resource_oqwq2")])

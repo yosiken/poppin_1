@@ -1,0 +1,93 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_pkok5"]
+[ext_resource type="Texture2D" path="res://resources/texture/ob_san.png" id="2_shl02"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie.png" id="3_rec0e"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_3lb5k"]
+
+[sub_resource type="Resource" id="Resource_oal20"]
+script = ExtResource("1_pkok5")
+speaker = "ルイ"
+text = "わぁ……！ 門が開いた！ あそこに飛び込めば、元の世界、私の部屋に、みんなのいる配信に戻れるんだね！"
+speaking = 2
+right = ExtResource("2_shl02")
+
+[sub_resource type="Resource" id="Resource_s2b2x"]
+script = ExtResource("1_pkok5")
+speaker = "シマエナガ"
+text = "そうだ。だが、その扉をくぐり抜ける前に、私から最後の警告がある。ルイ、よく聞け"
+speaking = 1
+left = ExtResource("3_rec0e")
+
+[sub_resource type="Resource" id="Resource_2djjo"]
+script = ExtResource("1_pkok5")
+speaker = "ルイ"
+text = "え……？ なに、シマエナガちゃん。急にシリアスな顔（というかぬいぐるみだから無表情だけど）になって……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_mxxe4"]
+script = ExtResource("1_pkok5")
+speaker = "シマエナガ"
+text = "お前がその扉の向こう、現実世界に戻った瞬間に待ち受けているものは、きらびやかなファンタジーではない。"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_74v4e"]
+script = ExtResource("1_pkok5")
+text = "お前を待っているのは、計5杯の酒と粉もん２種、ラーメン、パフェの合体が生み出す、人生史上最悪レベルの『猛烈な二日酔い』。そして、深夜にこれだけのカロリーを摂取したことによる『過酷な体重増加』だ。"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_wd6no"]
+script = ExtResource("1_pkok5")
+text = "今夜の暴食による代償（ギルト）を、全身 of 痛みと体重計の数字で支払うことになる。……本当に、その覚悟はあるか？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_28f1e"]
+script = ExtResource("1_pkok5")
+speaker = "ルイ"
+text = "う、頭痛と、体重計……（ゴクリ）。た、確かに、異世界でこのままふわふわ浮いてる方が、二日酔いもないし太りもしないよね……。このまま異世界無双配信者として生きていくのも悪くないかも……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_our85"]
+script = ExtResource("1_pkok5")
+speaker = "シマエナガ"
+text = "それでもいいぞ。ここで永遠に、よだれを垂らして眠り続けるか？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_273wk"]
+script = ExtResource("1_pkok5")
+speaker = "ルイ"
+text = "……。……ううん！ やだ！ 私、帰る！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_lpn2s"]
+script = ExtResource("1_pkok5")
+speaker = "シマエナガ"
+text = "ほう？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_sloqe"]
+script = ExtResource("1_pkok5")
+speaker = "ルイ"
+text = "二日酔いがなんだ！ 体重増加がなんだ！今日のこの泥酔異世界転生、絶対に次の配信の雑談ネタにして、リスナーのみんなに話して爆笑を取ってやるんだから！『ちょっとみんな聞いてよ〜！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ti6hw"]
+script = ExtResource("1_pkok5")
+text = "川に落ちたらシマエナガが喋りだしてさぁ！』って笑い飛ばして、スパチャたくさんもらうんだもん！それに……みんなが待ってる配信の場所に、私はどうしても帰りたいの！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_i2upt"]
+script = ExtResource("1_pkok5")
+speaker = "シマエナガ"
+text = "ふっ……。相変わらず、強欲で自堕落で、救いようのない愛すべきアホだな。だが、その配信魂（リスナーラブ）だけは認めてやろう。いいだろう。行け、ポンコツ配信者！ 現実の荒波、そして明日の頭痛に立ち向かうのだ！"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_kw6du"]
+script = ExtResource("1_pkok5")
+speaker = "ルイ"
+text = "うん！ ありがとね、シマエナガちゃん！……よーし、現実世界に、帰還（ただいま）するぞぉぉぉーーー！"
+speaking = 2
+
+[resource]
+script = ExtResource("4_3lb5k")
+lines = Array[ExtResource("1_pkok5")]([SubResource("Resource_oal20"), SubResource("Resource_s2b2x"), SubResource("Resource_2djjo"), SubResource("Resource_mxxe4"), SubResource("Resource_74v4e"), SubResource("Resource_wd6no"), SubResource("Resource_28f1e"), SubResource("Resource_our85"), SubResource("Resource_273wk"), SubResource("Resource_lpn2s"), SubResource("Resource_sloqe"), SubResource("Resource_ti6hw"), SubResource("Resource_i2upt"), SubResource("Resource_kw6du")])

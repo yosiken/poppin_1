@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://c5ettlqrjk6tf"]
+
+[ext_resource type="Script" uid="uid://1iu2pnnffu6i" path="res://scripts/stage.gd" id="1_thbjj"]
+[ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_4rvt0"]
+[ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_bfomk"]
+[ext_resource type="Texture2D" uid="uid://ef420ly1sjgx" path="res://resources/texture/osake.png" id="4_gi1yo"]
+[ext_resource type="Resource" path="res://resources/cutscene/stage03_intro.tres" id="cut_intro"]
+[ext_resource type="Resource" path="res://resources/cutscene/stage03_outro.tres" id="cut_outro"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
+size = Vector2(109.2, 212.8)
+
+[node name="Stage03" type="Node2D" unique_id=740633051]
+script = ExtResource("1_thbjj")
+display_name = "たて穴"
+camera_bounds = Rect2(-300, -900, 2000, 2200)
+intro = ExtResource("cut_intro")
+outro = ExtResource("cut_outro")
+
+[node name="Spawn" type="Marker2D" parent="." unique_id=1606277033]
+position = Vector2(0, 1000)
+
+[node name="Terrain" type="StaticBody2D" parent="." unique_id=377188820]
+
+[node name="Block00" type="CollisionPolygon2D" parent="Terrain" unique_id=597950560]
+position = Vector2(200, 1250)
+polygon = PackedVector2Array(-600, -60, 600, -60, 600, 60, -600, 60)
+script = ExtResource("2_4rvt0")
+
+[node name="Block01" type="CollisionPolygon2D" parent="Terrain" unique_id=1317626441]
+position = Vector2(953, 1051)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block02" type="CollisionPolygon2D" parent="Terrain" unique_id=254531268]
+position = Vector2(409, 921)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block03" type="CollisionPolygon2D" parent="Terrain" unique_id=75655820]
+position = Vector2(857, 670)
+polygon = PackedVector2Array(-202, -68, 198, -68, 198, -8, -202, -8)
+script = ExtResource("2_4rvt0")
+
+[node name="Block11" type="CollisionPolygon2D" parent="Terrain" unique_id=1383595967]
+position = Vector2(216, 719)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block10" type="CollisionPolygon2D" parent="Terrain" unique_id=1050251327]
+position = Vector2(1411, 849)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block04" type="CollisionPolygon2D" parent="Terrain" unique_id=1486305532]
+position = Vector2(414, 211)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block12" type="CollisionPolygon2D" parent="Terrain" unique_id=1666088249]
+position = Vector2(300, -6)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block13" type="CollisionPolygon2D" parent="Terrain" unique_id=1967133096]
+position = Vector2(882, -73)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block08" type="CollisionPolygon2D" parent="Terrain" unique_id=2004272451]
+position = Vector2(1354, 456)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block09" type="CollisionPolygon2D" parent="Terrain" unique_id=1270319255]
+position = Vector2(892, 329)
+scale = Vector2(0.48000002, 1)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block05" type="CollisionPolygon2D" parent="Terrain" unique_id=809278439]
+position = Vector2(1036, -201)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block06" type="CollisionPolygon2D" parent="Terrain" unique_id=2072940087]
+position = Vector2(-380, 400)
+polygon = PackedVector2Array(-30, -950, 30, -950, 30, 950, -30, 950)
+script = ExtResource("2_4rvt0")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Block07" type="CollisionPolygon2D" parent="Terrain" unique_id=824788396]
+position = Vector2(1580, 400)
+polygon = PackedVector2Array(-30, -950, 30, -950, 30, 950, -30, 950)
+script = ExtResource("2_4rvt0")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Goal" type="Area2D" parent="." unique_id=1886507720]
+z_index = -1
+position = Vector2(950, -410)
+collision_mask = 2
+script = ExtResource("3_bfomk")
+
+[node name="Sprite" type="Sprite2D" parent="Goal" unique_id=242435537]
+texture = ExtResource("4_gi1yo")
+
+[node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=37095405]
+position = Vector2(98, 30)
+shape = SubResource("RectangleShape2D_thbjj")

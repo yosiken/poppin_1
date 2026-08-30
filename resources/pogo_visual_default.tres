@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PogoVisualStats" format=3]
+
+[ext_resource type="Script" uid="uid://d0uonas28m405" path="res://scripts/pogo_visual_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+ball_squash_y = 0.7
+squash_recover_frames = 12
+flail_gain = 1.0
+flail_stiffness = 40.0
+flail_damping = 2.5
