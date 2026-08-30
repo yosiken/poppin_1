@@ -15,7 +15,8 @@ const GROUPS := {
 	"bounce":    ["restitution", "bounce_add", "bounce_add_authority", "pogo_authority",
 				  "max_bounce_speed"],
 	"tilt":      ["tilt_speed", "stabilize_rate", "tilt_limit"],
-	"charge":    ["charge_time", "charge_hold_time", "charge_mult", "super_mult", "super_cooldown"],
+	"charge":    ["charge_time", "charge_hold_time", "charge_mult",
+				  "charge_restitution_mult", "super_mult", "super_cooldown"],
 	"air":       ["gravity", "terminal_velocity", "air_drag",
 				  "air_control", "air_control_max_speed"],
 	"assist":    ["input_buffer_time", "landing_snap_angle", "landing_snap_hold_time",
@@ -54,8 +55,13 @@ const GROUPS := {
 @export_range(0.05, 3.0, 0.05) var charge_time := 0.6
 ## チャージ中にその場で留まれる時間 (秒)。charge_time より短いと満タン前に強制発射される
 @export_range(0.05, 3.0, 0.05) var charge_hold_time := 1.0
-## 満タン時の反発倍率
+## 満タン時の最低跳躍量(bounce_add)の倍率
 @export_range(1.0, 3.0, 0.05) var charge_mult := 1.5
+## 満タン時の地形反射(restitution)の倍率。
+## 1.0 にすると従来どおり bounce_add にしかチャージが効かず、
+## 進入速度を溜めてからチャージしても高く飛べない。
+## 1.0 より大きくすると「速度を稼いでから溜める」が報われるようになる
+@export_range(1.0, 3.0, 0.05) var charge_restitution_mult := 1.7
 ## スーパージャンプ倍率（スキル解放時のみ有効）
 @export_range(1.0, 4.0, 0.05) var super_mult := 1.8
 ## スーパージャンプのクールタイム (秒)

@@ -245,16 +245,22 @@ func _resolve_ground(normal: Vector2, delta: float) -> void:
 	#    接地した瞬間の速度を使う
 	var v_in := _pin_impact_velocity if _charge_pinned else velocity
 	_charge_pinned = false
-	var reflected := v_in.bounce(normal) * _s("restitution")
+
+	# チャージは最低跳躍量だけでなく地形反射にも掛ける。
+	# 反射にも掛けないと進入速度の 82% が常に捨てられ、
+	# 「速度を稼いでからチャージ」が報われない
+	var c := _consume_charge()
+	var mult := lerpf(1.0, _s("charge_mult"), c)
+	var rest_mult := lerpf(1.0, _s("charge_restitution_mult"), c)
+	if super_jump_unlocked and c >= 0.999 and _super_cd <= 0.0:
+		mult = _s("super_mult")
+		rest_mult = _s("super_mult")
+		_super_cd = _s("super_cooldown")
+
+	var reflected := v_in.bounce(normal) * _s("restitution") * rest_mult
 	var dir := UP.rotated(deg_to_rad(tilt_deg))
 	var authority := _s("pogo_authority")
 	var out := reflected.lerp(dir * reflected.length(), authority)
-
-	var c := _consume_charge()
-	var mult := lerpf(1.0, _s("charge_mult"), c)
-	if super_jump_unlocked and c >= 0.999 and _super_cd <= 0.0:
-		mult = _s("super_mult")
-		_super_cd = _s("super_cooldown")
 
 	# 最低跳躍量は法線と射出方向のブレンド方向へ入れる。純粋な法線方向（＝平地では真上）だと
 	# 傾けるほど水平成分が増えても垂直ゲタが変わらず、飛距離が傾き角にほとんど反応しなくなる
