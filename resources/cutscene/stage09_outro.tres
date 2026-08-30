@@ -7,14 +7,14 @@
 
 [sub_resource type="Resource" id="Resource_r7c1k"]
 script = ExtResource("1_t1p1n")
-speaker = "ルイ"
+speaker = "OB"
 text = "あ……。最後は、冷たくて、甘くて、きゅんと酸っぱくて、ピンク色の……。女の子がみんな大好きな……『季節のいちごパフェ』！ 夜パフェ最高！ ダイエット……何それ美味しいのぉ！？"
 speaking = 2
 right = ExtResource("2_836e4")
 
 [sub_resource type="Resource" id="Resource_oj5kc"]
 script = ExtResource("1_t1p1n")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "よくぞ思い出した。『季節のいちごパフェ』。深夜の夜パフェという、カロリーの暴力、ギルティの極み。これで現実世界で飲食した全ての記憶が蘇った。お前の欲望の歴史が、今、10番目の扉を開いたぞ"
 speaking = 1
 left = ExtResource("3_pelsk")

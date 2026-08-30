@@ -7,14 +7,14 @@
 
 [sub_resource type="Resource" id="Resource_hbbsx"]
 script = ExtResource("1_ygqeh")
-speaker = "ルイ"
+speaker = "OB"
 text = "な、失礼な！ でも……うん、入店して席に着いた瞬間、喉がカラカラで……。あ、思い出した！『とりあえず生で！』"
 speaking = 2
 right = ExtResource("2_5wwyp")
 
 [sub_resource type="Resource" id="Resource_oqwq2"]
 script = ExtResource("1_ygqeh")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "……思い出すまでもないな。当たり前すぎてクイズの体をなしていない。だが、これで最初のピースは埋まった。次に行くぞ"
 speaking = 1
 left = ExtResource("3_1ilod")

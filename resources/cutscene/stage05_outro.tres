@@ -7,21 +7,21 @@
 
 [sub_resource type="Resource" id="Resource_u8a0j"]
 script = ExtResource("1_cgvsy")
-speaker = "ルイ"
+speaker = "OB"
 text = "え？ 日本酒の後にまた粉もん……？ たこ焼きを食べた後なのに……？ 嘘でしょ、そんなバカな……あ！ でも頼んでる！ キャベツと豚肉とソースが鉄板の上で焦げる、あの幸せな匂い！『お好み焼き』だ！"
 speaking = 2
 right = ExtResource("2_mr3mf")
 
 [sub_resource type="Resource" id="Resource_2vnfm"]
 script = ExtResource("1_cgvsy")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "正解だ。たこ焼きを食べた次にお好み焼きを頼む。お前の胃袋は大阪の炭水化物テーマパークか？ 栄養バランスという概念をお前の実家に忘れてきたのか？"
 speaking = 1
 left = ExtResource("3_q6lt2")
 
 [sub_resource type="Resource" id="Resource_ee3wo"]
 script = ExtResource("1_cgvsy")
-speaker = "ルイ"
+speaker = "OB"
 text = "いいの！ 大阪に来たらたこ焼きもお好み焼きも両方食べるのが義務なの！ 法律で決まってるの！"
 speaking = 2
 

@@ -6,7 +6,7 @@
 
 [sub_resource type="Resource" id="Resource_x6aby"]
 script = ExtResource("1_amcu2")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "ビールのお供といえば、大阪・道頓堀の代名詞。お前は店に入るやいなや、熱々の丸い球体を口に放り込んでハフハフ言っていたはずだ"
 speaking = 1
 left = ExtResource("2_23evt")

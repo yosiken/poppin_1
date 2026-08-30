@@ -6,7 +6,7 @@
 
 [sub_resource type="Resource" id="Resource_yrt2d"]
 script = ExtResource("1_04fdb")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "お前の脳内法律はさておき、ソースの濃い味でお前の喉はさらに乾く。4杯目。お前はまたしても日本酒を注文した。それも、微炭酸でフルーティーな、飲む者を虜にするあの悪魔的銘柄だ"
 speaking = 1
 left = ExtResource("2_l2nqf")

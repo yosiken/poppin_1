@@ -7,27 +7,27 @@
 
 [sub_resource type="Resource" id="Resource_a8qcy"]
 script = ExtResource("1_1bfqb")
-speaker = "ルイ"
+speaker = "OB"
 text = "あ, それ知ってる！ 口に含んだ瞬間にシュワッと弾けて、リンゴみたいな甘酸っぱい香りが広がるやつ！『風の森（かぜのもり）』！"
 speaking = 2
 right = ExtResource("2_fixnd")
 
 [sub_resource type="Resource" id="Resource_1lnn4"]
 script = ExtResource("1_1bfqb")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "その通り。これも奈良県御所の油長酒造が醸す『風の森』だ。グラスに注がれた瞬間からピチピチと跳ねるようなガス感、そしてお前の理性を完全に粉砕する圧倒的な旨さ。これを飲んだ時、お前は何と言っていた？"
 speaking = 1
 left = ExtResource("3_1k4lx")
 
 [sub_resource type="Resource" id="Resource_lq4m1"]
 script = ExtResource("1_1bfqb")
-speaker = "ルイ"
+speaker = "OB"
 text = "『旨い、うますぎる。これ、無限に飲める水じゃん……』って言ってた。あはは、完全に出来上がってるね、私"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_aem33"]
 script = ExtResource("1_1bfqb")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "笑いごとではない。その『無限に飲める水』がお前をここへ引きずり下ろした元凶の一つだぞ"
 speaking = 1
 

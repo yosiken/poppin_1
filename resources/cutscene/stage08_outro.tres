@@ -7,7 +7,7 @@
 
 [sub_resource type="Resource" id="Resource_lci6h"]
 script = ExtResource("1_c8ka2")
-speaker = "ルイ"
+speaker = "OB"
 text = "えっ、ラーメンの後にまだ飲んでるの私！？ どんだけ飲むの！？ ……う、うぅ、でも、なんかすごくスタイリッシュなボトルの記憶が……。"
 speaking = 2
 right = ExtResource("2_st6c1")
@@ -19,7 +19,7 @@ speaking = 2
 
 [sub_resource type="Resource" id="Resource_5gnj2"]
 script = ExtResource("1_c8ka2")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "その通り。低アルコールでありながら、風の森ならではの生命感あふれる味わいを実現した革新的な日本酒『風の森 ALPHA』だ。……これで５杯目。"
 speaking = 1
 left = ExtResource("3_uxxq4")
@@ -31,7 +31,7 @@ speaking = 1
 
 [sub_resource type="Resource" id="Resource_tt106"]
 script = ExtResource("1_c8ka2")
-speaker = "ルイ"
+speaker = "OB"
 text = "あ、あははは……そうかもしれない……。でも、風の森ALPHA、本当に美味しかったんだよぉ……（遠い目）"
 speaking = 2
 

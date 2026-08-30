@@ -9,8 +9,8 @@
   - 「## 【...】」で場面を区切る
   - 「**話者**」の次の行以降を、その話者のセリフとして拾う
   - 〔演出：...〕はゲーム中のテキストにはせず、note として JSON に残す
-  - 各ステージは「最初のシマエナガの問いかけ」を intro、
-    「ルイが思い出す以降」を outro に割る
+  - 各ステージは「冒頭のナビゲーター（左側）の問いかけ」を intro、
+    「主人公（右側）が答える以降」を outro に割る
   - 長すぎるセリフはテキストウインドウに収まる長さで複数コマに分割する
 """
 
@@ -22,7 +22,11 @@ from pathlib import Path
 # テキストウインドウ1コマに入れる全角換算の目安
 MAX_CHARS = 105
 
-SPEAKERS = {"ルイ": "right", "シマエナガ": "left"}
+# 話者名 -> 立ち絵の位置。台本で名前を変えたらここも直すこと
+SPEAKERS = {"OB": "right", "カニエナガ": "left"}
+
+
+unknown_speakers = set()
 
 
 def parse(md_path):
@@ -51,8 +55,14 @@ def parse(md_path):
 
         # **話者**
         m = re.fullmatch(r"\*\*(.+?)\*\*", line)
-        if m and m.group(1) in SPEAKERS:
-            speaker = m.group(1)
+        if m:
+            name = m.group(1)
+            if name in SPEAKERS:
+                speaker = name
+                continue
+            # 台本側で名前が変わると黙って0件になるので拾っておく
+            if len(name) <= 12 and "〔" not in name:
+                unknown_speakers.add(name)
             continue
 
         if speaker:
@@ -139,10 +149,11 @@ def to_events(scenes):
             continue
         num = int(m.group(1))
 
-        # 冒頭に続くシマエナガの問いかけを intro、そこから先を outro にする。
-        # ルイから始まる場面（ステージ10）は intro 無しで全部 outro に回す
+        # 冒頭に続くナビゲーター（左側）の問いかけを intro、そこから先を outro にする。
+        # 主人公から始まる場面（ステージ10）は intro 無しで全部 outro に回す。
+        # 名前で判定すると台本の改名で壊れるので、立ち絵の位置で見る
         split_at = 0
-        while split_at < len(lines) and lines[split_at]["speaker"] == "シマエナガ":
+        while split_at < len(lines) and SPEAKERS[lines[split_at]["speaker"]] == "left":
             split_at += 1
         intro = lines[:split_at]
         outro = lines[split_at:]
@@ -187,13 +198,21 @@ def main(argv):
     scenes = parse(md)
     events = expand(to_events(scenes))
 
+    if unknown_speakers:
+        print("警告: SPEAKERS に無い話者名: %s" % "、".join(sorted(unknown_speakers)))
+    if not events:
+        print("エラー: イベントを1件も抽出できませんでした。")
+        print("  台本の話者名が SPEAKERS (%s) と一致しているか確認してください。"
+              % "、".join(SPEAKERS))
+        return 1
+
+    print("場面 %d 件 -> イベント %d 件" % (len(scenes), len(events)))
     out_dir = Path("resources/cutscene")
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "scenario.json"
     out_path.write_text(json.dumps(events, ensure_ascii=False, indent=1),
                         encoding="utf-8")
 
-    print("場面 %d 件 -> イベント %d 件" % (len(scenes), len(events)))
     for key in sorted(events):
         ev = events[key]
         longest = max((width(r["text"]) for r in ev["rows"]), default=0)

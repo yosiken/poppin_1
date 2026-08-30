@@ -7,7 +7,7 @@
 
 [sub_resource type="Resource" id="Resource_xga3v"]
 script = ExtResource("1_bkhll")
-speaker = "ルイ"
+speaker = "OB"
 text = "丸い球体って言い方やめてよ！ でも、ソースとマヨネーズの香ばしい匂いが鼻をくすぐる……。あ！ たこ焼きだ！ 外はカリッと、中はトロ〜ッとしてて、大ぶりのタコが入ってて……あそこのたこ焼きが一番美味しいんだよね！"
 speaking = 2
 right = ExtResource("2_d3whh")
@@ -19,7 +19,7 @@ speaking = 2
 
 [sub_resource type="Resource" id="Resource_pdpm5"]
 script = ExtResource("1_bkhll")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "正解だ。たこ焼道楽『わなか』。やはりビールに合わせるならこれに限る。お前の味覚の記憶だけは、脳味噌のキャパシティの割にしっかりしているな。次だ、3枚目のカードをめくれ"
 speaking = 1
 left = ExtResource("3_uga3f")

@@ -6,7 +6,7 @@
 
 [sub_resource type="Resource" id="Resource_88ss5"]
 script = ExtResource("1_fhe7r")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "ラーメンという終着駅にたどり着いたはずのお前だが、泥酔した獣に『締め』という概念は通用しなかった。お前はさらにグラスを傾ける。5杯目の日本酒、先ほどの『風の森』のさらに進化系、あるいは別シリーズの高級なやつだ"
 speaking = 1
 left = ExtResource("2_x30e5")

@@ -7,21 +7,21 @@
 
 [sub_resource type="Resource" id="Resource_8p4s8"]
 script = ExtResource("1_x8fab")
-speaker = "ルイ"
+speaker = "OB"
 text = "うぐっ……ここら辺から記憶の霧が濃くなってきた……。でも、なんかすごくお洒落な一合瓶が見える……。あ、このラベル、何て読むんだっけ、クジラ……そう！ 奈良の御所にある千代酒造の『櫛羅（くじら）』！"
 speaking = 2
 right = ExtResource("2_p2xug")
 
 [sub_resource type="Resource" id="Resource_qbr27"]
 script = ExtResource("1_x8fab")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "よく思い出したな。奈良・御所の地で、山田錦を自社栽培して醸されるこだわりの銘柄『櫛羅』だ。お前のような呑兵衛にはもったいないほどの美酒だな"
 speaking = 1
 left = ExtResource("3_gujyp")
 
 [sub_resource type="Resource" id="Resource_l5hxo"]
 script = ExtResource("1_x8fab")
-speaker = "ルイ"
+speaker = "OB"
 text = "もったいなくないもん！ あのキリッとした旨味が、お肉にも魚にも合うんだから……あぁ、思い出しただけで喉が鳴るぅ……"
 speaking = 2
 

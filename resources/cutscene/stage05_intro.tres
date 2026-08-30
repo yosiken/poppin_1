@@ -6,7 +6,7 @@
 
 [sub_resource type="Resource" id="Resource_kccec"]
 script = ExtResource("1_ogf1j")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "上質な日本酒で舌が肥えたお前だが、野生の胃袋はさらに暴走する。ここで、お前はまたしても『禁断の粉もん』を追加注文した。さすがのお前も、自分の頼み方にセルフツッコミを入れていたぞ"
 speaking = 1
 left = ExtResource("2_tuajt")

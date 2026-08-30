@@ -7,27 +7,27 @@
 
 [sub_resource type="Resource" id="Resource_shg23"]
 script = ExtResource("1_0cpef")
-speaker = "ルイ"
+speaker = "OB"
 text = "う、頭が痛い……。でも、じんわり温かくて、スープが身体に染み渡る感覚……。トッピングは、シャキシャキの白菜……それと、この赤いのは……『白菜キムチ』と『ニラキムチ』！ ということは……深夜の『ラーメン』！"
 speaking = 2
 right = ExtResource("2_3ffe1")
 
 [sub_resource type="Resource" id="Resource_7xgor"]
 script = ExtResource("1_0cpef")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "お見事。深夜に食べる悪魔の締めラーメンだ。白菜とニラキムチのジャンキーな辛みが、アルコールで麻痺した脳天を直撃する。……それにしてもお前、今夜、炭水化物しか食べていなくないか？"
 speaking = 1
 left = ExtResource("3_br2v1")
 
 [sub_resource type="Resource" id="Resource_s10vh"]
 script = ExtResource("1_0cpef")
-speaker = "ルイ"
+speaker = "OB"
 text = "だって……お酒を飲んだ後のラーメンは、神様が許してくれた無罪の食べ物なんだよ……（涙ぐむ）"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_jplqy"]
 script = ExtResource("1_0cpef")
-speaker = "シマエナガ"
+speaker = "カニエナガ"
 text = "神はそんなデブの免罪符を発行していない。現実の体重計がお前を裁く日を心待ちにしているぞ"
 speaking = 1
 
