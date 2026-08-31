@@ -3,7 +3,8 @@ extends EditorPlugin
 ##
 ## 2Dエディタのビューポートに方眼を重ねる。
 ##
-## 実行中の方眼（DesignGrid、F4で切替）と同じ寸法・同じ色で描く。
+## 実行中の方眼（DesignGrid ノード、F4で切替）と同じ寸法・同じ色で描く。
+## ノード側は編集中には描かないので、エディタで見えるのは常にこちらだけ。
 ## 数値は DesignGrid の定数を参照しているので、編集しているときの見え方と
 ## 遊んでいるときの見え方がずれない。
 ##
@@ -35,6 +36,9 @@ func _enter_tree() -> void:
 	_button.button_pressed = _load_visible()
 	_button.toggled.connect(_on_toggled)
 	add_control_to_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, _button)
+	# ノードを選んでいなくても描かせる。これを呼ばないと、描画は
+	# _handles が true を返したノードを編集中のときにしか回ってこない
+	set_force_draw_over_forwarding_enabled()
 	set_process(true)
 
 
@@ -43,12 +47,6 @@ func _exit_tree() -> void:
 		remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, _button)
 		_button.queue_free()
 		_button = null
-
-
-## どのノードを選んでいても描きたいので、すべて受ける。
-## メイン画面を持たないプラグインなので、他のエディタの邪魔にはならない
-func _handles(_object: Object) -> bool:
-	return true
 
 
 func _process(_delta: float) -> void:
@@ -67,7 +65,8 @@ func _process(_delta: float) -> void:
 
 # ═══════════════════════════════ 描画
 
-func _forward_canvas_draw_over_viewport(overlay: Control) -> void:
+## 選択状態に関係なく毎回呼ばれる描画。set_force_draw_over_forwarding_enabled と対
+func _forward_canvas_force_draw_over_viewport(overlay: Control) -> void:
 	if _button == null or not _button.button_pressed:
 		return
 	var vp := EditorInterface.get_editor_viewport_2d()
