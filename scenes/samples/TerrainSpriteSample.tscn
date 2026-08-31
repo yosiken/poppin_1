@@ -10,10 +10,18 @@
 
 [node name="Ground" type="Polygon2D" parent="."]
 position = Vector2(0, 700)
-polygon = PackedVector2Array(0, 0, 2000, 0, 2000, 260, 0, 260)
+polygon = PackedVector2Array(0, 0, 1000, 0, 1000, 260, 0, 260)
 script = ExtResource("1_ts")
 texture = ExtResource("2_grass")
 tile_size = Vector2(220, 0)
+
+[node name="GroundMirror" type="Polygon2D" parent="."]
+position = Vector2(1000, 700)
+polygon = PackedVector2Array(0, 0, 1000, 0, 1000, 260, 0, 260)
+script = ExtResource("1_ts")
+texture = ExtResource("2_grass")
+tile_size = Vector2(220, 0)
+mirror_tiling = true
 
 [node name="Slope" type="Polygon2D" parent="."]
 position = Vector2(320, 380)
@@ -77,4 +85,4 @@ text = "tile_size = 100 / 200 / 400 px"
 [node name="Note3" type="Label" parent="."]
 offset_left = 0.0
 offset_top = 660.0
-text = "tile_size = 220 px"
+text = "左: そのまま貼る（継ぎ目の線が出る）      右: mirror_tiling（線は消えるが対称の帯が出る）"

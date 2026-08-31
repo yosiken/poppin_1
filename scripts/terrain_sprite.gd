@@ -19,6 +19,8 @@ extends Polygon2D
 ## タイルは resources/texture/Parts/tiles にある。シートのままでは
 ## 繰り返しに使えないので tools/slice_tiles.gd で切り出してある。
 ##
+## ステージのコリジョンからまとめて作るには tools/make_terrain_sprites.gd。
+##
 
 ## 1タイルを何pxで見せるか。0 なら画像の原寸。
 ## y を 0 にすると x から縦横比を保って決める
@@ -26,6 +28,14 @@ extends Polygon2D
 	set(value):
 		tile_size = value
 		_apply()
+
+## 1マスごとに絵を反転して貼る。上下左右が繋がっていない絵でも
+## 継ぎ目が出なくなる代わりに、対称の模様が出る。
+## 芝や土のような細かい絵向き。レンガや板のように向きのある絵には向かない
+@export var mirror_tiling := false:
+	set(value):
+		mirror_tiling = value
+		_apply_material()
 
 ## 形をコピーしてくる CollisionPolygon2D
 @export var copy_from: NodePath
@@ -36,6 +46,9 @@ extends Polygon2D
 		copy_shape_now = false
 		if value:
 			_copy_shape()
+
+
+const MIRROR_SHADER := "res://resources/shader/mirror_tile.gdshader"
 
 
 func _ready() -> void:
@@ -55,6 +68,7 @@ func _set(property: StringName, _value: Variant) -> bool:
 func _apply() -> void:
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_apply_material()
 	if texture == null:
 		return
 	var tex_size := texture.get_size()
@@ -69,6 +83,18 @@ func _apply() -> void:
 	elif want.x <= 0.0:
 		want.x = want.y * (tex_size.x / tex_size.y)
 	texture_scale = tex_size / want
+
+
+func _apply_material() -> void:
+	if not mirror_tiling:
+		if material is ShaderMaterial:
+			material = null
+		return
+	var mat := material as ShaderMaterial
+	if mat == null or mat.shader == null:
+		mat = ShaderMaterial.new()
+		mat.shader = load(MIRROR_SHADER)
+		material = mat
 
 
 func _copy_shape() -> void:
