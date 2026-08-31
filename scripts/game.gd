@@ -16,6 +16,11 @@ extends Node2D
 ##   数字 1〜9 / 0 … ステージへ直接ジャンプ
 ##
 
+## 地形が camera_bounds からこれだけはみ出すまでは警告しない (px)。
+## 端の数十pxは実際には行けない場所なので、いちいち出すと本当の
+## 作り忘れが埋もれる
+const BOUNDS_SLACK := 64.0
+
 signal stage_loaded(index: int, stage: Stage)
 signal all_cleared()
 ## 場外へ落ちて開始位置へ戻された。引数は落ちた地点
@@ -227,6 +232,7 @@ func load_stage(index: int, manual := true) -> void:
 	_points = _stage.get_recovery_points()
 	_reset_player()
 	_apply_camera_bounds()
+	_check_stage_bounds()
 	_refresh_select_ui()
 	print("[Game] ステージ %d/%d '%s' を読み込み"
 		% [index + 1, stages.size(), _stage.get_display_name()])
@@ -273,6 +279,62 @@ func _apply_camera_bounds() -> void:
 	cam.limit_right = int(r.end.x)
 	cam.limit_bottom = int(r.end.y)
 	cam.reset_smoothing()
+
+
+## ステージの範囲設定が地形や開始位置と食い違っていないかを読み込み時に見る。
+##
+## camera_bounds はカメラの可動範囲と落下死の線を兼ねている。Rect2 なので
+## 上を広げるつもりで position.y だけ動かすと下端も一緒に上がってしまい、
+## 開始した瞬間に落下死する。見た目には何も起きないので原因を追いにくい。
+## 仮データを流用したステージでも、地形だけ作り替えて範囲を直し忘れると
+## 端がカメラに入らなくなる。どちらも起きやすいので毎回見る
+func _check_stage_bounds() -> void:
+	if _stage == null:
+		return
+	var bounds := _stage.camera_bounds
+	if bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
+		return
+	var name := _stage.get_display_name()
+	var death_line := bounds.end.y + fall_margin
+
+	var spawn := _stage.get_spawn_position()
+	if spawn.y > death_line:
+		print("[Game] 警告: %s の開始位置 y=%.0f が落下死の線 y=%.0f より下です。"
+			% [name, spawn.y, death_line]
+			+ "開始した瞬間に死にます。camera_bounds の下端を伸ばしてください")
+	for i in _points.size():
+		var py := _points[i].global_position.y
+		if py > death_line:
+			print("[Game] 警告: %s の復帰地点 %d の y=%.0f が落下死の線 y=%.0f より下です"
+				% [name, i + 1, py, death_line])
+
+	var terrain := _terrain_rect()
+	if terrain.size == Vector2.ZERO or bounds.grow(BOUNDS_SLACK).encloses(terrain):
+		return
+	print("[Game] 警告: %s の地形 x %.0f..%.0f / y %.0f..%.0f が "
+		% [name, terrain.position.x, terrain.end.x, terrain.position.y, terrain.end.y]
+		+ "camera_bounds x %.0f..%.0f / y %.0f..%.0f からはみ出しています。"
+		% [bounds.position.x, bounds.end.x, bounds.position.y, bounds.end.y]
+		+ "はみ出した先はカメラが追わないので画面に入りません")
+
+
+## 地形が実際に占めている範囲。回転しているパーツも含めて頂点から求める
+func _terrain_rect() -> Rect2:
+	var rect := Rect2()
+	var first := true
+	for node in _stage.find_children("*", "CollisionPolygon2D", true, false):
+		var poly := node as CollisionPolygon2D
+		if poly == null or poly.polygon.size() < 2:
+			continue
+		var xform := poly.global_transform
+		for point in poly.polygon:
+			var world := xform * point
+			if first:
+				rect = Rect2(world, Vector2.ZERO)
+				first = false
+			else:
+				rect = rect.expand(world)
+	return rect
 
 
 ## ステージ開始の見出しを出して、指定秒数だけ待つ。
