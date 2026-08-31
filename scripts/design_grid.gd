@@ -9,17 +9,30 @@ extends Node2D
 ##   - 飛び込み台を使って届く高さ = 最大 568px（約2.3マス）
 ## つまり「1マス強＝普通の限界」「2マス＝落差が要る」の目安になる。
 ##
-## @tool なのでエディタでも見える。実行中は F4 で切り替え。
+## 実行中は F4 で切り替え。エディタで編集しているときは
+## addons/design_grid のプラグインが同じものを 2Dビューに重ねる。
 ##
 
+## 既定値。エディタ用のプラグインと共有する。実行中と編集中で
+## 見た目がずれないよう、数値はここ1か所にまとめておく
+const DEFAULT_CELL := 250.0
+const DEFAULT_MAJOR := 4
+const LINE_COLOR := Color(1.0, 1.0, 1.0, 0.07)
+const MAJOR_COLOR := Color(0.55, 0.85, 1.0, 0.16)
+const AXIS_COLOR := Color(1.0, 0.6, 0.3, 0.35)
+const LABEL_COLOR := Color(0.7, 0.85, 1.0, 0.5)
+const LABEL_SIZE := 16
+## 縦横どちらかがこの本数を超えるなら描かない（ズームアウトしすぎ）
+const MAX_LINES := 400
+
 ## マス目の大きさ (px)
-@export var cell_size := 250.0:
+@export var cell_size := DEFAULT_CELL:
 	set(value):
 		cell_size = maxf(value, 8.0)
 		queue_redraw()
 
 ## 何マスごとに太線にするか
-@export_range(1, 20, 1) var major_every := 4:
+@export_range(1, 20, 1) var major_every := DEFAULT_MAJOR:
 	set(value):
 		major_every = value
 		queue_redraw()
@@ -32,9 +45,9 @@ extends Node2D
 		z_index = 100 if draw_on_top else -100
 
 @export_group("Look")
-@export var line_color := Color(1.0, 1.0, 1.0, 0.07)
-@export var major_color := Color(0.55, 0.85, 1.0, 0.16)
-@export var axis_color := Color(1.0, 0.6, 0.3, 0.35)
+@export var line_color := LINE_COLOR
+@export var major_color := MAJOR_COLOR
+@export var axis_color := AXIS_COLOR
 ## 太線の交点に座標を表示する
 @export var show_coords := true
 
@@ -72,7 +85,7 @@ func _draw() -> void:
 	var x1 := int(ceil(rect.end.x / cell_size))
 	var y0 := int(floor(rect.position.y / cell_size))
 	var y1 := int(ceil(rect.end.y / cell_size))
-	if (x1 - x0) > 400 or (y1 - y0) > 400:
+	if (x1 - x0) > MAX_LINES or (y1 - y0) > MAX_LINES:
 		return          # 引きすぎ（ズームアウトしすぎ）のときは描かない
 
 	var font := ThemeDB.fallback_font
@@ -100,4 +113,4 @@ func _draw() -> void:
 				continue
 			draw_string(font, Vector2(ix * cell_size + 6.0, iy * cell_size + 20.0),
 				"%d, %d" % [ix * int(cell_size), iy * int(cell_size)],
-				HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.85, 1.0, 0.5))
+				HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE, LABEL_COLOR)
