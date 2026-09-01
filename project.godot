@@ -21,6 +21,10 @@ window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/design_grid/plugin.cfg")
+
 [filesystem]
 
 import/blender/enabled=false
@@ -61,7 +65,3 @@ pogo_retry={
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.09, 0.1, 0.13, 1)
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/design_grid/plugin.cfg")

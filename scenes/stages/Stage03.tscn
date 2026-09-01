@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://1iu2pnnffu6i" path="res://scripts/stage.gd" id="1_thbjj"]
 [ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_4rvt0"]
 [ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_bfomk"]
+[ext_resource type="Resource" uid="uid://cl1lu8kh6q4ft" path="res://resources/cutscene/stage03_intro.tres" id="cut_intro"]
+[ext_resource type="Resource" uid="uid://cojeb4xlhwjcx" path="res://resources/cutscene/stage03_outro.tres" id="cut_outro"]
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
-[ext_resource type="Resource" path="res://resources/cutscene/stage03_intro.tres" id="cut_intro"]
-[ext_resource type="Resource" path="res://resources/cutscene/stage03_outro.tres" id="cut_outro"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
-size = Vector2(109.2, 212.8)
+size = Vector2(64.86666, 96.6)
 
 [node name="Stage03" type="Node2D" unique_id=740633051]
 script = ExtResource("1_thbjj")
@@ -23,27 +23,30 @@ position = Vector2(0, 1000)
 [node name="Terrain" type="StaticBody2D" parent="." unique_id=377188820]
 
 [node name="Block00" type="CollisionPolygon2D" parent="Terrain" unique_id=597950560]
-position = Vector2(200, 1250)
+position = Vector2(46, 1244)
+scale = Vector2(0.72000027, 1)
 polygon = PackedVector2Array(-600, -60, 600, -60, 600, 60, -600, 60)
 script = ExtResource("2_4rvt0")
 
 [node name="Block01" type="CollisionPolygon2D" parent="Terrain" unique_id=1317626441]
-position = Vector2(953, 1051)
+position = Vector2(886, 998)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
 [node name="Block02" type="CollisionPolygon2D" parent="Terrain" unique_id=254531268]
-position = Vector2(409, 921)
+position = Vector2(463, 1088)
+scale = Vector2(0.59999514, 1)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
 [node name="Block03" type="CollisionPolygon2D" parent="Terrain" unique_id=75655820]
-position = Vector2(857, 670)
+position = Vector2(866, 711)
 polygon = PackedVector2Array(-202, -68, 198, -68, 198, -8, -202, -8)
 script = ExtResource("2_4rvt0")
 
 [node name="Block11" type="CollisionPolygon2D" parent="Terrain" unique_id=1383595967]
-position = Vector2(216, 719)
+position = Vector2(373, 531)
+scale = Vector2(0.84982586, 1.1691802)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
@@ -53,33 +56,40 @@ polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
 [node name="Block04" type="CollisionPolygon2D" parent="Terrain" unique_id=1486305532]
-position = Vector2(414, 211)
+position = Vector2(186, -266)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
 [node name="Block12" type="CollisionPolygon2D" parent="Terrain" unique_id=1666088249]
-position = Vector2(300, -6)
+position = Vector2(6, 171)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
 [node name="Block13" type="CollisionPolygon2D" parent="Terrain" unique_id=1967133096]
-position = Vector2(882, -73)
+position = Vector2(1170, -443)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
 [node name="Block08" type="CollisionPolygon2D" parent="Terrain" unique_id=2004272451]
-position = Vector2(1354, 456)
+position = Vector2(1213, 251)
+scale = Vector2(0.72, 1)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
 [node name="Block09" type="CollisionPolygon2D" parent="Terrain" unique_id=1270319255]
-position = Vector2(892, 329)
+position = Vector2(849, 416)
+scale = Vector2(0.48000002, 1)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block14" type="CollisionPolygon2D" parent="Terrain" unique_id=1825234944]
+position = Vector2(1460.6, 39)
 scale = Vector2(0.48000002, 1)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
 [node name="Block05" type="CollisionPolygon2D" parent="Terrain" unique_id=809278439]
-position = Vector2(1036, -201)
+position = Vector2(514, -493)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
@@ -97,16 +107,28 @@ fill_color = Color(0.5, 0.36, 0.32, 1)
 
 [node name="Goal" type="Area2D" parent="." unique_id=1886507720]
 z_index = -1
-position = Vector2(950, -410)
+position = Vector2(1461.6, -74)
 collision_mask = 2
 script = ExtResource("3_bfomk")
 
 [node name="Sprite" type="Sprite2D" parent="Goal" unique_id=242435537]
+position = Vector2(0, -15)
+scale = Vector2(1.5370758, 1.5370758)
 texture = ExtResource("tex_goal")
 hframes = 3
 vframes = 3
 frame = 2
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=37095405]
-position = Vector2(98, 30)
 shape = SubResource("RectangleShape2D_thbjj")
+
+[node name="RecoveryPoints" type="Node2D" parent="." unique_id=579901931]
+
+[node name="Point1" type="Marker2D" parent="RecoveryPoints" unique_id=229275393]
+position = Vector2(729, 919)
+
+[node name="Point2" type="Marker2D" parent="RecoveryPoints" unique_id=1163612535]
+position = Vector2(886, 602)
+
+[node name="Point3" type="Marker2D" parent="RecoveryPoints" unique_id=1861501115]
+position = Vector2(1265, 162)
