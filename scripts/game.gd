@@ -47,6 +47,18 @@ signal player_fell(from_position: Vector2)
 ## ステージセレクトで飛んだときも intro を再生するか
 @export var play_intro_on_select := false
 
+@export_group("BGM")
+## ステージBGM。stages と同じ順番・同じ長さで、各ステージに鳴らす曲を直接指定する
+@export var stage_bgm: Array[AudioStream] = []
+
+@export_group("Test play")
+## テストプレイ用。有効な間は test_play_stage_count 番目のステージをクリアすると
+## 感謝メッセージを出して最初のステージへ戻る。本編を最後まで通せるよう既定は false。
+## 途中経過だけのテスト版を配る用途で true に戻す
+@export var test_play_mode := false
+## テストプレイの区切りとするステージ番号 (1 始まり)
+@export_range(1, 10, 1) var test_play_stage_count := 5
+
 @export_group("Stage title")
 ## ステージ開始時に出す見出しの表示秒数。0 で出さない
 @export_range(0.0, 5.0, 0.1) var stage_title_duration := 1.0
@@ -73,6 +85,8 @@ signal player_fell(from_position: Vector2)
 ## クリアデモと次のステージの冒頭デモの間に挟む時間経過の演出。
 ## 未設定なら実行時に作る
 @export var time_passage: TimePassage
+## ステージBGM再生用。未設定なら実行時に作る
+@export var bgm_player: AudioStreamPlayer
 
 # ─────────────────────────────── 内部状態
 var _index := -1
@@ -90,11 +104,20 @@ var _points: Array[Marker2D] = []
 ## スコア用の記録
 var _fall_count := 0
 var _total_falls := 0
+## 全ステージ合計のクリアタイム（オンラインランキングの total 用）
+var _total_clear_time := 0.0
 
 
 # ═══════════════════════════════ ライフサイクル
 
+## BGが万一見切れても黒いvoidではなく空の水色が見えるようにする。
+## プロジェクト設定で変えるとエディタの2Dビューにも影響するため、
+## 実行時にここだけで書き換える
+const PLAY_CLEAR_COLOR := Color(0.172549, 0.588235, 0.768627, 1.0)
+
+
 func _ready() -> void:
+	RenderingServer.set_default_clear_color(PLAY_CLEAR_COLOR)
 	# ノード型の @export は _ready の時点ではまだ解決されていないことがあるため、
 	# 名前で引き直す。インスペクタで別のノードを差した場合はそちらが優先される
 	if player == null:
@@ -117,13 +140,26 @@ func _ready() -> void:
 		time_passage = TimePassage.new()
 		time_passage.name = "TimePassage"
 		add_child(time_passage)
+	if bgm_player == null:
+		bgm_player = get_node_or_null(^"BgmPlayer") as AudioStreamPlayer
+	if bgm_player == null:
+		bgm_player = AudioStreamPlayer.new()
+		bgm_player.name = "BgmPlayer"
+		bgm_player.bus = "BGM"
+		add_child(bgm_player)
+	# 落下復帰中は get_tree().paused = true になるが、BGMは止めたくないので
+	# ポーズの影響を受けないようにする
+	bgm_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	if stages.is_empty():
 		push_warning("Game: stages が空です")
 		return
 	_build_select_ui()
-	if opening:
+	# テストモードではタイトルとデモ(オープニング・ステージ冒頭イベント)を
+	# 飛ばして、いきなりステージだけをプレイできるようにする
+	var skip_demo := Settings.test_mode
+	if opening and not skip_demo:
 		await cutscene.play(opening)
-	load_stage(start_index)
+	load_stage(start_index, not skip_demo)
 
 
 func _physics_process(_delta: float) -> void:
@@ -234,6 +270,7 @@ func load_stage(index: int, manual := true) -> void:
 	_apply_camera_bounds()
 	_check_stage_bounds()
 	_refresh_select_ui()
+	_play_stage_bgm(index)
 	print("[Game] ステージ %d/%d '%s' を読み込み"
 		% [index + 1, stages.size(), _stage.get_display_name()])
 	stage_loaded.emit(index, _stage)
@@ -265,6 +302,24 @@ func _reset_player() -> void:
 		return
 	player.teleport(_stage.get_spawn_position())
 	player.set_physics_process(true)
+
+
+## stage_bgm[index] の曲を鳴らす。
+## 同じ曲が既に鳴っていれば鳴らし直さない（リトライ時にぶつ切りにしない）
+func _play_stage_bgm(index: int) -> void:
+	if bgm_player == null or index < 0 or index >= stage_bgm.size():
+		return
+	var track := stage_bgm[index]
+	if track == null:
+		return
+	if bgm_player.stream == track and bgm_player.playing:
+		return
+	if track is AudioStreamMP3:
+		(track as AudioStreamMP3).loop = true
+	elif track is AudioStreamOggVorbis:
+		(track as AudioStreamOggVorbis).loop = true
+	bgm_player.stream = track
+	bgm_player.play()
 
 
 func _apply_camera_bounds() -> void:
@@ -435,6 +490,7 @@ func get_total_falls() -> int:
 func reset_score() -> void:
 	_total_falls = 0
 	_fall_count = 0
+	_total_clear_time = 0.0
 
 
 # ═══════════════════════════════ デバッグ
@@ -458,10 +514,18 @@ func _on_goal_reached(clear_time: float) -> void:
 	if _advancing:
 		return
 	_advancing = true
+	if bgm_player:
+		bgm_player.stop()          # ステージBGMを止めて、ジングルと重ならないようにする
 	if sfx_goal:
 		sfx_goal.play()
 	var is_last := _index >= stages.size() - 1
-	_show_clear(clear_time, is_last)
+	var is_test_end := test_play_mode and _index + 1 >= test_play_stage_count
+	_total_clear_time += clear_time
+	if not Settings.test_mode:
+		_submit_stage_score(_index, clear_time, _fall_count)
+		if is_last:
+			_submit_total_score(_total_clear_time, _total_falls)
+	_show_clear(_total_clear_time if is_last else clear_time, is_last, is_test_end)
 	await _wait_after_goal()
 	if not _advancing:                    # 待機中に手動で切り替えられていたら何もしない
 		return
@@ -471,11 +535,15 @@ func _on_goal_reached(clear_time: float) -> void:
 	if outro:
 		await cutscene.play(outro)
 
+	if is_test_end:
+		load_stage(start_index)
+		return
+
 	if is_last:
 		if ending:
 			await cutscene.play(ending)
 		all_cleared.emit()
-		_show_clear(clear_time, true)
+		_show_clear(_total_clear_time, true)
 		return
 
 	# 時間経過。暗転したまま次のステージへ移り、load_stage の中で明ける
@@ -483,6 +551,19 @@ func _on_goal_reached(clear_time: float) -> void:
 		var caption := _stage.time_passage_text if _stage else ""
 		await time_passage.fade_out(caption)
 	load_stage(_index + 1)
+
+
+## ステージ単体のスコアを "stage01"〜"stage10" のリーダーボードへ送る。
+## スコアはクリアタイム（秒）。落下回数は metadata に添える。
+## 通信は待たない（結果を待ってゲーム進行を止めたくないため）
+func _submit_stage_score(index: int, clear_time: float, fall_count: int) -> void:
+	var board := "stage%02d" % (index + 1)
+	SilentWolf.Scores.save_score(Settings.player_name, clear_time, board, {"falls": fall_count})
+
+
+## 全ステージ合計のスコアを "total" リーダーボードへ送る
+func _submit_total_score(total_time: float, total_falls: int) -> void:
+	SilentWolf.Scores.save_score(Settings.player_name, total_time, "total", {"falls": total_falls})
 
 
 ## クリアSEが鳴り終わるまでイベントを始めないための待ち
@@ -499,7 +580,7 @@ func _wait_after_goal() -> void:
 
 # ═══════════════════════════════ UI
 
-func _show_clear(clear_time: float, is_last: bool) -> void:
+func _show_clear(clear_time: float, is_last: bool, test_end := false) -> void:
 	_clear_overlay_hide()
 	_clear_overlay = CanvasLayer.new()
 	_clear_overlay.layer = 64
@@ -518,6 +599,10 @@ func _show_clear(clear_time: float, is_last: bool) -> void:
 	box.add_theme_constant_override("separation", 14)
 	_clear_overlay.add_child(box)
 
+	if test_end:
+		_add_label(box, "テストプレイありがとうございます！！", 46, Color(1.0, 0.92, 0.4))
+		return
+
 	if is_last:
 		_add_label(box, "ALL CLEAR", 64, Color(1.0, 0.92, 0.4))
 		_add_label(box, "TIME  %.2f" % clear_time, 30, Color(0.9, 0.94, 1.0))
@@ -527,6 +612,65 @@ func _show_clear(clear_time: float, is_last: bool) -> void:
 		_add_label(box, "STAGE %d CLEAR" % (_index + 1), 52, Color(1.0, 0.92, 0.4))
 		_add_label(box, "TIME  %.2f    FALLS  %d" % [clear_time, _fall_count],
 			28, Color(0.9, 0.94, 1.0))
+
+	_show_stage_ranking(_clear_overlay, _index)
+
+
+## クリアしたステージのランキング(1〜10位)を左上にテキストで出す
+func _show_stage_ranking(overlay: CanvasLayer, stage_index: int) -> void:
+	var box := VBoxContainer.new()
+	box.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	box.offset_left = 24
+	box.offset_top = 24
+	box.add_theme_constant_override("separation", 2)
+	overlay.add_child(box)
+
+	var title := Label.new()
+	title.text = "STAGE %d RANKING" % (stage_index + 1)
+	title.add_theme_font_size_override("font_size", 18)
+	title.add_theme_color_override("font_color", Color(1.0, 0.92, 0.4))
+	box.add_child(title)
+
+	var status := Label.new()
+	status.text = "読み込み中…"
+	status.add_theme_font_size_override("font_size", 14)
+	status.add_theme_color_override("font_color", Color(0.8, 0.85, 0.95))
+	box.add_child(status)
+
+	var board := "stage%02d" % (stage_index + 1)
+	var sw_result: Dictionary = await SilentWolf.Scores.get_scores(10, board).sw_get_scores_complete
+	if not is_instance_valid(box):
+		return          # 待っている間にクリア画面が閉じられた
+
+	if not sw_result.get("success", false):
+		status.text = "取得に失敗しました"
+		return
+	var scores: Array = sw_result.get("scores", [])
+	if scores.is_empty():
+		status.text = "まだ記録がありません"
+		return
+
+	# タイム(秒)なので短いほど上位
+	scores.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.score < b.score)
+	status.queue_free()
+	var font_size := int(Settings.ranking_font_size)
+	for i in range(scores.size()):
+		var s: Dictionary = scores[i]
+		var line := Label.new()
+		line.add_theme_font_size_override("font_size", font_size)
+		line.add_theme_color_override("font_color", _rank_color(i + 1, scores.size()))
+		line.text = "%2d. %s  %.2fs" % [i + 1, str(s.get("player_name", "?")), float(s.get("score", 0.0))]
+		box.add_child(line)
+
+
+## 1位: 黄色、2位: 水色、それ以降は水色から白へ順にグラデーションする
+func _rank_color(rank: int, total: int) -> Color:
+	if rank <= 1:
+		return Color(1.0, 0.92, 0.4)
+	var mizuiro := Color(0.6, 0.9, 1.0)
+	var span := maxf(float(maxi(total, 2) - 2), 1.0)
+	var t := clampf(float(rank - 2) / span, 0.0, 1.0)
+	return mizuiro.lerp(Color.WHITE, t)
 
 
 func _clear_overlay_hide() -> void:

@@ -36,6 +36,10 @@ const UP := Vector2.UP
 ## この値以上のチャージで発射したときだけ掛け声（jump_voice）を重ねる
 @export_range(0.0, 1.0, 0.05) var voice_charge_threshold := 0.15
 
+## 壁(32°超)の滑落SEを鳴らした後、次に鳴らせるまでのクールタイム (秒)。
+## ブロックの継ぎ目などで接触が一瞬途切れても連続で鳴らないようにする
+@export_range(0.0, 3.0, 0.05) var slip_se_cooldown := 0.6
+
 # ─────────────────────────────── 内部状態
 var tilt_deg := 0.0            ## 現在の傾き角（右が正）
 var charge := 0.0              ## 0.0〜1.0
@@ -58,8 +62,10 @@ var _pin_impact_velocity := Vector2.ZERO  ## 固定に入った瞬間の進入�
 var _sfx_land: AudioStreamPlayer    ## 着地
 var _sfx_jump: AudioStreamPlayer    ## 地面を離れる瞬間
 var _sfx_voice: AudioStreamPlayer   ## ためジャンプの掛け声
+var _sfx_slip: AudioStreamPlayer    ## 壁(32°超)に触れて滑り始めた瞬間
 var _was_grounded := false          ## 前フレームに接地していたか（着地音の重複防止）
 var _grounded_now := false          ## このフレームで接地したか
+var _slip_se_timer := 0.0           ## 滑落SEの残りクールタイム
 
 
 # ═══════════════════════════════ ライフサイクル
@@ -73,6 +79,7 @@ func _ready() -> void:
 	_sfx_land = get_node_or_null(^"SfxLand") as AudioStreamPlayer
 	_sfx_jump = get_node_or_null(^"SfxJump") as AudioStreamPlayer
 	_sfx_voice = get_node_or_null(^"SfxVoice") as AudioStreamPlayer
+	_sfx_slip = get_node_or_null(^"SfxSlip") as AudioStreamPlayer
 
 
 func _physics_process(delta: float) -> void:
@@ -83,6 +90,7 @@ func _physics_process(delta: float) -> void:
 	_process_charge(delta)
 
 	_super_cd = maxf(0.0, _super_cd - delta)
+	_slip_se_timer = maxf(0.0, _slip_se_timer - delta)
 
 	_apply_gravity(delta)
 	_apply_air_control(delta)
@@ -286,8 +294,18 @@ func _resolve_ground(normal: Vector2, delta: float) -> void:
 
 
 func _resolve_wall(normal: Vector2) -> void:
-	# 壁は跳ね返さない。滑らせて速度を殺す
-	velocity = velocity.bounce(normal) * _s("wall_bounce_scale")
+	# 滑落SEはクールタイム制。継ぎ目などで接触が一瞬途切れても連続で鳴らないようにする
+	if _slip_se_timer <= 0.0:
+		_play(_sfx_slip)
+		_slip_se_timer = slip_se_cooldown
+
+	# 壁は跳ね返さない。沿って滑らせる。
+	# めり込む方向の成分だけ軽く押し返して(wall_bounce_scale)めり込みを防ぐ。
+	# 速度全体に掛けると、沿って滑る分（重力で毎フレーム自然に加速するはずの
+	# 落下速度）まで一緒に削られてしまい、ずるずると遅い滑落になっていた
+	var into_wall := normal * velocity.dot(normal)
+	var along_wall := velocity - into_wall
+	velocity = along_wall - into_wall * _s("wall_bounce_scale")
 
 
 func _resolve_ceiling(normal: Vector2) -> void:

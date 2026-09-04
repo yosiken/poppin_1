@@ -48,7 +48,45 @@ extends Polygon2D
 			_copy_shape()
 
 
-const MIRROR_SHADER := "res://resources/shader/mirror_tile.gdshader"
+@export_group("縁取り・影")
+## ポリゴンの輪郭に沿って線を描く。BGと足場の境目を見やすくする
+@export var outline_enabled := true:
+	set(value):
+		outline_enabled = value
+		_apply()
+
+## 輪郭線の色
+@export var outline_color := Color(0.09, 0.07, 0.05, 0.9):
+	set(value):
+		outline_color = value
+		_apply()
+
+## 輪郭線の太さ (px)
+@export var outline_width := 4.0:
+	set(value):
+		outline_width = value
+		_apply()
+
+## 下端をどれだけ暗くするか。0 で無効。地面に接している感じを出す
+@export_range(0.0, 1.0, 0.05) var shadow_strength := 0.35:
+	set(value):
+		shadow_strength = value
+		_apply_material()
+
+## 下端から何pxぶんを暗くするか
+@export var shadow_height := 24.0:
+	set(value):
+		shadow_height = value
+		_apply_material()
+
+## 影の色
+@export var shadow_color := Color(0.0, 0.0, 0.0, 1.0):
+	set(value):
+		shadow_color = value
+		_apply_material()
+
+
+const TERRAIN_SHADER := "res://resources/shader/terrain_fill.gdshader"
 
 
 func _ready() -> void:
@@ -56,8 +94,9 @@ func _ready() -> void:
 
 
 func _set(property: StringName, _value: Variant) -> bool:
-	# texture を差し替えたら大きさを取り直す
-	if property == &"texture":
+	# texture を差し替えたら大きさを取り直す。polygon の編集は輪郭線と
+	# 影の下端に反映する必要がある
+	if property == &"texture" or property == &"polygon":
 		call_deferred("_apply")
 	return false
 
@@ -69,6 +108,7 @@ func _apply() -> void:
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_apply_material()
+	_sync_outline()
 	if texture == null:
 		return
 	var tex_size := texture.get_size()
@@ -86,15 +126,58 @@ func _apply() -> void:
 
 
 func _apply_material() -> void:
-	if not mirror_tiling:
-		if material is ShaderMaterial:
-			material = null
-		return
 	var mat := material as ShaderMaterial
 	if mat == null or mat.shader == null:
 		mat = ShaderMaterial.new()
-		mat.shader = load(MIRROR_SHADER)
+		mat.shader = load(TERRAIN_SHADER)
 		material = mat
+	mat.set_shader_parameter(&"mirror_tiling", mirror_tiling)
+	mat.set_shader_parameter(&"shadow_height", shadow_height)
+	mat.set_shader_parameter(&"shadow_strength", shadow_strength)
+	mat.set_shader_parameter(&"shadow_color", shadow_color)
+	mat.set_shader_parameter(&"bottom_y", _polygon_bottom_y())
+
+
+## ポリゴンのローカル座標での下端(最大Y)。影のグラデーションの基準にする
+func _polygon_bottom_y() -> float:
+	if polygon.is_empty():
+		return 0.0
+	var max_y := polygon[0].y
+	for p in polygon:
+		max_y = maxf(max_y, p.y)
+	return max_y
+
+
+var _outline: Line2D
+
+
+func _ensure_outline() -> void:
+	if _outline != null and is_instance_valid(_outline):
+		return
+	_outline = get_node_or_null(^"Outline") as Line2D
+	if _outline != null:
+		return
+	_outline = Line2D.new()
+	_outline.name = "Outline"
+	_outline.joint_mode = Line2D.LINE_JOINT_ROUND
+	_outline.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	_outline.end_cap_mode = Line2D.LINE_CAP_ROUND
+	add_child(_outline)
+
+
+## polygon の形に沿って輪郭線を引き直す
+func _sync_outline() -> void:
+	if not outline_enabled or polygon.size() < 2:
+		if _outline != null and is_instance_valid(_outline):
+			_outline.visible = false
+		return
+	_ensure_outline()
+	_outline.visible = true
+	_outline.width = outline_width
+	_outline.default_color = outline_color
+	var pts := PackedVector2Array(polygon)
+	pts.append(polygon[0])
+	_outline.points = pts
 
 
 func _copy_shape() -> void:

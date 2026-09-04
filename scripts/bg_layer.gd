@@ -47,6 +47,14 @@ const RASTER_SHADER := "res://resources/shader/raster_scroll.gdshader"
 		cover_screen = value
 		_apply()
 
+## cover_screen の余白の倍率。1.0 だとぴったりで隙間の余裕が無い。
+## カメラのスムージングがカットシーンの一時停止などに追いつききらないと
+## 端に一瞬隙間が出るので、その分の余裕を持たせる
+@export_range(1.0, 2.0, 0.05) var cover_margin := 1.3:
+	set(value):
+		cover_margin = value
+		_apply()
+
 ## 画面のどこに合わせるか。0 = 上端、1 = 下端、0.5 = 中央。
 ## 画像の同じ割合の位置が画面のその位置に来る
 @export_range(0.0, 1.0, 0.05) var anchor_y := 0.0:
@@ -160,7 +168,7 @@ func _apply() -> void:
 	var tex_size := texture.get_size()
 	var used := zoom
 	if cover_screen and tex_size.x > 0.0 and tex_size.y > 0.0:
-		used = maxf(screen.x / tex_size.x, screen.y / tex_size.y)
+		used = maxf(screen.x / tex_size.x, screen.y / tex_size.y) * cover_margin
 	_sprite.scale = Vector2(used, used)
 
 	# 繰り返し幅は「画面上での画像の大きさ」。倍率を掛け忘れると

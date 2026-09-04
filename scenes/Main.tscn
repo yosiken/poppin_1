@@ -22,6 +22,10 @@
 [ext_resource type="AudioStream" uid="uid://bd5d7y10hhqg4" path="res://resources/sound/jump_voice.mp3" id="7_voice"]
 [ext_resource type="AudioStream" uid="uid://guwxvwfo18cw" path="res://resources/sound/fall.mp3" id="15_fall"]
 [ext_resource type="AudioStream" uid="uid://dqy34e440bof" path="res://resources/sound/goal1.mp3" id="16_goal"]
+[ext_resource type="AudioStream" uid="uid://byl18mhr17j0o" path="res://resources/sound/bgm/bgm01.mp3" id="22_bgm1"]
+[ext_resource type="AudioStream" uid="uid://tupeb0rwlqnm" path="res://resources/sound/bgm/bgm02.mp3" id="23_bgm2"]
+[ext_resource type="AudioStream" uid="uid://cqelr8jdhjexc" path="res://resources/sound/bgm/bgm03.mp3" id="24_bgm3"]
+[ext_resource type="AudioStream" path="res://resources/sound/slip.mp3" id="25_slip"]
 [ext_resource type="Resource" path="res://resources/cutscene/opening.tres" id="17_op"]
 [ext_resource type="Resource" path="res://resources/cutscene/ending.tres" id="18_ed"]
 [ext_resource type="Script" uid="uid://c4gyuno60iuka" path="res://scripts/player_visual.gd" id="8_visual"]
@@ -39,6 +43,8 @@ opening = ExtResource("17_op")
 ending = ExtResource("18_ed")
 sfx_goal = NodePath("SfxGoal")
 time_passage = NodePath("TimePassage")
+bgm_player = NodePath("BgmPlayer")
+stage_bgm = [ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2")]
 
 [node name="Background" parent="." instance=ExtResource("21_bg")]
 
@@ -50,10 +56,15 @@ script = ExtResource("19_grid")
 
 [node name="SfxFall" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("15_fall")
+bus = "SE"
 
 [node name="SfxGoal" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("16_goal")
 volume_linear = 0.6
+bus = "BGM"
+
+[node name="BgmPlayer" type="AudioStreamPlayer" parent="."]
+bus = "BGM"
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1859720644 groups=["player"]]
 position = Vector2(0, 800)
@@ -72,14 +83,21 @@ visual_stats = ExtResource("11_visual")
 stream = ExtResource("5_land")
 volume_db = -3.0
 max_polyphony = 2
+bus = "SE"
 
 [node name="SfxJump" type="AudioStreamPlayer" parent="Player" unique_id=112299813]
 stream = ExtResource("6_jump")
 max_polyphony = 2
+bus = "SE"
 
 [node name="SfxVoice" type="AudioStreamPlayer" parent="Player" unique_id=1322470437]
 stream = ExtResource("7_voice")
 volume_db = -2.0
+bus = "SE"
+
+[node name="SfxSlip" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource("25_slip")
+bus = "SE"
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1924607058]
 zoom = Vector2(1.4, 1.4)

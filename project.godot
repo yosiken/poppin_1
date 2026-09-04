@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="Popping"
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="res://scenes/Title.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[autoload]
+
+Settings="*res://scripts/settings.gd"
+SilentWolf="*uid://c813r2vqw4w11"
 
 [display]
 
@@ -23,7 +28,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/design_grid/plugin.cfg")
+enabled=PackedStringArray("res://addons/design_grid/plugin.cfg", "res://addons/silent_wolf/plugin.cfg")
 
 [filesystem]
 

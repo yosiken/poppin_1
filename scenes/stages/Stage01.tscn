@@ -1,14 +1,124 @@
-[gd_scene format=3 uid="uid://dp6ae0v3cpq6o"]
+[gd_scene format=3 uid="uid://dmxypaq2h05nx"]
 
 [ext_resource type="Script" uid="uid://1iu2pnnffu6i" path="res://scripts/stage.gd" id="1_4upp5"]
 [ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_0tami"]
 [ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_uam3y"]
+[ext_resource type="Shader" uid="uid://cwsj8xaf2qwel" path="res://resources/shader/terrain_fill.gdshader" id="7_qmr62"]
+[ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="7_qofvl"]
+[ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="8_gb36o"]
+[ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="9_qmr62"]
+[ext_resource type="Texture2D" uid="uid://dx8hab0e1snrf" path="res://resources/texture/Parts/tiles/tile_09.png" id="10_mx7fg"]
+[ext_resource type="Texture2D" uid="uid://0yf1nbteyhcq" path="res://resources/texture/Tutorial.jpg" id="12_mx7fg"]
 [ext_resource type="Resource" uid="uid://b4uxbkvyq781p" path="res://resources/cutscene/stage01_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://bsh8ibbmcgf6o" path="res://resources/cutscene/stage01_outro.tres" id="cut_outro"]
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qmy6f"]
-size = Vector2(64.86666, 96.6)
+size = Vector2(111.41978, 165.92729)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hwgo4"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 75.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s25jr"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 246.2062
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mcttg"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 263.16016
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hls5w"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 241.0617
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_88qi3"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 327.03046
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ad123"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 269.95013
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_erijc"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 170.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qcskf"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 180.17758
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7uoni"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = -22.49524
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2gtal"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 190.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kub80"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 484.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hrnie"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 498.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sc2we"]
+shader = ExtResource("7_qmr62")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 83.0
 
 [node name="Stage01" type="Node2D" unique_id=602930718]
 script = ExtResource("1_4upp5")
@@ -128,3 +238,177 @@ vframes = 3
 position = Vector2(-20, -85)
 scale = Vector2(1.1967556, 1.0938953)
 shape = SubResource("RectangleShape2D_qmy6f")
+
+[node name="Graphics" type="Node2D" parent="." unique_id=695616908]
+
+[node name="Gfx_Ground" type="Polygon2D" parent="Graphics" unique_id=2029271979]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_hwgo4")
+position = Vector2(1351, 1076)
+texture = ExtResource("7_qofvl")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-1500, -75, 1500, -75, 1500, 75, -1500, 75)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ground")
+
+[node name="Gfx_Ramp" type="Polygon2D" parent="Graphics" unique_id=1498432405]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_s25jr")
+position = Vector2(393.00006, 316)
+rotation = 0.43536407
+texture = ExtResource("10_mx7fg")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-57.437744, 180.01642, -22.814331, 126.41408, 48.03607, 89.04797, 104.69568, 94.67743, 131.24384, 120.92992, 136.87439, 159.11752, 100.35278, 184.92789, 75.302246, 216.43146, 20.772827, 246.2062, -34.558228, 241.0617)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ramp")
+
+[node name="Gfx_Ramp8" type="Polygon2D" parent="Graphics" unique_id=1766307878]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_mcttg")
+position = Vector2(2572, 95.99997)
+rotation = 0.43536407
+texture = ExtResource("10_mx7fg")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-57.437744, 180.01642, -23.425781, 132.21301, 48.03607, 89.04797, 81.39502, 80.14911, 104.69568, 94.67743, 129.49365, 119.53827, 136.87439, 159.11752, 113.80615, 199.62512, 75.302246, 216.43146, 55.69214, 245.40466, 3.2924805, 263.16016, -34.558228, 241.0617, -56.994873, 211.79395)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ramp8")
+
+[node name="Gfx_Ramp7" type="Polygon2D" parent="Graphics" unique_id=2103972662]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_hls5w")
+position = Vector2(1175, 211)
+rotation = 0.43536407
+texture = ExtResource("10_mx7fg")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-69.66821, 153.72165, -39.28308, 107.60501, 5.9472656, 74.43538, 48.03607, 89.04797, 83.69336, 77.97708, 123.44153, 80.44379, 132.53003, 107.09711, 136.87439, 159.11752, 100.69031, 204.62268, 21.089111, 235.03036, -34.558228, 241.0617, -71.96619, 203.31717)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ramp7")
+
+[node name="Gfx_Ramp6" type="Polygon2D" parent="Graphics" unique_id=1563521928]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_88qi3")
+position = Vector2(2081.0002, 598.0001)
+rotation = 0.43536407
+texture = ExtResource("7_qofvl")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-65.11426, 87.63635, 335.73926, -22.713745, 353.9165, 30.592773, 318.07007, 95.792725, 191.74121, 149.0376, 62.777832, 327.03046, -34.558228, 241.0617)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ramp6")
+
+[node name="Gfx_Ramp5" type="Polygon2D" parent="Graphics" unique_id=802419059]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_ad123")
+position = Vector2(1673.0001, 776.00006)
+rotation = 0.43536407
+texture = ExtResource("7_qofvl")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-95.310425, 79.62384, 126.83508, -23.702576, 242.83423, 161.66791, -25.533203, 269.95013)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ramp5")
+
+[node name="Gfx_Ramp2" type="Polygon2D" parent="Graphics" unique_id=235406445]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_erijc")
+position = Vector2(670, 983)
+rotation = 0.65452796
+texture = ExtResource("7_qofvl")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-203.7746, 112.25375, 168.29968, -173.26636, 220, -130, -180, 170)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ramp2")
+
+[node name="Gfx_Ramp3" type="Polygon2D" parent="Graphics" unique_id=1699753106]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_qcskf")
+position = Vector2(1265, 959.99994)
+rotation = -2.4962966
+scale = Vector2(1.5152081, 1.5152081)
+texture = ExtResource("7_qofvl")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-220, 130, 180, -170, 219.45032, -105.726166, -149.35938, 180.17758)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ramp3")
+
+[node name="Gfx_Ramp4" type="Polygon2D" parent="Graphics" unique_id=1203793417]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_7uoni")
+position = Vector2(110, 98.00006)
+rotation = 1.3214948
+scale = Vector2(0.40452358, 0.40452358)
+texture = ExtResource("7_qofvl")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(383.3501, -52.903076, 444.3423, -292.4652, 557.5464, -266.19458, 482.74646, -22.49524)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ramp4")
+
+[node name="Gfx_Platform" type="Polygon2D" parent="Graphics" unique_id=760593824]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_2gtal")
+position = Vector2(1895.9999, 849)
+scale = Vector2(0.5999951, 1)
+texture = ExtResource("7_qofvl")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-231.66846, -117, 220.00195, -116, 255.00244, 190, -265.00195, 165)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Platform")
+
+[node name="Gfx_Wall" type="Polygon2D" parent="Graphics" unique_id=1390235836]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_kub80")
+position = Vector2(2824, 656)
+texture = ExtResource("9_qmr62")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-25, -375, 293, -377, 302, 483, -24, 484)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Wall")
+
+[node name="Gfx_Wall2" type="Polygon2D" parent="Graphics" unique_id=962335509]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_hrnie")
+position = Vector2(-175, 658)
+texture = ExtResource("9_qmr62")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-320, -484, 68, -493, 64, 493, -291, 498)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Wall2")
+
+[node name="Gfx_Ceiling" type="Polygon2D" parent="Graphics" unique_id=890489915]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_sc2we")
+position = Vector2(0, 261)
+texture = ExtResource("9_qmr62")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-201, -91, 109, -130, 245, -52, 200, 20, -184, 83)
+script = ExtResource("8_gb36o")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Ceiling")
+
+[node name="Tutorial" type="Sprite2D" parent="." unique_id=1496568407]
+position = Vector2(421.99997, 691)
+scale = Vector2(0.33673474, 0.33673474)
+texture = ExtResource("12_mx7fg")
