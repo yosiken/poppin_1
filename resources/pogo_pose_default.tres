@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PogoPose" format=3]
+
+[ext_resource type="Script" uid="uid://c5usp2t2ceq2h" path="res://scripts/pogo_pose.gd" id="1_pose"]
+
+[resource]
+script = ExtResource("1_pose")
+rotations = Dictionary[StringName, Vector3]({
+&"upper_arm_L": Vector3(55, 0, -20),
+&"forearm_L": Vector3(30, 0, 0),
+&"upper_arm_R": Vector3(-45, 0, 20),
+&"forearm_R": Vector3(25, 0, 0),
+&"spine_001": Vector3(-14, 0, 0),
+&"spine_002": Vector3(-12, 0, 0),
+&"spine_004": Vector3(12, 0, 0),
+&"spine_005": Vector3(10, 0, 0)
+})

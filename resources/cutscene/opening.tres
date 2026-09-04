@@ -1,0 +1,70 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://csjq6yaucuosl"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_yji8q"]
+[ext_resource type="Texture2D" uid="uid://c3ingcb43hgfg" path="res://resources/texture/ob_san.png" id="2_2ssu3"]
+[ext_resource type="Texture2D" uid="uid://cv1fmvshh8vxl" path="res://resources/texture/kanie.png" id="3_tlocn"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
+
+[sub_resource type="Resource" id="Resource_xrrmf"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "おつるい〜！ 今日の配信も楽しかったねぇ……うぷっ、ちょっと飲みすぎたかもぉ。でも！ 配信の後のビールってなんでこんなに美味しいの……？ あ、ひっかけ橋（戎橋）だ。風が気持ちいいなぁ〜。"
+speaking = 2
+right = ExtResource("2_2ssu3")
+
+[sub_resource type="Resource" id="Resource_yime8"]
+script = ExtResource("1_yji8q")
+text = "……おっとっと、足元が、あ、あれ、滑っ——"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_v46gj"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "……ん……。ここは……？ 綺麗な星空……じゃなくて、なんか青く光るエフェクトが浮いてる？ 私、ひょっとして……ゲームの世界にバグで入り込んじゃった？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_nviov"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "おい、起きろ。いつまで床（と言ってもただの光の床だが）でよだれを垂らしているんだ、このポンコツ配信者"
+speaking = 1
+left = ExtResource("3_tlocn")
+
+[sub_resource type="Resource" id="Resource_mgmiw"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "うわっ！？ 何この丸くて白い、もちもちした可愛い生き物！？ 宙に浮いてる……あっ、私の大好きなカニエナガのぬいぐるみ！？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_yd60s"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "そうだ。だが今の私はただの綿の塊ではない。お前のふざけた魂を現実世界へ送り返すために遣わされた、異世界のナビゲーターだ。お前は深夜の道頓堀川に転落し、この『忘却の異世界』へ転生したんだよ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_xkdfa"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "ええええええ！？ 嘘、異世界転生！？ 私が！？ これって超バズるやつじゃん！ カメラどこ！？ 配信枠取らなきゃ！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_1jbvs"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "落ち着け、現実のスマホは今頃川の底だ。元の世界に戻りたければ、お前が川に落ちる直前、道頓堀で『何をどれだけ暴飲暴食していたか』をすべて思い出すんだ。"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_n1ewt"]
+script = ExtResource("1_yji8q")
+text = "お前の濁りきった記憶を復元することだけが、現実へのゲートを開く鍵となる"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_jiib1"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "暴飲暴食って失礼な！ ちょっと嗜んだだけだよ！……えーっと、何から食べたっけな……？"
+speaking = 2
+
+[resource]
+script = ExtResource("4_crtyr")
+lines = Array[ExtResource("1_yji8q")]([SubResource("Resource_xrrmf"), SubResource("Resource_yime8"), SubResource("Resource_v46gj"), SubResource("Resource_nviov"), SubResource("Resource_mgmiw"), SubResource("Resource_yd60s"), SubResource("Resource_xkdfa"), SubResource("Resource_1jbvs"), SubResource("Resource_n1ewt"), SubResource("Resource_jiib1")])

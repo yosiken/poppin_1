@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://c4804ap2kwilh"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_c8ka2"]
+[ext_resource type="Texture2D" uid="uid://c3ingcb43hgfg" path="res://resources/texture/ob_san.png" id="2_st6c1"]
+[ext_resource type="Texture2D" uid="uid://cv1fmvshh8vxl" path="res://resources/texture/kanie.png" id="3_uxxq4"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_hlwc3"]
+
+[sub_resource type="Resource" id="Resource_lci6h"]
+script = ExtResource("1_c8ka2")
+speaker = "OB"
+text = "えっ、ラーメンの後にまだ飲んでるの私！？ どんだけ飲むの！？ ……う、うぅ、でも、なんかすごくスタイリッシュなボトルの記憶が……。"
+speaking = 2
+right = ExtResource("2_st6c1")
+
+[sub_resource type="Resource" id="Resource_1gdar"]
+script = ExtResource("1_c8ka2")
+text = "アルコール度数がちょっと低めで、信じられないくらい軽やかで、デザートみたいに甘美な……そうだ！ 『風の森 ALPHA（アルファ）』！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_5gnj2"]
+script = ExtResource("1_c8ka2")
+speaker = "カニエナガ"
+text = "その通り。低アルコールでありながら、風の森ならではの生命感あふれる味わいを実現した革新的な日本酒『風の森 ALPHA』だ。……これで５杯目。"
+speaking = 1
+left = ExtResource("3_uxxq4")
+
+[sub_resource type="Resource" id="Resource_rhu0i"]
+script = ExtResource("1_c8ka2")
+text = "お前、道頓堀川に落ちたのは、異世界の召喚魔法のせいでも何でもなく、ただの飲みすぎによる自業自得、千鳥足による自爆だな？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_tt106"]
+script = ExtResource("1_c8ka2")
+speaker = "OB"
+text = "あ、あははは……そうかもしれない……。でも、風の森ALPHA、本当に美味しかったんだよぉ……（遠い目）"
+speaking = 2
+
+[resource]
+script = ExtResource("4_hlwc3")
+lines = Array[ExtResource("1_c8ka2")]([SubResource("Resource_lci6h"), SubResource("Resource_1gdar"), SubResource("Resource_5gnj2"), SubResource("Resource_rhu0i"), SubResource("Resource_tt106")])

@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://i0n523lr7x8g"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_bkhll"]
+[ext_resource type="Texture2D" uid="uid://c3ingcb43hgfg" path="res://resources/texture/ob_san.png" id="2_d3whh"]
+[ext_resource type="Texture2D" uid="uid://cv1fmvshh8vxl" path="res://resources/texture/kanie.png" id="3_uga3f"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_qxl11"]
+
+[sub_resource type="Resource" id="Resource_xga3v"]
+script = ExtResource("1_bkhll")
+speaker = "OB"
+text = "丸い球体って言い方やめてよ！ でも、ソースとマヨネーズの香ばしい匂いが鼻をくすぐる……。あ！ たこ焼きだ！ 外はカリッと、中はトロ〜ッとしてて、大ぶりのタコが入ってて……あそこのたこ焼きが一番美味しいんだよね！"
+speaking = 2
+right = ExtResource("2_d3whh")
+
+[sub_resource type="Resource" id="Resource_uoqmy"]
+script = ExtResource("1_bkhll")
+text = "えーっと、店名は……『わなか』！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_pdpm5"]
+script = ExtResource("1_bkhll")
+speaker = "カニエナガ"
+text = "正解だ。たこ焼道楽『わなか』。やはりビールに合わせるならこれに限る。お前の味覚の記憶だけは、脳味噌のキャパシティの割にしっかりしているな。次だ、3枚目のカードをめくれ"
+speaking = 1
+left = ExtResource("3_uga3f")
+
+[resource]
+script = ExtResource("4_qxl11")
+lines = Array[ExtResource("1_bkhll")]([SubResource("Resource_xga3v"), SubResource("Resource_uoqmy"), SubResource("Resource_pdpm5")])

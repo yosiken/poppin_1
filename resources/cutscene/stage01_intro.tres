@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://b4uxbkvyq781p"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_hxmir"]
+[ext_resource type="Texture2D" uid="uid://cv1fmvshh8vxl" path="res://resources/texture/kanie.png" id="2_ycfur"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_le35o"]
+
+[sub_resource type="Resource" id="Resource_4xutf"]
+script = ExtResource("1_hxmir")
+speaker = "カニエナガ"
+text = "さあ、記念すべき最初のステージだ。まずは乾杯の瞬間を思い出せ。お前のようなアルコール中毒者が、店に入って開口一番に叫ぶ言葉は決まっているはずだ"
+speaking = 1
+left = ExtResource("2_ycfur")
+
+[resource]
+script = ExtResource("3_le35o")
+lines = Array[ExtResource("1_hxmir")]([SubResource("Resource_4xutf")])

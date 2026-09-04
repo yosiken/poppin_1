@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://brsrlytkeew0i"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_x8fab"]
+[ext_resource type="Texture2D" uid="uid://c3ingcb43hgfg" path="res://resources/texture/ob_san.png" id="2_p2xug"]
+[ext_resource type="Texture2D" uid="uid://cv1fmvshh8vxl" path="res://resources/texture/kanie.png" id="3_gujyp"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_br8eg"]
+
+[sub_resource type="Resource" id="Resource_8p4s8"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "うぐっ……ここら辺から記憶の霧が濃くなってきた……。でも、なんかすごくお洒落な一合瓶が見える……。あ、このラベル、何て読むんだっけ、クジラ……そう！ 奈良の御所にある千代酒造の『櫛羅（くじら）』！"
+speaking = 2
+right = ExtResource("2_p2xug")
+
+[sub_resource type="Resource" id="Resource_qbr27"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "よく思い出したな。奈良・御所の地で、山田錦を自社栽培して醸されるこだわりの銘柄『櫛羅』だ。お前のような呑兵衛にはもったいないほどの美酒だな"
+speaking = 1
+left = ExtResource("3_gujyp")
+
+[sub_resource type="Resource" id="Resource_l5hxo"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "もったいなくないもん！ あのキリッとした旨味が、お肉にも魚にも合うんだから……あぁ、思い出しただけで喉が鳴るぅ……"
+speaking = 2
+
+[resource]
+script = ExtResource("4_br8eg")
+lines = Array[ExtResource("1_x8fab")]([SubResource("Resource_8p4s8"), SubResource("Resource_qbr27"), SubResource("Resource_l5hxo")])
