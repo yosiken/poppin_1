@@ -46,10 +46,10 @@ class_name PlayerVisual
 ## 足先が基準から (親+子) ぶん回ってしまい、関節が反対側へ折れる（フリップする）。
 ## 先へ行くほど倍率を下げること。
 @export var flail_bones: Dictionary[StringName, float] = {
-	&"upper_arm_L": 1.0, &"forearm_L": 1.0,
-	&"upper_arm_R": 1.0, &"forearm_R": 1.0,
-	&"thigh_L": 0.6, &"shin_L": 0.35,
-	&"thigh_R": 0.6, &"shin_R": 0.35,
+	&"upper_arm.L": 1.0, &"forearm.L": 1.0,
+	&"upper_arm.R": 1.0, &"forearm.R": 1.0,
+	&"thigh.L": 0.6, &"shin.L": 0.35,
+	&"thigh.R": 0.6, &"shin.R": 0.35,
 }
 
 @export_group("Animation")

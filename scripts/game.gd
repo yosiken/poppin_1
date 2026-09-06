@@ -107,6 +107,14 @@ var _total_falls := 0
 ## 全ステージ合計のクリアタイム（オンラインランキングの total 用）
 var _total_clear_time := 0.0
 
+## リプレイ記録（そのステージの1位を更新した時だけスコアに添えて送信する。
+## 何フレームに1回記録するか。小さいほど滑らかだが容量が増える）
+const REPLAY_SAMPLE_STRIDE := 3
+var _replay_x: PackedFloat32Array = PackedFloat32Array()
+var _replay_y: PackedFloat32Array = PackedFloat32Array()
+var _replay_tilt: PackedFloat32Array = PackedFloat32Array()
+var _replay_frame_count := 0
+
 
 # ═══════════════════════════════ ライフサイクル
 
@@ -165,6 +173,38 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	_update_checkpoint()
 	_check_fall()
+	_record_replay_frame()
+
+
+func _reset_replay() -> void:
+	_replay_x.clear()
+	_replay_y.clear()
+	_replay_tilt.clear()
+	_replay_frame_count = 0
+
+
+## プレイヤーの座標・傾きをステージ開始からゴールまで記録する。
+## 巻き戻し(復帰地点への瞬間移動)もそのまま座標として残るので、
+## 再生側は素直になぞるだけで実際の動きを再現できる
+func _record_replay_frame() -> void:
+	if player == null or _stage == null:
+		return
+	_replay_frame_count += 1
+	if _replay_frame_count % REPLAY_SAMPLE_STRIDE != 0:
+		return
+	_replay_x.append(snappedf(player.global_position.x, 0.1))
+	_replay_y.append(snappedf(player.global_position.y, 0.1))
+	_replay_tilt.append(snappedf(player.tilt_deg, 1.0))
+
+
+## 記録済みのリプレイをスコアのmetadataに載せられる形に変換する
+func _build_replay_payload() -> Dictionary:
+	return {
+		"stride": REPLAY_SAMPLE_STRIDE,
+		"x": Array(_replay_x),
+		"y": Array(_replay_y),
+		"tilt": Array(_replay_tilt),
+	}
 
 
 ## 復帰地点への到達を記録する。番号は巻き戻さないので、
@@ -265,6 +305,7 @@ func load_stage(index: int, manual := true) -> void:
 
 	_fall_count = 0
 	_checkpoint = -1
+	_reset_replay()
 	_points = _stage.get_recovery_points()
 	_reset_player()
 	_apply_camera_bounds()
@@ -555,10 +596,25 @@ func _on_goal_reached(clear_time: float) -> void:
 
 ## ステージ単体のスコアを "stage01"〜"stage10" のリーダーボードへ送る。
 ## スコアはクリアタイム（秒）。落下回数は metadata に添える。
-## 通信は待たない（結果を待ってゲーム進行を止めたくないため）
+## そのステージの現在の1位より速ければ、リプレイを添えて送信する。
+## 及ばなければリプレイ無しで送る（1位の座を守っている記録だけが
+## 結果的にリプレイを持ち続ける。await していても呼び出し側は
+## 待たずに進む＝ゲーム進行を止めない）
 func _submit_stage_score(index: int, clear_time: float, fall_count: int) -> void:
 	var board := "stage%02d" % (index + 1)
-	SilentWolf.Scores.save_score(Settings.player_name, clear_time, board, {"falls": fall_count})
+	var metadata := {"falls": fall_count}
+
+	var current: Dictionary = await SilentWolf.Scores.get_scores(1, board).sw_get_scores_complete
+	var is_new_best := true
+	if current.get("success", false):
+		var scores: Array = current.get("scores", [])
+		if not scores.is_empty():
+			is_new_best = clear_time < float(scores[0].get("score", INF))
+
+	if is_new_best:
+		metadata["replay"] = _build_replay_payload()
+
+	SilentWolf.Scores.save_score(Settings.player_name, clear_time, board, metadata)
 
 
 ## 全ステージ合計のスコアを "total" リーダーボードへ送る

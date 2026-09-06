@@ -46,6 +46,11 @@ var ranking_font_size := 14.0:
 	set(value):
 		ranking_font_size = clampf(value, 10.0, 32.0)
 
+## リプレイ再生画面への受け渡し用（保存はしない、シーン切り替えを挟むための一時受け渡し）。
+## -1 なら再生するものが無い
+var pending_replay_stage_index := -1
+var pending_replay_data: Dictionary = {}
+
 
 func _ready() -> void:
 	SilentWolf.configure({

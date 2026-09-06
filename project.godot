@@ -30,10 +30,6 @@ window/stretch/aspect="expand"
 
 enabled=PackedStringArray("res://addons/design_grid/plugin.cfg", "res://addons/silent_wolf/plugin.cfg")
 
-[filesystem]
-
-import/blender/enabled=false
-
 [input]
 
 pogo_left={

@@ -14,6 +14,7 @@ extends Control
 ## カットシーンをスキップできる（cutscene.gd）のでそちらを使うこと
 
 const MAIN_SCENE := "res://scenes/Main.tscn"
+const REPLAY_SCENE := "res://scenes/ReplayViewer.tscn"
 const PANEL_COLOR := Color(0.06, 0.07, 0.11, 0.92)
 const BORDER_COLOR := Color(0.55, 0.65, 0.85, 0.7)
 const ACCENT_COLOR := Color(1.0, 0.92, 0.4)
@@ -306,6 +307,12 @@ func _start_game() -> void:
 	get_tree().change_scene_to_file(MAIN_SCENE)
 
 
+func _start_replay(stage_index: int, replay_data: Dictionary) -> void:
+	Settings.pending_replay_stage_index = stage_index
+	Settings.pending_replay_data = replay_data
+	get_tree().change_scene_to_file(REPLAY_SCENE)
+
+
 func _show_options() -> void:
 	_menu.visible = false
 	_options.visible = true
@@ -394,6 +401,16 @@ func _add_ranking_row(rank: int, total: int, score: Dictionary) -> void:
 	time_label.add_theme_font_size_override("font_size", font_size)
 	time_label.add_theme_color_override("font_color", color)
 	row.add_child(time_label)
+
+	# "total" にはリプレイが無いので、ステージ別ページでのみボタンを出す
+	if _ranking_board_index >= 1 and metadata is Dictionary and metadata.has("replay"):
+		var stage_index := _ranking_board_index - 1
+		var replay_data: Dictionary = metadata["replay"]
+		var play_btn := Button.new()
+		play_btn.text = "▶"
+		play_btn.custom_minimum_size = Vector2(36, 28)
+		play_btn.pressed.connect(func() -> void: _start_replay(stage_index, replay_data))
+		row.add_child(play_btn)
 
 
 func _close_panels() -> void:
