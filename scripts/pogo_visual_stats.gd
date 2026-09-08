@@ -22,6 +22,7 @@ const GROUPS := {
 	"squash": ["ball_squash_y", "squash_recover_frames", "squash_compensate_character"],
 	"flail":  ["flail_gain", "flail_stiffness", "flail_damping",
 			   "flail_soft_deg", "flail_barrier", "flail_max_deg", "flail_max_speed"],
+	"toon":   ["toon_band_count", "toon_shadow_floor"],
 }
 
 # ─────────────────────────────── カメラ
@@ -86,3 +87,10 @@ const GROUPS := {
 ## そこで張り付いてから鞭のように戻るのを防ぐ。
 ## 目安は flail_max_deg * sqrt(flail_stiffness)
 @export_range(10.0, 2000.0, 10.0) var flail_max_speed := 300.0
+
+# ─────────────────────────────── トゥーンシェーディング
+@export_group("Toon")
+## キーライトの当たり方を何階調に分けるか。3で「暗め・中間・明るめ」の3段階
+@export_range(2, 6, 1) var toon_band_count := 3
+## 一番暗い帯の明るさ。0にすると陰が真っ黒になる
+@export_range(0.0, 1.0, 0.01) var toon_shadow_floor := 0.35

@@ -57,7 +57,10 @@ class_name PlayerVisual
 ## モデルにアニメーションが無い場合は pose が使われる
 @export var idle_animation: StringName = &""
 
+const TOON_SHADER := preload("res://resources/shader/toon_character.gdshader")
+
 # ─────────────────────────────── 内部状態
+var _toon_materials: Array[ShaderMaterial] = []
 var _viewport: SubViewport
 var _rig: Node3D                       ## 傾き(Z)を与える外側。カメラ基準で回す
 var _yaw: Node3D                       ## モデルの向き(Y)。傾きと軸が混ざらないよう内側に分ける
@@ -280,7 +283,9 @@ func _build_viewport() -> void:
 	_yaw = Node3D.new()
 	_yaw.name = "Yaw"
 	_rig.add_child(_yaw)
-	_yaw.add_child(model.instantiate())
+	var model_instance := model.instantiate()
+	_yaw.add_child(model_instance)
+	_apply_toon_shading(model_instance)
 
 	_skeleton = _find_node_of_type(_yaw, "Skeleton3D") as Skeleton3D
 	if _skeleton == null:
@@ -323,6 +328,49 @@ func _apply_visual_stats() -> void:
 		_env.ambient_light_energy = visual_stats.ambient_energy
 	var s := visual_stats.world_height_px / float(view_size.y)
 	scale = Vector2(s, s)
+	for mat in _toon_materials:
+		mat.set_shader_parameter(&"band_count", visual_stats.toon_band_count)
+		mat.set_shader_parameter(&"shadow_floor", visual_stats.toon_shadow_floor)
+
+
+# ═══════════════════════════════ トゥーンシェーディング
+
+## モデル内の全メッシュに、元の色/テクスチャは保ったまま段階式トゥーンの
+## シェーダーを上書きする。モデルを差し替えても毎回自動で効く
+func _apply_toon_shading(root: Node) -> void:
+	if root is MeshInstance3D:
+		_apply_toon_to_mesh(root as MeshInstance3D)
+	for c in root.get_children():
+		_apply_toon_shading(c)
+
+
+func _apply_toon_to_mesh(mesh_instance: MeshInstance3D) -> void:
+	var mesh := mesh_instance.mesh
+	if mesh == null:
+		return
+	for i in mesh.get_surface_count():
+		var src := mesh_instance.get_active_material(i)
+		# 色/テクスチャの引き継ぎ元が読めないときは上書きしない。
+		# ここで灰色のマテリアルへ差し替えてしまうと、原因(モデル側の問題)が
+		# シェーダーのバグに見えてしまうため
+		if not (src is BaseMaterial3D):
+			push_warning("PlayerVisual: トゥーン非対応のマテリアル(%s)のため元のまま表示: %s [%d]"
+				% [src.get_class() if src else "null", mesh_instance.name, i])
+			continue
+		var base := src as BaseMaterial3D
+		if base.albedo_texture == null:
+			push_warning("PlayerVisual: %s [%d] にテクスチャが無い(ベースカラーのみ)"
+				% [mesh_instance.name, i])
+		var mat := ShaderMaterial.new()
+		mat.shader = TOON_SHADER
+		mat.set_shader_parameter(&"albedo_color", base.albedo_color)
+		if base.albedo_texture:
+			mat.set_shader_parameter(&"albedo_texture", base.albedo_texture)
+			mat.set_shader_parameter(&"use_texture", true)
+		mat.set_shader_parameter(&"band_count", visual_stats.toon_band_count)
+		mat.set_shader_parameter(&"shadow_floor", visual_stats.toon_shadow_floor)
+		mesh_instance.set_surface_override_material(i, mat)
+		_toon_materials.append(mat)
 
 
 ## 見た目パラメータの取得

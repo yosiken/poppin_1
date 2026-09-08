@@ -29,7 +29,7 @@
 [ext_resource type="Resource" path="res://resources/cutscene/opening.tres" id="17_op"]
 [ext_resource type="Resource" path="res://resources/cutscene/ending.tres" id="18_ed"]
 [ext_resource type="Script" uid="uid://c4gyuno60iuka" path="res://scripts/player_visual.gd" id="8_visual"]
-[ext_resource type="PackedScene" path="res://resources/model/player_6.blend" id="9_model"]
+[ext_resource type="PackedScene" path="res://resources/model/player_7.blend" id="9_model"]
 [ext_resource type="Resource" path="res://resources/pogo_pose_default.tres" id="10_pose"]
 [ext_resource type="Resource" path="res://resources/pogo_visual_default.tres" id="11_visual"]
 

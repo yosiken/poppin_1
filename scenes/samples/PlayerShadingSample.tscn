@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/pogo_player.gd" id="1_player"]
+[ext_resource type="Resource" path="res://resources/pogo_stats_default.tres" id="2_stats"]
+[ext_resource type="Script" path="res://scripts/player_visual.gd" id="3_visual"]
+[ext_resource type="PackedScene" path="res://resources/model/player_7.blend" id="4_model"]
+[ext_resource type="Resource" path="res://resources/pogo_pose_default.tres" id="5_pose"]
+[ext_resource type="Resource" path="res://resources/pogo_visual_default.tres" id="6_visualstats"]
+[ext_resource type="Script" path="res://scripts/pogo_tuner.gd" id="7_tuner"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
+size = Vector2(1600, 100)
+
+[node name="PlayerShadingSample" type="Node2D"]
+
+[node name="Background" type="ColorRect" parent="."]
+offset_left = -700.0
+offset_top = -700.0
+offset_right = 700.0
+offset_bottom = 400.0
+color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(0, 600)
+
+[node name="Shape" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+position = Vector2(0, 400)
+collision_layer = 2
+safe_margin = 0.4
+script = ExtResource("1_player")
+stats = ExtResource("2_stats")
+
+[node name="Visual" type="Sprite2D" parent="Player"]
+script = ExtResource("3_visual")
+model = ExtResource("4_model")
+pose = ExtResource("5_pose")
+visual_stats = ExtResource("6_visualstats")
+view_size = Vector2i(512, 512)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(5, 5)
+
+[node name="Tuner" type="CanvasLayer" parent="."]
+script = ExtResource("7_tuner")
+start_visible = true
+target = NodePath("../Player")
+
+[node name="Note" type="Label" parent="."]
+offset_left = -700.0
+offset_top = -680.0
+offset_right = 100.0
+offset_bottom = -640.0
+text = "シェーディング確認用サンプル。F1でパラメータパネル表示/非表示(Toon/Lightのグループを調整)"
