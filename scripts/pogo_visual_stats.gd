@@ -19,10 +19,12 @@ const GROUPS := {
 			   "model_yaw_turn_speed", "facing_deadzone"],
 	"light":  ["light_pitch_deg", "light_yaw_deg", "light_energy", "light_color",
 			   "ambient_energy", "ambient_color"],
-	"squash": ["ball_squash_y", "squash_recover_frames", "squash_compensate_character"],
+	"squash": ["ball_squash_y", "squash_recover_frames", "ball_stretch_y", "stretch_speed_ref",
+			   "body_follow_ball"],
 	"flail":  ["flail_gain", "flail_stiffness", "flail_damping",
 			   "flail_soft_deg", "flail_barrier", "flail_max_deg", "flail_max_speed"],
 	"toon":   ["toon_band_count", "toon_shadow_floor"],
+	"outline": ["outline_color", "outline_width"],
 }
 
 # ─────────────────────────────── カメラ
@@ -48,8 +50,8 @@ const GROUPS := {
 @export_group("Light")
 ## キーライトの仰角 (度)。-90 で真上から、0 で真横から
 @export_range(-90.0, 90.0, 1.0) var light_pitch_deg := -35.0
-## キーライトの方位 (度)。0 でカメラ側から、-90 で画面左から
-@export_range(-180.0, 180.0, 1.0) var light_yaw_deg := -40.0
+## キーライトの方位 (度)。0 でカメラ側から奥へ、-90 で画面左から
+@export_range(-180.0, 180.0, 1.0) var light_yaw_deg := -10.0
 ## キーライトの強さ
 @export_range(0.0, 8.0, 0.05) var light_energy := 1.2
 ## キーライトの色
@@ -59,14 +61,19 @@ const GROUPS := {
 ## 環境光の色。キーライトと補色寄りにすると立体感が出る
 @export var ambient_color := Color(0.55, 0.62, 0.75)
 
-# ─────────────────────────────── ボールの潰れ
+# ─────────────────────────────── ボールの潰れ・伸び
 @export_group("Squash")
 ## 着地時のボールの縦スケール。1.0 で潰さない
 @export_range(0.5, 1.0, 0.01) var ball_squash_y := 0.9
 ## 潰れてから元に戻るまでのフレーム数 (60fps 換算)
 @export_range(1, 30, 1) var squash_recover_frames := 6
-## ボールを潰したときにキャラまで一緒に潰れるのを打ち消す
-@export var squash_compensate_character := false
+## 空中で最も速いときのボールの縦スケール。1.0 で伸ばさない
+@export_range(1.0, 1.6, 0.01) var ball_stretch_y := 1.15
+## 縦の伸びが最大になる上下方向の速さ (px/s)
+@export_range(100.0, 2000.0, 10.0) var stretch_speed_ref := 900.0
+## ボールの伸縮にキャラがどれだけ付いていくか。1.0 でボール上端にぴったり乗る。
+## 0 にするとキャラは動かず、ボールだけが伸び縮みする
+@export_range(0.0, 1.5, 0.05) var body_follow_ball := 1.0
 
 # ─────────────────────────────── 手足の振れ
 @export_group("Flail")
@@ -90,7 +97,15 @@ const GROUPS := {
 
 # ─────────────────────────────── トゥーンシェーディング
 @export_group("Toon")
-## キーライトの当たり方を何階調に分けるか。3で「暗め・中間・明るめ」の3段階
-@export_range(2, 6, 1) var toon_band_count := 3
+## キーライトの当たり方を何階調に分けるか
+@export_range(2, 6, 1) var toon_band_count := 4
 ## 一番暗い帯の明るさ。0にすると陰が真っ黒になる
-@export_range(0.0, 1.0, 0.01) var toon_shadow_floor := 0.35
+@export_range(0.0, 1.0, 0.01) var toon_shadow_floor := 0.2
+
+# ─────────────────────────────── 輪郭線
+@export_group("Outline")
+## 輪郭線の色。アルファを0にすると輪郭が消える
+@export var outline_color := Color(0.08, 0.07, 0.1, 1.0)
+## 輪郭線の太さ。3Dを焼いたテクスチャのテクセル単位なので、
+## view_size を変えると画面上の見た目の太さも変わる。0 で無効
+@export_range(0.0, 8.0, 0.5) var outline_width := 2.0

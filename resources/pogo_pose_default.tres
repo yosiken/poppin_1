@@ -5,12 +5,12 @@
 [resource]
 script = ExtResource("1_pose")
 rotations = Dictionary[StringName, Vector3]({
-&"forearm.L": Vector3(30, 0, 0),
-&"forearm.R": Vector3(25, 0, 0),
-&"spine.001": Vector3(-14, 0, 0),
-&"spine.002": Vector3(-12, 0, 0),
-&"spine.004": Vector3(12, 0, 0),
-&"spine.005": Vector3(10, 0, 0),
-&"upper_arm.L": Vector3(55, 0, -20),
-&"upper_arm.R": Vector3(-45, 0, 20)
+&"DEF-forearm.L": Vector3(30, 0, 0),
+&"DEF-forearm.R": Vector3(25, 0, 0),
+&"DEF-spine.001": Vector3(-14, 0, 0),
+&"DEF-spine.002": Vector3(-12, 0, 0),
+&"DEF-spine.004": Vector3(12, 0, 0),
+&"DEF-spine.005": Vector3(10, 0, 0),
+&"DEF-upper_arm.L": Vector3(55, 0, -20),
+&"DEF-upper_arm.R": Vector3(-45, 0, 20)
 })

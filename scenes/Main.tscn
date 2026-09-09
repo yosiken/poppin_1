@@ -1,70 +1,70 @@
 [gd_scene format=3 uid="uid://b3tf8b44sn8la"]
 
-[ext_resource type="Script" uid="uid://c45rwpy51ubv7" path="res://scripts/game.gd" id="14_game"]
-[ext_resource type="Script" path="res://scripts/design_grid.gd" id="19_grid"]
-[ext_resource type="Script" path="res://scripts/time_passage.gd" id="20_pass"]
-[ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="21_bg"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage01.tscn" id="st01"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage02.tscn" id="st02"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage03.tscn" id="st03"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage04.tscn" id="st04"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage05.tscn" id="st05"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage06.tscn" id="st06"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage07.tscn" id="st07"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage08.tscn" id="st08"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage09.tscn" id="st09"]
-[ext_resource type="PackedScene" path="res://scenes/stages/Stage10.tscn" id="st10"]
 [ext_resource type="Script" uid="uid://drj5kj2bh55u3" path="res://scripts/pogo_player.gd" id="1_player"]
 [ext_resource type="Script" uid="uid://d15fu4kny1x64" path="res://scripts/pogo_tuner.gd" id="2_tuner"]
 [ext_resource type="Resource" uid="uid://bn4kypulci4cd" path="res://resources/pogo_stats_default.tres" id="3_stats"]
 [ext_resource type="AudioStream" uid="uid://dcgj7fsakpf3f" path="res://resources/sound/noise1.mp3" id="5_land"]
 [ext_resource type="AudioStream" uid="uid://crajd3rg3lrs6" path="res://resources/sound/jump_1.mp3" id="6_jump"]
 [ext_resource type="AudioStream" uid="uid://bd5d7y10hhqg4" path="res://resources/sound/jump_voice.mp3" id="7_voice"]
+[ext_resource type="Script" uid="uid://c4gyuno60iuka" path="res://scripts/player_visual.gd" id="8_visual"]
+[ext_resource type="PackedScene" uid="uid://chb2jhy0ycm54" path="res://resources/model/player_7.blend" id="9_model"]
+[ext_resource type="Resource" uid="uid://c5fl7iacd3rmx" path="res://resources/pogo_pose_default.tres" id="10_pose"]
+[ext_resource type="Resource" path="res://resources/pogo_visual_default.tres" id="11_visual"]
+[ext_resource type="Script" uid="uid://c45rwpy51ubv7" path="res://scripts/game.gd" id="14_game"]
 [ext_resource type="AudioStream" uid="uid://guwxvwfo18cw" path="res://resources/sound/fall.mp3" id="15_fall"]
 [ext_resource type="AudioStream" uid="uid://dqy34e440bof" path="res://resources/sound/goal1.mp3" id="16_goal"]
+[ext_resource type="Resource" uid="uid://csjq6yaucuosl" path="res://resources/cutscene/opening.tres" id="17_op"]
+[ext_resource type="Resource" uid="uid://chj2dx3pijim5" path="res://resources/cutscene/ending.tres" id="18_ed"]
+[ext_resource type="Script" uid="uid://dqgdirupf7s26" path="res://scripts/design_grid.gd" id="19_grid"]
+[ext_resource type="Script" uid="uid://cvdwqytmo4yrh" path="res://scripts/time_passage.gd" id="20_pass"]
+[ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="21_bg"]
 [ext_resource type="AudioStream" uid="uid://byl18mhr17j0o" path="res://resources/sound/bgm/bgm01.mp3" id="22_bgm1"]
 [ext_resource type="AudioStream" uid="uid://tupeb0rwlqnm" path="res://resources/sound/bgm/bgm02.mp3" id="23_bgm2"]
 [ext_resource type="AudioStream" uid="uid://cqelr8jdhjexc" path="res://resources/sound/bgm/bgm03.mp3" id="24_bgm3"]
-[ext_resource type="AudioStream" path="res://resources/sound/slip.mp3" id="25_slip"]
-[ext_resource type="Resource" path="res://resources/cutscene/opening.tres" id="17_op"]
-[ext_resource type="Resource" path="res://resources/cutscene/ending.tres" id="18_ed"]
-[ext_resource type="Script" uid="uid://c4gyuno60iuka" path="res://scripts/player_visual.gd" id="8_visual"]
-[ext_resource type="PackedScene" path="res://resources/model/player_7.blend" id="9_model"]
-[ext_resource type="Resource" path="res://resources/pogo_pose_default.tres" id="10_pose"]
-[ext_resource type="Resource" path="res://resources/pogo_visual_default.tres" id="11_visual"]
+[ext_resource type="AudioStream" uid="uid://d2niaoo6qoreq" path="res://resources/sound/slip.mp3" id="25_slip"]
+[ext_resource type="PackedScene" uid="uid://dmxypaq2h05nx" path="res://scenes/stages/Stage01.tscn" id="st01"]
+[ext_resource type="PackedScene" uid="uid://em4oh00jbg7u" path="res://scenes/stages/Stage02.tscn" id="st02"]
+[ext_resource type="PackedScene" uid="uid://eij48jxwuvvp" path="res://scenes/stages/Stage03.tscn" id="st03"]
+[ext_resource type="PackedScene" uid="uid://cf06mi4sdjiel" path="res://scenes/stages/Stage04.tscn" id="st04"]
+[ext_resource type="PackedScene" uid="uid://bmi21he4ulpat" path="res://scenes/stages/Stage05.tscn" id="st05"]
+[ext_resource type="PackedScene" uid="uid://b7nst5bvwkh44" path="res://scenes/stages/Stage06.tscn" id="st06"]
+[ext_resource type="PackedScene" uid="uid://qpqbt4akq1rg" path="res://scenes/stages/Stage07.tscn" id="st07"]
+[ext_resource type="PackedScene" uid="uid://2mkgx06tft5a" path="res://scenes/stages/Stage08.tscn" id="st08"]
+[ext_resource type="PackedScene" uid="uid://ctw8gpwmoy577" path="res://scenes/stages/Stage09.tscn" id="st09"]
+[ext_resource type="PackedScene" uid="uid://da0cwvvsiav8" path="res://scenes/stages/Stage10.tscn" id="st10"]
 
 [node name="Main" type="Node2D" unique_id=377847871]
 script = ExtResource("14_game")
-stages = [ExtResource("st01"), ExtResource("st02"), ExtResource("st03"), ExtResource("st04"), ExtResource("st05"), ExtResource("st06"), ExtResource("st07"), ExtResource("st08"), ExtResource("st09"), ExtResource("st10")]
+stages = Array[PackedScene]([ExtResource("st01"), ExtResource("st02"), ExtResource("st03"), ExtResource("st04"), ExtResource("st05"), ExtResource("st06"), ExtResource("st07"), ExtResource("st08"), ExtResource("st09"), ExtResource("st10")])
+opening = ExtResource("17_op")
+ending = ExtResource("18_ed")
+stage_bgm = Array[AudioStream]([ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2")])
 player = NodePath("Player")
 stage_host = NodePath("StageHost")
 sfx_fall = NodePath("SfxFall")
-opening = ExtResource("17_op")
-ending = ExtResource("18_ed")
 sfx_goal = NodePath("SfxGoal")
 time_passage = NodePath("TimePassage")
 bgm_player = NodePath("BgmPlayer")
-stage_bgm = [ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2")]
 
-[node name="Background" parent="." instance=ExtResource("21_bg")]
+[node name="Background" parent="." unique_id=1586633226 instance=ExtResource("21_bg")]
 
-[node name="DesignGrid" type="Node2D" parent="."]
+[node name="DesignGrid" type="Node2D" parent="." unique_id=1152502999]
 z_index = -100
 script = ExtResource("19_grid")
 
-[node name="StageHost" type="Node2D" parent="."]
+[node name="StageHost" type="Node2D" parent="." unique_id=889720923]
 
-[node name="SfxFall" type="AudioStreamPlayer" parent="."]
+[node name="SfxFall" type="AudioStreamPlayer" parent="." unique_id=1709726902]
 stream = ExtResource("15_fall")
-bus = "SE"
+bus = &"SE"
 
-[node name="SfxGoal" type="AudioStreamPlayer" parent="."]
+[node name="SfxGoal" type="AudioStreamPlayer" parent="." unique_id=731304773]
 stream = ExtResource("16_goal")
-volume_linear = 0.6
-bus = "BGM"
+volume_db = -4.4369745
+bus = &"BGM"
 
-[node name="BgmPlayer" type="AudioStreamPlayer" parent="."]
-bus = "BGM"
+[node name="BgmPlayer" type="AudioStreamPlayer" parent="." unique_id=552726662]
+bus = &"BGM"
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1859720644 groups=["player"]]
 position = Vector2(0, 800)
@@ -83,21 +83,21 @@ visual_stats = ExtResource("11_visual")
 stream = ExtResource("5_land")
 volume_db = -3.0
 max_polyphony = 2
-bus = "SE"
+bus = &"SE"
 
 [node name="SfxJump" type="AudioStreamPlayer" parent="Player" unique_id=112299813]
 stream = ExtResource("6_jump")
 max_polyphony = 2
-bus = "SE"
+bus = &"SE"
 
 [node name="SfxVoice" type="AudioStreamPlayer" parent="Player" unique_id=1322470437]
 stream = ExtResource("7_voice")
 volume_db = -2.0
-bus = "SE"
+bus = &"SE"
 
-[node name="SfxSlip" type="AudioStreamPlayer" parent="Player"]
+[node name="SfxSlip" type="AudioStreamPlayer" parent="Player" unique_id=100710375]
 stream = ExtResource("25_slip")
-bus = "SE"
+bus = &"SE"
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1924607058]
 zoom = Vector2(1.4, 1.4)
@@ -110,8 +110,8 @@ position_smoothing_speed = 8.0
 
 [node name="Tuner" type="CanvasLayer" parent="." unique_id=390471932]
 script = ExtResource("2_tuner")
-start_visible = false
 target = NodePath("../Player")
+start_visible = false
 
-[node name="TimePassage" type="CanvasLayer" parent="."]
+[node name="TimePassage" type="CanvasLayer" parent="." unique_id=164641574]
 script = ExtResource("20_pass")

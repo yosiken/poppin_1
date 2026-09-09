@@ -46,21 +46,40 @@ class_name PlayerVisual
 ## 足先が基準から (親+子) ぶん回ってしまい、関節が反対側へ折れる（フリップする）。
 ## 先へ行くほど倍率を下げること。
 @export var flail_bones: Dictionary[StringName, float] = {
-	&"upper_arm.L": 1.0, &"forearm.L": 1.0,
-	&"upper_arm.R": 1.0, &"forearm.R": 1.0,
-	&"thigh.L": 0.6, &"shin.L": 0.35,
-	&"thigh.R": 0.6, &"shin.R": 0.35,
+	&"DEF-upper_arm.L": 1.0, &"DEF-forearm.L": 1.0,
+	&"DEF-upper_arm.R": 1.0, &"DEF-forearm.R": 1.0,
+	&"DEF-thigh.L": 0.6, &"DEF-shin.L": 0.35,
+	&"DEF-thigh.R": 0.6, &"DEF-shin.R": 0.35,
+	&"DEF-spine.004": 0.4, &"DEF-spine.005": 0.25,
+	# 頭は首(DEF-spine)チェーンの子ではなく、Rigifyのコントロール側にぶら下がった
+	# 別系統のボーン。コンストレイントは取り込まれないので首を回しても付いてこない。
+	# ここだけは積み上がらないので、首につながって見えるよう
+	# 上の首ボーンの合計(0.4+0.25)と同じ値を入れる
+	&"head.001": 0.65,
 }
+
+@export_group("Ball")
+## ボール（跳ねる玉）を動かすボーン名。
+## ボールはキャラクター本体とは別のスケルトンに1本だけ入っており、
+## このボーンを持つスケルトンをボール用、そうでない方をキャラクター本体として扱う
+@export var ball_bone: StringName = &"ball"
 
 @export_group("Animation")
 ## 再生するアニメーション名。空ならモデルが持つ最初のアニメーションを使う。
 ## モデルにアニメーションが無い場合は pose が使われる
 @export var idle_animation: StringName = &""
 
+@export_group("Toon")
+## この名前のマテリアルはトゥーンを掛けず、陰影なし(unlit)で描く。
+## ライトの向きで暗くなってほしくない部分（白目やハイライトなど）に使う
+@export var unlit_materials: Array[StringName] = [&"white_unlit"]
+
 const TOON_SHADER := preload("res://resources/shader/toon_character.gdshader")
+const OUTLINE_SHADER := preload("res://resources/shader/sprite_outline.gdshader")
 
 # ─────────────────────────────── 内部状態
 var _toon_materials: Array[ShaderMaterial] = []
+var _outline_material: ShaderMaterial
 var _viewport: SubViewport
 var _rig: Node3D                       ## 傾き(Z)を与える外側。カメラ基準で回す
 var _yaw: Node3D                       ## モデルの向き(Y)。傾きと軸が混ざらないよう内側に分ける
@@ -75,10 +94,11 @@ var _flail_base: Dictionary[int, Quaternion] = {}   ## 振れを乗せる土台�
 var _anim_driven: Dictionary[int, bool] = {}        ## アニメーションが毎フレーム上書きするボーン
 var _flail_angle := 0.0
 var _flail_vel := 0.0
-var _ball: Node3D                      ## ボール。スケルトンの MeshInstance3D 側の祖先
+var _ball_skeleton: Skeleton3D         ## ボール用（ボーン1本）のスケルトン
+var _ball_bone_idx := -1
 var _ball_base_scale := Vector3.ONE
-var _char_root: Node3D                 ## ボールの直下でキャラを含むノード（打ち消し用）
-var _char_base_scale := Vector3.ONE
+var _ball_top_y := 0.0                 ## ボーン原点からボール上端までの高さ
+var _char_base_y := 0.0                ## キャラクター側スケルトンの基準の高さ
 var _squash := 1.0
 var _facing_right := true              ## 直近の進行方向。デッドゾーン内では保持する
 var _yaw_deg := 0.0                    ## 補間中の現在の向き
@@ -103,7 +123,6 @@ func _ready() -> void:
 	# 初期の向きは補間の途中から始めないよう、右向きの角度で直接置く
 	_yaw_deg = visual_stats.model_yaw_right_deg
 	_yaw.rotation.y = deg_to_rad(_yaw_deg)
-	_find_ball()
 	_capture_flail_base()
 	# アニメーションより後に走らせて、その上へ振れを重ねる
 	process_priority = 100
@@ -141,30 +160,53 @@ func _update_facing(delta: float) -> void:
 
 # ═══════════════════════════════ ボールの潰れ
 
-## ボールはスケルトンの祖先にある MeshInstance3D。
-## キャラのメッシュもスケルトンの子孫にあるので、スケルトンから上へ辿って探す
-func _find_ball() -> void:
+## モデルにはスケルトンが2つ入っている（キャラクター本体とボール）。
+## 順番に依存すると取り違えるので、ball_bone を持つ方をボールとして選り分ける
+func _resolve_skeletons() -> void:
+	var found: Array[Node] = []
+	_collect_nodes_of_type(_yaw, "Skeleton3D", found)
+	for n in found:
+		var skel := n as Skeleton3D
+		var idx := _find_ball_bone(skel)
+		if idx >= 0:
+			_ball_skeleton = skel
+			_ball_bone_idx = idx
+			_ball_base_scale = skel.get_bone_pose_scale(idx)
+		elif _skeleton == null:
+			_skeleton = skel
 	if _skeleton == null:
+		push_warning("PlayerVisual: キャラクター本体の Skeleton3D が見つかりません")
+	else:
+		_char_base_y = _skeleton.position.y
+	if _ball_skeleton == null:
+		push_warning("PlayerVisual: ボール用ボーン '%s' を持つスケルトンが見つかりません" % ball_bone)
 		return
-	var n: Node = _skeleton.get_parent()
-	var below: Node = _skeleton
-	while n != null and n != _yaw:
-		if n is MeshInstance3D:
-			_ball = n as Node3D
-			_char_root = below as Node3D
-			break
-		below = n
-		n = n.get_parent()
-	if _ball == null:
-		push_warning("PlayerVisual: ボール（スケルトンの祖先の MeshInstance3D）が見つかりません")
-		return
-	_ball_base_scale = _ball.scale
-	if _char_root:
-		_char_base_scale = _char_root.scale
+
+	# キャラをボールの上端に乗せ続けるため、伸縮でどれだけ上端が動くかを測っておく。
+	# ボーン原点を基準にスケールが掛かるので、原点から上端までの距離がそのまま倍率になる
+	var ball_mesh := _find_node_of_type(_ball_skeleton, "MeshInstance3D") as MeshInstance3D
+	if ball_mesh:
+		_ball_top_y = maxf(ball_mesh.get_aabb().end.y
+			- _ball_skeleton.get_bone_global_rest(_ball_bone_idx).origin.y, 0.0)
+
+
+## glTF取り込みでは、ボーン名が同名のノード（ボールのメッシュ）と衝突すると
+## "ball_2" のように連番が付く。完全一致で見つからないときはその形も許容する
+func _find_ball_bone(skel: Skeleton3D) -> int:
+	var idx := skel.find_bone(ball_bone)
+	if idx >= 0:
+		return idx
+	var prefix := String(ball_bone)
+	for i in skel.get_bone_count():
+		var rest := skel.get_bone_name(i).substr(prefix.length())
+		if skel.get_bone_name(i).begins_with(prefix) and rest.begins_with("_") \
+				and rest.substr(1).is_valid_int():
+			return i
+	return -1
 
 
 func _update_squash(delta: float) -> void:
-	if _ball == null or delta <= 0.0:
+	if _ball_skeleton == null or delta <= 0.0:
 		return
 
 	if _player and _player.is_grounded():
@@ -176,11 +218,24 @@ func _update_squash(delta: float) -> void:
 		var duration := float(_v(&"squash_recover_frames")) / float(Engine.physics_ticks_per_second)
 		_recover_t = minf(1.0, _recover_t + delta / maxf(duration, 0.0001))
 
+	# 着地でぺしゃんこ → 元に戻る → 空中では上下の速さに応じて縦に伸びる、の順。
+	# 潰れが戻りきってから伸びを混ぜる。同時に掛けると着地の一瞬で打ち消し合って何も見えない
 	_squash = lerpf(_v(&"ball_squash_y"), 1.0, _recover_t)
-	_ball.scale.y = _ball_base_scale.y * _squash
-	if _v(&"squash_compensate_character") and _char_root:
-		# 親のスケールが子へ伝播するぶんを打ち消す
-		_char_root.scale.y = _char_base_scale.y / maxf(_squash, 0.01)
+	if _player and _recover_t >= 1.0:
+		var speed_ref: float = maxf(_v(&"stretch_speed_ref"), 1.0)
+		var t := clampf(absf(_player.velocity.y) / speed_ref, 0.0, 1.0)
+		_squash = lerpf(1.0, _v(&"ball_stretch_y"), t)
+
+	# 縦に潰した分だけ横へ広げる。体積が変わって見えると跳ねではなく伸縮に見える
+	var lateral := 1.0 / sqrt(maxf(_squash, 0.01))
+	_ball_skeleton.set_bone_pose_scale(_ball_bone_idx,
+		_ball_base_scale * Vector3(lateral, _squash, lateral))
+
+	# キャラはボールの上に乗っているので、上端が沈んだ／伸びた分だけ一緒に上下させる。
+	# ここを動かさないとボールだけが潰れてキャラが宙に浮いて見える
+	if _skeleton:
+		_skeleton.position.y = _char_base_y \
+			+ _ball_top_y * (_squash - 1.0) * _v(&"body_follow_ball")
 
 
 # ═══════════════════════════════ 手足の振れ
@@ -287,9 +342,7 @@ func _build_viewport() -> void:
 	_yaw.add_child(model_instance)
 	_apply_toon_shading(model_instance)
 
-	_skeleton = _find_node_of_type(_yaw, "Skeleton3D") as Skeleton3D
-	if _skeleton == null:
-		push_warning("PlayerVisual: モデルに Skeleton3D が見つかりません")
+	_resolve_skeletons()
 
 	_cam = Camera3D.new()
 	_cam.projection = Camera3D.PROJECTION_ORTHOGONAL
@@ -310,6 +363,12 @@ func _build_viewport() -> void:
 
 	# SubViewport の描画結果をこのスプライトの絵にする
 	texture = _viewport.get_texture()
+
+	# 輪郭線は3Dではなく、焼き上がったテクスチャのアルファを膨らませて描く
+	_outline_material = ShaderMaterial.new()
+	_outline_material.shader = OUTLINE_SHADER
+	material = _outline_material
+
 	_apply_visual_stats()
 
 
@@ -331,6 +390,9 @@ func _apply_visual_stats() -> void:
 	for mat in _toon_materials:
 		mat.set_shader_parameter(&"band_count", visual_stats.toon_band_count)
 		mat.set_shader_parameter(&"shadow_floor", visual_stats.toon_shadow_floor)
+	if _outline_material:
+		_outline_material.set_shader_parameter(&"outline_color", visual_stats.outline_color)
+		_outline_material.set_shader_parameter(&"outline_width", visual_stats.outline_width)
 
 
 # ═══════════════════════════════ トゥーンシェーディング
@@ -358,6 +420,13 @@ func _apply_toon_to_mesh(mesh_instance: MeshInstance3D) -> void:
 				% [src.get_class() if src else "null", mesh_instance.name, i])
 			continue
 		var base := src as BaseMaterial3D
+		if unlit_materials.has(StringName(base.resource_name)):
+			# 取り込んだマテリアルはモデルを複数出したときに共有されるので、
+			# 直に書き換えず複製したものを被せる
+			var flat := base.duplicate() as BaseMaterial3D
+			flat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			mesh_instance.set_surface_override_material(i, flat)
+			continue
 		if base.albedo_texture == null:
 			push_warning("PlayerVisual: %s [%d] にテクスチャが無い(ベースカラーのみ)"
 				% [mesh_instance.name, i])
@@ -386,6 +455,13 @@ func _find_node_of_type(n: Node, type_name: StringName) -> Node:
 		if found:
 			return found
 	return null
+
+
+func _collect_nodes_of_type(n: Node, type_name: StringName, out: Array[Node]) -> void:
+	if n.is_class(type_name):
+		out.append(n)
+	for c in n.get_children():
+		_collect_nodes_of_type(c, type_name, out)
 
 
 # ═══════════════════════════════ 基本姿勢（アニメーション / ポーズ）

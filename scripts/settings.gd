@@ -22,11 +22,13 @@ var bgm_volume := 0.8:
 	set(value):
 		bgm_volume = clampf(value, 0.0, 1.0)
 		_apply_bus_volume("BGM", bgm_volume)
+		_queue_save()
 
 var se_volume := 0.8:
 	set(value):
 		se_volume = clampf(value, 0.0, 1.0)
 		_apply_bus_volume("SE", se_volume)
+		_queue_save()
 
 ## デモ（オープニング・ステージ冒頭イベント）を飛ばす開発者用の隠しスイッチ。
 ## 有効な間はスコアをオンラインランキングへ送信しない（テストデータで汚さないため）。
@@ -39,17 +41,26 @@ var se_volume := 0.8:
 var test_mode := false
 
 ## オンラインランキングに載せるプレイヤー名
-var player_name := "プレイヤー"
+var player_name := "プレイヤー":
+	set(value):
+		player_name = value
+		_queue_save()
 
 ## ランキング表示(各順位の行)の文字サイズ (px)
 var ranking_font_size := 14.0:
 	set(value):
 		ranking_font_size = clampf(value, 10.0, 32.0)
+		_queue_save()
 
 ## リプレイ再生画面への受け渡し用（保存はしない、シーン切り替えを挟むための一時受け渡し）。
 ## -1 なら再生するものが無い
 var pending_replay_stage_index := -1
 var pending_replay_data: Dictionary = {}
+
+
+## 読み込みが終わるまでは保存しない。起動時に既定値で上書きしてしまわないため
+var _loading := true
+var _save_queued := false
 
 
 func _ready() -> void:
@@ -59,9 +70,25 @@ func _ready() -> void:
 		"log_level": 0,
 	})
 	_load()
+	_loading = false
 
 
-## オプション画面を閉じるときなどに呼ぶ
+## 値が変わるたびに保存を予約する。
+## 以前はオプション画面の「戻る」を押したときだけ保存していたため、
+## 音量を変えてからその画面のままゲームを終了すると設定が消えていた
+func _queue_save() -> void:
+	if _loading or _save_queued:
+		return
+	_save_queued = true
+	# スライダーのドラッグ中に毎フレーム書き込まないよう1フレーム分をまとめる
+	_flush_save.call_deferred()
+
+
+func _flush_save() -> void:
+	_save_queued = false
+	save()
+
+
 func save() -> void:
 	var cfg := ConfigFile.new()
 	cfg.set_value("audio", "bgm_volume", bgm_volume)
@@ -69,7 +96,11 @@ func save() -> void:
 	cfg.set_value("debug", "test_mode", test_mode)
 	cfg.set_value("profile", "player_name", player_name)
 	cfg.set_value("ui", "ranking_font_size", ranking_font_size)
-	cfg.save(SAVE_PATH)
+	var err := cfg.save(SAVE_PATH)
+	if err != OK:
+		# 再現しない環境依存の保存失敗をログに残す（書き込み権限など）
+		push_warning("Settings: 設定の保存に失敗しました (%s): %s"
+			% [ProjectSettings.globalize_path(SAVE_PATH), error_string(err)])
 
 
 func _load() -> void:
