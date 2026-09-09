@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bn3xxpi6n7l5x"]
+
+[ext_resource type="Script" uid="uid://drj5kj2bh55u3" path="res://scripts/pogo_player.gd" id="1_player"]
+[ext_resource type="Resource" uid="uid://bn4kypulci4cd" path="res://resources/pogo_stats_default.tres" id="2_stats"]
+[ext_resource type="Script" uid="uid://c4gyuno60iuka" path="res://scripts/player_visual.gd" id="3_visual"]
+[ext_resource type="PackedScene" uid="uid://chb2jhy0ycm54" path="res://resources/model/player_7.blend" id="4_model"]
+[ext_resource type="Resource" uid="uid://c5fl7iacd3rmx" path="res://resources/pogo_pose_default.tres" id="5_pose"]
+[ext_resource type="Resource" path="res://resources/pogo_visual_default.tres" id="6_visualstats"]
+[ext_resource type="Script" uid="uid://d15fu4kny1x64" path="res://scripts/pogo_tuner.gd" id="7_tuner"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
+size = Vector2(1600, 100)
+
+[node name="PlayerShadingSample" type="Node2D" unique_id=1901016614]
+
+[node name="Background" type="ColorRect" parent="." unique_id=78437245]
+offset_left = -700.0
+offset_top = -700.0
+offset_right = 700.0
+offset_bottom = 400.0
+color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="Ground" type="StaticBody2D" parent="." unique_id=252440795]
+position = Vector2(0, 600)
+
+[node name="Shape" type="CollisionShape2D" parent="Ground" unique_id=767258046]
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1518947737 groups=["player"]]
+position = Vector2(0, 400)
+collision_layer = 2
+safe_margin = 0.4
+script = ExtResource("1_player")
+stats = ExtResource("2_stats")
+
+[node name="Visual" type="Sprite2D" parent="Player" unique_id=1837098019]
+script = ExtResource("3_visual")
+model = ExtResource("4_model")
+pose = ExtResource("5_pose")
+visual_stats = ExtResource("6_visualstats")
+view_size = Vector2i(512, 512)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=536153152]
+zoom = Vector2(5, 5)
+
+[node name="Tuner" type="CanvasLayer" parent="." unique_id=1413998480]
+script = ExtResource("7_tuner")
+target = NodePath("../Player")
+
+[node name="Note" type="Label" parent="." unique_id=72229164]
+offset_left = -700.0
+offset_top = -680.0
+offset_right = 100.0
+offset_bottom = -640.0
+text = "シェーディング確認用サンプル。F1でパラメータパネル表示/非表示(Toon/Lightのグループを調整)"

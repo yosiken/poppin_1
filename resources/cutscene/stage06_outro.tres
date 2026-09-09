@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://c2ydg4sm58vpg"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_1bfqb"]
+[ext_resource type="Texture2D" uid="uid://c3ingcb43hgfg" path="res://resources/texture/ob_san.png" id="2_fixnd"]
+[ext_resource type="Texture2D" uid="uid://cv1fmvshh8vxl" path="res://resources/texture/kanie.png" id="3_1k4lx"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_iuxvc"]
+
+[sub_resource type="Resource" id="Resource_a8qcy"]
+script = ExtResource("1_1bfqb")
+speaker = "OB"
+text = "あ, それ知ってる！ 口に含んだ瞬間にシュワッと弾けて、リンゴみたいな甘酸っぱい香りが広がるやつ！『風の森（かぜのもり）』！"
+speaking = 2
+right = ExtResource("2_fixnd")
+
+[sub_resource type="Resource" id="Resource_1lnn4"]
+script = ExtResource("1_1bfqb")
+speaker = "カニエナガ"
+text = "その通り。これも奈良県御所の油長酒造が醸す『風の森』だ。グラスに注がれた瞬間からピチピチと跳ねるようなガス感、そしてお前の理性を完全に粉砕する圧倒的な旨さ。これを飲んだ時、お前は何と言っていた？"
+speaking = 1
+left = ExtResource("3_1k4lx")
+
+[sub_resource type="Resource" id="Resource_lq4m1"]
+script = ExtResource("1_1bfqb")
+speaker = "OB"
+text = "『旨い、うますぎる。これ、無限に飲める水じゃん……』って言ってた。あはは、完全に出来上がってるね、私"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_aem33"]
+script = ExtResource("1_1bfqb")
+speaker = "カニエナガ"
+text = "笑いごとではない。その『無限に飲める水』がお前をここへ引きずり下ろした元凶の一つだぞ"
+speaking = 1
+
+[resource]
+script = ExtResource("4_iuxvc")
+lines = Array[ExtResource("1_1bfqb")]([SubResource("Resource_a8qcy"), SubResource("Resource_1lnn4"), SubResource("Resource_lq4m1"), SubResource("Resource_aem33")])

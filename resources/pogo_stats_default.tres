@@ -1,8 +1,23 @@
 [gd_resource type="Resource" script_class="PogoStats" format=3 uid="uid://bn4kypulci4cd"]
 
-[ext_resource type="Script" uid="uid://b8mfdkqib753d" path="res://scripts/pogo_stats.gd" id="1_stats"]
+[ext_resource type="Script" uid="uid://b8mfdkqib753d" path="res://scripts/pogo_stats.gd" id="1"]
 
 [resource]
-script = ExtResource("1_stats")
-gravity = 1100.0
-terminal_velocity = 1300.0
+script = ExtResource("1")
+restitution = 0.18
+bounce_add = 250.0
+pogo_authority = 0.93
+max_bounce_speed = 1550.0
+tilt_speed = 30.0
+stabilize_rate = 25.0
+tilt_limit = 35.0
+charge_time = 0.15
+charge_hold_time = 0.25
+charge_mult = 1.7
+super_mult = 2.5
+gravity = 450.0
+terminal_velocity = 1350.0
+air_drag = 0.04
+air_control = 20.0
+wall_bounce_scale = 0.39
+ground_normal_threshold = -0.85

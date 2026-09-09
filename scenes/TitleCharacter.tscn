@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://bdmu38ems8mul"]
+
+[ext_resource type="Script" uid="uid://bo6u7d3ek3858" path="res://scripts/title_character.gd" id="1_char"]
+[ext_resource type="Texture2D" uid="uid://bl0ljftwwm7ko" path="res://resources/texture/title_character/body.png" id="2_body"]
+[ext_resource type="Texture2D" uid="uid://1p6jeg3mgyro" path="res://resources/texture/title_character/head_open.png" id="3_head_open"]
+[ext_resource type="Texture2D" uid="uid://bpnn4yld8uw0f" path="res://resources/texture/title_character/head_blink.png" id="4_head_blink"]
+[ext_resource type="Texture2D" uid="uid://dnpfucioljdvr" path="res://resources/texture/title_character/mouth.png" id="5_mouth"]
+[ext_resource type="Texture2D" uid="uid://qfipgj1kwi4w" path="res://resources/texture/title_character/arm_r.png" id="6_arm_r"]
+[ext_resource type="Texture2D" uid="uid://cvn4lw41pl22g" path="res://resources/texture/title_character/arm_l.png" id="7_arm_l"]
+
+[node name="TitleCharacter" type="Node2D" unique_id=1509930650]
+script = ExtResource("1_char")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=252848789]
+texture_filter = 1
+texture = ExtResource("2_body")
+centered = false
+
+[node name="ArmR" type="Node2D" parent="Body" unique_id=1042019318]
+position = Vector2(409, 263)
+
+[node name="ArmRSprite" type="Sprite2D" parent="Body/ArmR" unique_id=219504289]
+texture_filter = 1
+texture = ExtResource("6_arm_r")
+centered = false
+offset = Vector2(-409, -263)
+
+[node name="ArmL" type="Node2D" parent="Body" unique_id=729730595]
+position = Vector2(118, 263)
+
+[node name="ArmLSprite" type="Sprite2D" parent="Body/ArmL" unique_id=212787399]
+texture_filter = 1
+texture = ExtResource("7_arm_l")
+centered = false
+offset = Vector2(-118, -263)
+
+[node name="Head" type="Node2D" parent="Body" unique_id=1064079224]
+position = Vector2(264, 239)
+
+[node name="HeadOpen" type="Sprite2D" parent="Body/Head" unique_id=498650739]
+texture_filter = 1
+texture = ExtResource("3_head_open")
+centered = false
+offset = Vector2(-264, -239)
+
+[node name="HeadBlink" type="Sprite2D" parent="Body/Head" unique_id=1803390039]
+visible = false
+texture_filter = 1
+texture = ExtResource("4_head_blink")
+centered = false
+offset = Vector2(-264, -239)
+
+[node name="MouthPivot" type="Node2D" parent="Body/Head" unique_id=824688285]
+position = Vector2(0, -28)
+
+[node name="MouthSprite" type="Sprite2D" parent="Body/Head/MouthPivot" unique_id=1597612507]
+texture_filter = 1
+texture = ExtResource("5_mouth")
+centered = false
+offset = Vector2(-264, -211)

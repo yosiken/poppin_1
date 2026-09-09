@@ -1,0 +1,474 @@
+[gd_scene format=3 uid="uid://bmi21he4ulpat"]
+
+[ext_resource type="Script" uid="uid://1iu2pnnffu6i" path="res://scripts/stage.gd" id="1_thbjj"]
+[ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_4rvt0"]
+[ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_bfomk"]
+[ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="7_d1h3p"]
+[ext_resource type="Shader" uid="uid://cwsj8xaf2qwel" path="res://resources/shader/terrain_fill.gdshader" id="7_yvibb"]
+[ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="8_yvibb"]
+[ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="9_4hncb"]
+[ext_resource type="Resource" uid="uid://dq5uf2tf26oud" path="res://resources/cutscene/stage05_intro.tres" id="cut_intro"]
+[ext_resource type="Resource" uid="uid://biaua5542h66b" path="res://resources/cutscene/stage05_outro.tres" id="cut_outro"]
+[ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
+size = Vector2(64.86666, 96.6)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4hncb"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 212.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h0sqm"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 249.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pwn03"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 30.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_duh7c"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = -8.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cdyv0"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 2.820877
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q8iig"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 2.820877
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5sug2"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 2.820877
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qri1o"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 30.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mhvmy"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 30.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1y5qp"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 30.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g82wo"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 30.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7pe58"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 30.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ciqje"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 30.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gi6ia"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 30.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vs7yr"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 950.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ma2en"]
+shader = ExtResource("7_yvibb")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 1031.0
+
+[node name="Stage05" type="Node2D" unique_id=640078749]
+script = ExtResource("1_thbjj")
+display_name = "たて穴 (仮5)"
+camera_bounds = Rect2(-600, -2000, 3050, 3300)
+intro = ExtResource("cut_intro")
+outro = ExtResource("cut_outro")
+
+[node name="Spawn" type="Marker2D" parent="." unique_id=1703398707]
+position = Vector2(0, 1000)
+
+[node name="Terrain" type="StaticBody2D" parent="." unique_id=1618501717]
+
+[node name="Block00" type="CollisionPolygon2D" parent="Terrain" unique_id=197258640]
+position = Vector2(200, 1250)
+polygon = PackedVector2Array(-600, -60, 600, -60, 600, 60, -600, 60)
+script = ExtResource("2_4rvt0")
+
+[node name="Block01" type="CollisionPolygon2D" parent="Terrain" unique_id=358628319]
+position = Vector2(924, 1221)
+polygon = PackedVector2Array(-200, -30, 73, -61, 306, -96, 564, -152, 796, -207, 1019, -298, 749, 67, 204, 87, -206, 91)
+script = ExtResource("2_4rvt0")
+
+[node name="Block02" type="CollisionPolygon2D" parent="Terrain" unique_id=1771206772]
+position = Vector2(380, 551)
+scale = Vector2(0.48000002, 1.8400012)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block03" type="CollisionPolygon2D" parent="Terrain" unique_id=331811714]
+position = Vector2(924, 424)
+scale = Vector2(0.67749447, 3.1265378)
+polygon = PackedVector2Array(-202, -68, 198, -68, 198, -8, -202, -8)
+script = ExtResource("2_4rvt0")
+
+[node name="Block11" type="CollisionPolygon2D" parent="Terrain" unique_id=315971143]
+position = Vector2(739, 398)
+scale = Vector2(0.39999998, 2.126997)
+polygon = PackedVector2Array(-200, -30, 200, -30, 202.50012, 2.820877, -92.5, 0.4701538)
+script = ExtResource("2_4rvt0")
+
+[node name="Block14" type="CollisionPolygon2D" parent="Terrain" unique_id=749451359]
+position = Vector2(217, 912.99994)
+scale = Vector2(0.39999998, 2.126997)
+polygon = PackedVector2Array(-200, -30, 200, -30, 202.50012, 2.820877, -92.5, 0.4701538)
+script = ExtResource("2_4rvt0")
+
+[node name="Block15" type="CollisionPolygon2D" parent="Terrain" unique_id=232805065]
+position = Vector2(-361, 1026)
+scale = Vector2(0.39999998, 2.126997)
+polygon = PackedVector2Array(-95.00006, -29.619232, 200, -30, 202.50012, 2.820877, -92.5, 0.4701538)
+script = ExtResource("2_4rvt0")
+
+[node name="Block10" type="CollisionPolygon2D" parent="Terrain" unique_id=321260064]
+position = Vector2(1335, 856)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block04" type="CollisionPolygon2D" parent="Terrain" unique_id=1001554733]
+position = Vector2(1364.0001, 396.99997)
+scale = Vector2(0.65484285, 2.7960227)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block12" type="CollisionPolygon2D" parent="Terrain" unique_id=521105878]
+position = Vector2(-157, 560)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block13" type="CollisionPolygon2D" parent="Terrain" unique_id=1014209687]
+position = Vector2(1079, -77)
+polygon = PackedVector2Array(-200, -30, -110, -80, -3, -96, 99, -85, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block08" type="CollisionPolygon2D" parent="Terrain" unique_id=1803470695]
+position = Vector2(715, 682.00006)
+scale = Vector2(0.47214442, 2.7525795)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block09" type="CollisionPolygon2D" parent="Terrain" unique_id=1698148232]
+position = Vector2(1077, 808)
+scale = Vector2(0.48000002, 2.6399999)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block05" type="CollisionPolygon2D" parent="Terrain" unique_id=99532211]
+position = Vector2(1753, 127)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("2_4rvt0")
+
+[node name="Block06" type="CollisionPolygon2D" parent="Terrain" unique_id=781451719]
+position = Vector2(-380, 400)
+polygon = PackedVector2Array(-30, -950, 30, -950, 30, 950, -30, 950)
+script = ExtResource("2_4rvt0")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Block07" type="CollisionPolygon2D" parent="Terrain" unique_id=357774727]
+position = Vector2(2189, 400)
+polygon = PackedVector2Array(-30, -950, 30, -950, 30, 950, -30, 950)
+script = ExtResource("2_4rvt0")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Goal" type="Area2D" parent="." unique_id=647219294]
+z_index = -1
+position = Vector2(1088, -387.00003)
+scale = Vector2(2.0273116, 2.0273116)
+collision_mask = 2
+script = ExtResource("3_bfomk")
+
+[node name="Sprite" type="Sprite2D" parent="Goal" unique_id=181639415]
+texture = ExtResource("tex_goal")
+hframes = 3
+vframes = 3
+frame = 4
+
+[node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=23159329]
+shape = SubResource("RectangleShape2D_thbjj")
+
+[node name="RecoveryPoints" type="Node2D" parent="." unique_id=1064170830]
+
+[node name="Point1" type="Marker2D" parent="RecoveryPoints" unique_id=2029332882]
+position = Vector2(1006, 1057)
+
+[node name="Point2" type="Marker2D" parent="RecoveryPoints" unique_id=1446883158]
+position = Vector2(381, 406)
+
+[node name="Point3" type="Marker2D" parent="RecoveryPoints" unique_id=296700738]
+position = Vector2(1360, 160)
+
+[node name="Graphics" type="Node2D" parent="." unique_id=533057725]
+
+[node name="Gfx_Block00" type="Polygon2D" parent="Graphics" unique_id=840658280]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_4hncb")
+position = Vector2(200, 1250)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-600, -60, 600, -60, 610, 207, -676, 212)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block00")
+
+[node name="Gfx_Block01" type="Polygon2D" parent="Graphics" unique_id=976301114]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_h0sqm")
+position = Vector2(924, 1221)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 73, -61, 306, -96, 564, -152, 796, -207, 1019, -298, 821, 134, 226, 238, -219, 249)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block01")
+
+[node name="Gfx_Block02" type="Polygon2D" parent="Graphics" unique_id=829204893]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_pwn03")
+position = Vector2(380, 551)
+scale = Vector2(0.48000002, 1.8400012)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block02")
+
+[node name="Gfx_Block03" type="Polygon2D" parent="Graphics" unique_id=820530049]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_duh7c")
+position = Vector2(924, 424)
+scale = Vector2(0.67749447, 3.1265378)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-202, -68, 198, -68, 198, -8, -202, -8)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block03")
+
+[node name="Gfx_Block11" type="Polygon2D" parent="Graphics" unique_id=1499154697]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_cdyv0")
+position = Vector2(739, 398)
+scale = Vector2(0.39999998, 2.126997)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 200, -30, 202.50012, 2.820877, -92.5, 0.4701538)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block11")
+
+[node name="Gfx_Block14" type="Polygon2D" parent="Graphics" unique_id=168710255]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_q8iig")
+position = Vector2(217, 912.99994)
+scale = Vector2(0.39999998, 2.126997)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 200, -30, 202.50012, 2.820877, -92.5, 0.4701538)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block14")
+
+[node name="Gfx_Block15" type="Polygon2D" parent="Graphics" unique_id=1460423203]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_5sug2")
+position = Vector2(-361, 1026)
+scale = Vector2(0.39999998, 2.126997)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-95.00006, -29.619232, 200, -30, 202.50012, 2.820877, -92.5, 0.4701538)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block15")
+
+[node name="Gfx_Block10" type="Polygon2D" parent="Graphics" unique_id=1478930888]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_qri1o")
+position = Vector2(1335, 856)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block10")
+
+[node name="Gfx_Block04" type="Polygon2D" parent="Graphics" unique_id=714942650]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_mhvmy")
+position = Vector2(1364.0001, 396.99997)
+scale = Vector2(0.65484285, 2.7960227)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block04")
+
+[node name="Gfx_Block12" type="Polygon2D" parent="Graphics" unique_id=1955416585]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_1y5qp")
+position = Vector2(-157, 560)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block12")
+
+[node name="Gfx_Block13" type="Polygon2D" parent="Graphics" unique_id=674689296]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_g82wo")
+position = Vector2(1081, -76)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, -110, -80, -3, -96, 99, -85, 200, -30, 200, 30, -200, 30)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block13")
+
+[node name="Gfx_Block08" type="Polygon2D" parent="Graphics" unique_id=1361500573]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_7pe58")
+position = Vector2(715, 682.00006)
+scale = Vector2(0.47214442, 2.7525795)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block08")
+
+[node name="Gfx_Block09" type="Polygon2D" parent="Graphics" unique_id=2014998160]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_ciqje")
+position = Vector2(1077, 808)
+scale = Vector2(0.48000002, 2.6399999)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block09")
+
+[node name="Gfx_Block05" type="Polygon2D" parent="Graphics" unique_id=1973005066]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_gi6ia")
+position = Vector2(1753, 127)
+texture = ExtResource("7_d1h3p")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block05")
+
+[node name="Gfx_Block06" type="Polygon2D" parent="Graphics" unique_id=357406430]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_vs7yr")
+position = Vector2(-380, 400)
+texture = ExtResource("9_4hncb")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-291, -956, 30, -950, 30, 950, -307, 939)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block06")
+
+[node name="Gfx_Block07" type="Polygon2D" parent="Graphics" unique_id=1186348783]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_ma2en")
+position = Vector2(2189, 400)
+texture = ExtResource("9_4hncb")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-30, -950, 506, -967, 490, 1012, -38, 1031)
+script = ExtResource("8_yvibb")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Block07")

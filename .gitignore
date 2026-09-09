@@ -1,0 +1,11 @@
+# Godot が生成するもの（再生成されるのでコミットしない）
+.godot/
+
+# 書き出したビルド成果物
+build/
+
+# Blender が自動で作るバックアップ
+*.blend1
+
+# Claude Codeの個人環境専用設定（各自のPCごとに異なるため共有しない）
+.claude/settings.local.json

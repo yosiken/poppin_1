@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_t1p1n"]
+[ext_resource type="Texture2D" path="res://resources/texture/ob_san.png" id="2_836e4"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie.png" id="3_pelsk"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_ejyft"]
+
+[sub_resource type="Resource" id="Resource_r7c1k"]
+script = ExtResource("1_t1p1n")
+speaker = "OB"
+text = "あ……。最後は、冷たくて、甘くて、きゅんと酸っぱくて、ピンク色の……。女の子がみんな大好きな……『季節のいちごパフェ』！ 夜パフェ最高！ ダイエット……何それ美味しいのぉ！？"
+speaking = 2
+right = ExtResource("2_836e4")
+
+[sub_resource type="Resource" id="Resource_oj5kc"]
+script = ExtResource("1_t1p1n")
+speaker = "カニエナガ"
+text = "よくぞ思い出した。『季節のいちごパフェ』。深夜の夜パフェという、カロリーの暴力、ギルティの極み。これで現実世界で飲食した全ての記憶が蘇った。お前の欲望の歴史が、今、10番目の扉を開いたぞ"
+speaking = 1
+left = ExtResource("3_pelsk")
+
+[resource]
+script = ExtResource("4_ejyft")
+lines = Array[ExtResource("1_t1p1n")]([SubResource("Resource_r7c1k"), SubResource("Resource_oj5kc")])
