@@ -5,12 +5,22 @@
 [resource]
 script = ExtResource("1_pose")
 rotations = Dictionary[StringName, Vector3]({
-&"DEF-forearm.L": Vector3(30, 0, 0),
-&"DEF-forearm.R": Vector3(25, 0, 0),
-&"DEF-spine.001": Vector3(-14, 0, 0),
-&"DEF-spine.002": Vector3(-12, 0, 0),
-&"DEF-spine.004": Vector3(12, 0, 0),
-&"DEF-spine.005": Vector3(10, 0, 0),
-&"DEF-upper_arm.L": Vector3(55, 0, -20),
-&"DEF-upper_arm.R": Vector3(-45, 0, 20)
+&"face": Vector3(-2.01, 0, 0),
+&"foot.L": Vector3(31.34, 9.19, 4.24),
+&"foot.R": Vector3(18.59, -7.49, -2.71),
+&"forearm.L": Vector3(24.82, 11.57, -4.7),
+&"forearm.R": Vector3(5.15, -5.85, -18.79),
+&"hand.L": Vector3(-2.71, 5.86, 14.75),
+&"hand.R": Vector3(0.97, -3.06, -10.66),
+&"pelvis.L": Vector3(3.36, -3.88, 5.39),
+&"shin.L": Vector3(8.64, 1.04, -1.56),
+&"shin.R": Vector3(12.75, -2.33, 3.43),
+&"spine": Vector3(-44.18, 0, 0),
+&"spine.001": Vector3(9.99, 0, 0),
+&"spine.002": Vector3(22.19, 0, 0),
+&"spine.003": Vector3(15.23, 0, 0),
+&"thigh.L": Vector3(-0.83, -8.88, -10.17),
+&"thigh.R": Vector3(-1.81, 13.18, 15.13),
+&"upper_arm.L": Vector3(84.16, 19.16, -9.65),
+&"upper_arm.R": Vector3(78.88, 142.81, 178.2)
 })

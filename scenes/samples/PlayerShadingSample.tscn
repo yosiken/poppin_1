@@ -3,9 +3,9 @@
 [ext_resource type="Script" uid="uid://drj5kj2bh55u3" path="res://scripts/pogo_player.gd" id="1_player"]
 [ext_resource type="Resource" uid="uid://bn4kypulci4cd" path="res://resources/pogo_stats_default.tres" id="2_stats"]
 [ext_resource type="Script" uid="uid://c4gyuno60iuka" path="res://scripts/player_visual.gd" id="3_visual"]
-[ext_resource type="PackedScene" uid="uid://chb2jhy0ycm54" path="res://resources/model/player_7.blend" id="4_model"]
+[ext_resource type="PackedScene" uid="uid://ckfpdkck8xf45" path="res://resources/model/player_8.blend" id="4_model"]
 [ext_resource type="Resource" uid="uid://c5fl7iacd3rmx" path="res://resources/pogo_pose_default.tres" id="5_pose"]
-[ext_resource type="Resource" path="res://resources/pogo_visual_default.tres" id="6_visualstats"]
+[ext_resource type="Resource" uid="uid://dvkv0kyhsqan" path="res://resources/pogo_visual_default.tres" id="6_visualstats"]
 [ext_resource type="Script" uid="uid://d15fu4kny1x64" path="res://scripts/pogo_tuner.gd" id="7_tuner"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]

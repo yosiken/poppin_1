@@ -17,8 +17,12 @@ extends Node2D
 ## ステージ選択に出す表示名。空ならシーン名が使われる
 @export var display_name := ""
 
-## カメラの可動範囲。サイズが 0 ならカメラ制限を変更しない
-@export var camera_bounds := Rect2(-150.0, -100.0, 3100.0, 1250.0)
+## カメラの可動範囲。シーン内の CameraBounds（4点のポリゴン）の外接矩形。
+## エディタで頂点をドラッグすれば範囲が変わるので、数値を打ち込む必要がない。
+## ノードが無い場合はサイズ0を返し、カメラ制限も落下判定も掛からなくなる
+var camera_bounds: Rect2:
+	get:
+		return _camera_bounds()
 
 @export_group("Event")
 ## ステージ開始時に再生するイベント
@@ -29,11 +33,26 @@ extends Node2D
 @export var time_passage_text := ""
 
 
+## CameraBounds のポリゴンを囲む矩形を返す。
+## 頂点は4点を想定しているが、回転や余分な頂点があっても外接矩形として扱う
+func _camera_bounds() -> Rect2:
+	var node := get_node_or_null(^"CameraBounds") as Polygon2D
+	if node == null or node.polygon.size() < 3:
+		push_warning("Stage: %s に CameraBounds（4点のポリゴン）がありません" % name)
+		return Rect2()
+	var rect := Rect2(node.to_global(node.polygon[0]), Vector2.ZERO)
+	for i in range(1, node.polygon.size()):
+		rect = rect.expand(node.to_global(node.polygon[i]))
+	return rect
+
+
 ## 復帰地点の一覧。RecoveryPoints の下に Marker2D を進行順に並べる。
 ## 無ければ空。その場合は落下時に Spawn へ戻る
 func get_recovery_points() -> Array[Marker2D]:
 	var out: Array[Marker2D] = []
-	var host := get_node_or_null(^"RecoveryPoints")
+	# 直下とは限らない（Spawn の子に置かれているステージがある）ので探して回る。
+	# 直下だけを見ていた頃は、そのステージだけ復帰地点が無い扱いになっていた
+	var host := find_child("RecoveryPoints", true, false)
 	if host == null:
 		return out
 	for c in host.get_children():

@@ -46,23 +46,35 @@ class_name PlayerVisual
 ## 足先が基準から (親+子) ぶん回ってしまい、関節が反対側へ折れる（フリップする）。
 ## 先へ行くほど倍率を下げること。
 @export var flail_bones: Dictionary[StringName, float] = {
-	&"DEF-upper_arm.L": 1.0, &"DEF-forearm.L": 1.0,
-	&"DEF-upper_arm.R": 1.0, &"DEF-forearm.R": 1.0,
-	&"DEF-thigh.L": 0.6, &"DEF-shin.L": 0.35,
-	&"DEF-thigh.R": 0.6, &"DEF-shin.R": 0.35,
-	&"DEF-spine.004": 0.4, &"DEF-spine.005": 0.25,
-	# 頭は首(DEF-spine)チェーンの子ではなく、Rigifyのコントロール側にぶら下がった
-	# 別系統のボーン。コンストレイントは取り込まれないので首を回しても付いてこない。
-	# ここだけは積み上がらないので、首につながって見えるよう
-	# 上の首ボーンの合計(0.4+0.25)と同じ値を入れる
-	&"head.001": 0.65,
+	&"upper_arm.L": 1.0, &"forearm.L": 1.0,
+	&"upper_arm.R": 1.0, &"forearm.R": 1.0,
+	&"thigh.L": 0.6, &"shin.L": 0.35,
+	&"thigh.R": 0.6, &"shin.R": 0.35,
+	# 首。頭 (spine.006 とその子の face) はこのチェーンの子なので、
+	# ここを回せば頭も一緒に振れる
+	&"spine.004": 0.4, &"spine.005": 0.25,
 }
 
+@export_group("Secondary")
+## 頭の動きに遅れて付いてくるボーンと配分倍率。
+## 耳は硬いばね、髪は柔らかいばねで、別々のパラメータで揺れる。
+## 回転は親から子へ積み上がるので、先へ行くほど倍率を下げること
+@export var ear_bones: Dictionary[StringName, float] = {
+	&"ear.L": 1.0, &"ear.L.001": 0.5,
+	&"ear.R": 1.0, &"ear.R.001": 0.5,
+}
+## 毛先ほど遅れて見えるよう、根元から先へ倍率を下げていく
+@export var hair_bones: Dictionary[StringName, float] = {
+	&"hair": 1.0, &"hair.001": 0.8, &"hair.002": 0.65,
+	&"hair.003": 0.5, &"hair.004": 0.4,
+}
 @export_group("Ball")
-## ボール（跳ねる玉）を動かすボーン名。
-## ボールはキャラクター本体とは別のスケルトンに1本だけ入っており、
-## このボーンを持つスケルトンをボール用、そうでない方をキャラクター本体として扱う
-@export var ball_bone: StringName = &"ball"
+## ボール（跳ねる玉）のメッシュ名。
+## ボールはキャラクター本体とは別のスケルトンに入っているので、
+## このメッシュを持つ方をボール用、持たない方をキャラクター本体として扱う。
+## ボーン名はモデルによって変わる（"ball" だったり "Bone" だったり）ので、
+## 名前が安定しているメッシュ側で見分ける
+@export var ball_mesh_name: StringName = &"ball"
 
 @export_group("Animation")
 ## 再生するアニメーション名。空ならモデルが持つ最初のアニメーションを使う。
@@ -94,6 +106,19 @@ var _flail_base: Dictionary[int, Quaternion] = {}   ## 振れを乗せる土台�
 var _anim_driven: Dictionary[int, bool] = {}        ## アニメーションが毎フレーム上書きするボーン
 var _flail_angle := 0.0
 var _flail_vel := 0.0
+## 耳・髪の揺れ。x = 前後(ローカルX軸まわり)、y = 左右(ローカルZ軸まわり)
+## _drive は均した移動速度 (1000px/s を 1.0 とする)
+var _drive := Vector2.ZERO
+var _ear_angle := Vector2.ZERO
+var _ear_vel := Vector2.ZERO
+## 髪は1本のばねではなく、段ごとに別のばねを持たせて順に伝える。
+## 同じ角度を全段へ配るとゴムのように一体で動いてしまう
+var _hair_chain: Array[int] = []          ## ボーン番号（根元から毛先の順）
+var _hair_weight: Array[float] = []
+var _hair_ang: Array[Vector2] = []
+var _hair_vel: Array[Vector2] = []
+var _secondary_base: Dictionary[int, Quaternion] = {}
+var _secondary_pos_base: Dictionary[int, Vector3] = {}
 var _ball_skeleton: Skeleton3D         ## ボール用（ボーン1本）のスケルトン
 var _ball_bone_idx := -1
 var _ball_base_scale := Vector3.ONE
@@ -138,6 +163,8 @@ func _process(_delta: float) -> void:
 	_update_facing(_delta)
 	_update_squash(_delta)
 	_update_flail(_delta)
+	# 頭が動いた結果に遅れて付いてくるので、体の処理より後に回す
+	_update_secondary(_delta)
 
 
 # ═══════════════════════════════ 向き
@@ -167,11 +194,10 @@ func _resolve_skeletons() -> void:
 	_collect_nodes_of_type(_yaw, "Skeleton3D", found)
 	for n in found:
 		var skel := n as Skeleton3D
-		var idx := _find_ball_bone(skel)
-		if idx >= 0:
+		if _ball_mesh_of(skel) and skel.get_bone_count() > 0:
 			_ball_skeleton = skel
-			_ball_bone_idx = idx
-			_ball_base_scale = skel.get_bone_pose_scale(idx)
+			_ball_bone_idx = 0          # ボールは根ボーン1本で動かす
+			_ball_base_scale = skel.get_bone_pose_scale(0)
 		elif _skeleton == null:
 			_skeleton = skel
 	if _skeleton == null:
@@ -179,30 +205,24 @@ func _resolve_skeletons() -> void:
 	else:
 		_char_base_y = _skeleton.position.y
 	if _ball_skeleton == null:
-		push_warning("PlayerVisual: ボール用ボーン '%s' を持つスケルトンが見つかりません" % ball_bone)
+		push_warning("PlayerVisual: '%s' メッシュを持つスケルトンが見つかりません" % ball_mesh_name)
 		return
 
 	# キャラをボールの上端に乗せ続けるため、伸縮でどれだけ上端が動くかを測っておく。
 	# ボーン原点を基準にスケールが掛かるので、原点から上端までの距離がそのまま倍率になる
-	var ball_mesh := _find_node_of_type(_ball_skeleton, "MeshInstance3D") as MeshInstance3D
+	var ball_mesh := _ball_mesh_of(_ball_skeleton)
 	if ball_mesh:
 		_ball_top_y = maxf(ball_mesh.get_aabb().end.y
 			- _ball_skeleton.get_bone_global_rest(_ball_bone_idx).origin.y, 0.0)
 
 
-## glTF取り込みでは、ボーン名が同名のノード（ボールのメッシュ）と衝突すると
-## "ball_2" のように連番が付く。完全一致で見つからないときはその形も許容する
-func _find_ball_bone(skel: Skeleton3D) -> int:
-	var idx := skel.find_bone(ball_bone)
-	if idx >= 0:
-		return idx
-	var prefix := String(ball_bone)
-	for i in skel.get_bone_count():
-		var rest := skel.get_bone_name(i).substr(prefix.length())
-		if skel.get_bone_name(i).begins_with(prefix) and rest.begins_with("_") \
-				and rest.substr(1).is_valid_int():
-			return i
-	return -1
+## そのスケルトンがボールのメッシュを持っていれば返す。
+## glTF取り込みで名前に連番が付くことがあるので前方一致で見る
+func _ball_mesh_of(skel: Skeleton3D) -> MeshInstance3D:
+	for c in skel.get_children():
+		if c is MeshInstance3D and String(c.name).begins_with(String(ball_mesh_name)):
+			return c as MeshInstance3D
+	return null
 
 
 func _update_squash(delta: float) -> void:
@@ -234,7 +254,7 @@ func _update_squash(delta: float) -> void:
 	# キャラはボールの上に乗っているので、上端が沈んだ／伸びた分だけ一緒に上下させる。
 	# ここを動かさないとボールだけが潰れてキャラが宙に浮いて見える
 	if _skeleton:
-		_skeleton.position.y = _char_base_y \
+		_skeleton.position.y = _char_base_y + _v(&"body_offset_y") \
 			+ _ball_top_y * (_squash - 1.0) * _v(&"body_follow_ball")
 
 
@@ -316,6 +336,115 @@ func _update_flail(delta: float) -> void:
 		if not _flail_base.has(i) or (_anim_driven.has(i) and _anim != null and _anim.is_playing()):
 			_flail_base[i] = _skeleton.get_bone_pose_rotation(i)
 		_skeleton.set_bone_pose_rotation(i, _flail_base[i] * offset)
+
+
+# ═══════════════════════════════ 耳・髪の揺れ
+
+## プレイヤーの移動に遅れて耳と髪を付いてこさせる。
+##
+## 駆動源は 2D 側の移動速度。3Dビューポートの中ではキャラは動かないので、
+## 頭のボーンの動きを見ると傾き(A/D入力)だけが入力になってしまい、
+## 「キーを押した瞬間に髪が動く」不自然な見え方になっていた。
+## 実際に跳んだり落ちたりした速度で振らせると、ジャンプに遅れて付いてくる
+func _update_secondary(delta: float) -> void:
+	if _skeleton == null or _player == null or delta <= 0.0:
+		return
+
+	# 画面の右方向が +x、下方向が +y。髪は進行方向と逆へ流れるので符号を反転する。
+	# 1000px/s でちょうど gain と同じ角度(度)になるようにしておく
+	var v := _player.velocity / 1000.0
+	var smooth: float = _v(&"secondary_smoothing")
+	_drive = _drive.lerp(v, 1.0 - exp(-smooth * delta))
+	# x(左右の移動) → Z軸まわりの振れ、y(上下の移動) → X軸まわりの振れ
+	var swing := Vector2(_drive.y, -_drive.x)
+	var limit: float = _v(&"secondary_max_deg")
+
+	# 目標の振れ角へ引き寄せる形にする。
+	# ばね定数で割られないので、硬さを変えても振れ幅は変わらず、
+	# 追従の速さと戻り方だけが変わる
+	# 耳: 硬いばね。すぐ戻る
+	var ear_push: Vector2 = swing * _v(&"ear_gain")
+	_ear_vel += (_v(&"ear_stiffness") * (ear_push - _ear_angle)
+		- _v(&"ear_damping") * _ear_vel) * delta
+	_ear_angle = (_ear_angle + _ear_vel * delta).limit_length(limit)
+	_apply_secondary(ear_bones, _ear_angle)
+
+	# 髪: 段ごとに別のばね。根元は移動速度、2段目以降は「一つ前の段の今の角度」を
+	# 目標にする。段を追うごとに遅れが積み重なり、毛先へ波が伝わっていく
+	_build_hair_chain()
+	var follow: float = _v(&"hair_follow")
+	var follow_ramp: float = _v(&"hair_follow_ramp")
+	var soften: float = _v(&"hair_softening")
+	var last := maxi(_hair_chain.size() - 1, 1)
+	var stiffness: float = _v(&"hair_stiffness")
+	var damping: float = _v(&"hair_damping")
+	var hair_push: Vector2 = swing * _v(&"hair_gain")
+	# 落下中に根元を倒す角度。ばねの連鎖には混ぜず、描くときに根元へだけ足す。
+	# 子ボーンは親の回転を継いで一緒に持ち上がるので、段ごとに足すと多重に掛かる
+	var lift_deg: float = _v(&"hair_fall_lift")
+	var lift := clampf(_drive.y, 0.0, 1.0) * lift_deg
+	for i in _hair_chain.size():
+		# 段が下るほど親に強く引かれるようにする
+		var target := hair_push * _hair_weight[i]
+		if i > 0:
+			target = _hair_ang[i - 1] * follow * pow(follow_ramp, float(i - 1))
+		# 毛先へ行くほど柔らかくして、さらに遅れて付いてくるようにする
+		var k := stiffness * pow(soften, float(i))
+		var c := damping * pow(soften, float(i))
+		_hair_vel[i] += (k * (target - _hair_ang[i]) - c * _hair_vel[i]) * delta
+		_hair_ang[i] = (_hair_ang[i] + _hair_vel[i] * delta).limit_length(limit)
+		# 位置ずらしは根元を0、毛先を最大にする。根元が動くと付け根が外れて見える
+		var applied := _hair_ang[i]
+		if i == 0:
+			applied.x += lift
+		_apply_bone_swing(_hair_chain[i], applied, float(i) / float(last))
+
+
+## hair_bones の並び順（根元→毛先）をボーン番号の配列にしておく
+func _build_hair_chain() -> void:
+	if not _hair_chain.is_empty():
+		return
+	for bone_name in hair_bones:
+		var i := _skeleton.find_bone(bone_name)
+		if i < 0:
+			continue
+		_hair_chain.append(i)
+		_hair_weight.append(hair_bones[bone_name])
+		_hair_ang.append(Vector2.ZERO)
+		_hair_vel.append(Vector2.ZERO)
+
+
+func _apply_bone_swing(i: int, angle: Vector2, stretch_scale := 1.0) -> void:
+	if not _secondary_base.has(i):
+		_secondary_base[i] = _skeleton.get_bone_pose_rotation(i)
+		_secondary_pos_base[i] = _skeleton.get_bone_pose_position(i)
+	var rx := deg_to_rad(angle.x)
+	var rz := deg_to_rad(angle.y)
+	_skeleton.set_bone_pose_rotation(i,
+		_secondary_base[i] * Quaternion.from_euler(Vector3(rx, 0.0, rz)))
+
+	# 回転だけだと関節が硬く見えるので、振れた向きへ位置も逃がす。
+	# ボーンは自分の +Y 方向へ伸びているので、Z軸まわりの振れは +X へ、
+	# X軸まわりの振れは -Z へずらすと、曲がりを後押しする向きになる
+	var stretch: float = _v(&"hair_stretch") * stretch_scale
+	if stretch > 0.0:
+		_skeleton.set_bone_pose_position(i,
+			_secondary_pos_base[i] + Vector3(rz, 0.0, -rx) * stretch)
+
+
+func _apply_secondary(bones: Dictionary[StringName, float], angle: Vector2) -> void:
+	for bone_name in bones:
+		var i := _skeleton.find_bone(bone_name)
+		if i < 0:
+			continue
+		# 基準は最初に見たときの姿勢。毎フレーム取り直すと自分が書いた値を
+		# 読み戻して角度が積み上がっていく
+		if not _secondary_base.has(i):
+			_secondary_base[i] = _skeleton.get_bone_pose_rotation(i)
+		var w: float = bones[bone_name]
+		var offset := Quaternion.from_euler(
+			Vector3(deg_to_rad(angle.x * w), 0.0, deg_to_rad(angle.y * w)))
+		_skeleton.set_bone_pose_rotation(i, _secondary_base[i] * offset)
 
 
 # ═══════════════════════════════ ビューポート構築

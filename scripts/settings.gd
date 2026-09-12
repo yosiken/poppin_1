@@ -2,7 +2,7 @@ extends Node
 ##
 ## ゲーム全体の設定。オートロード（Settings）として常駐する。
 ##
-## オプション画面から編集し、user://settings.cfg に保存する。
+## オプション画面から編集し、SAVE_PATH に保存する。
 ## BGM/SE の音量は AudioServer の "BGM"/"SE" バスへそのまま反映する
 ## （default_bus_layout.tres で用意してある）。
 ##
@@ -11,14 +11,23 @@ extends Node
 ## ここに直書きしている（サーバー側の秘密鍵ではない）
 ##
 
-const SAVE_PATH := "user://settings.cfg"
+const SAVE_PATH := "user://settings_v2.cfg"
+
+## 使わなくなった旧セーブ。引き継がずに消す。
+## 名前を変えるときは、古い名前をここへ足してから SAVE_PATH を変えること
+const OBSOLETE_SAVE_PATHS: PackedStringArray = ["user://settings.cfg"]
+
 ## バス音量を 0 にしたとき、-INF ではなくこの dB を下限にする
 const MIN_DB := -80.0
+
+## 名前を入力しなかった人に割り当てる名前の頭。
+## ランキングで全員が同じ名前にならないよう、初回起動時に3桁の番号を付ける
+const DEFAULT_NAME := "Player"
 
 const SW_API_KEY := "FfnXkXz7uK3FI3yyltIRL44CGmyUE6R57hVHYVEx"
 const SW_GAME_ID := "popping1"
 
-var bgm_volume := 0.8:
+var bgm_volume := 0.5:
 	set(value):
 		bgm_volume = clampf(value, 0.0, 1.0)
 		_apply_bus_volume("BGM", bgm_volume)
@@ -41,7 +50,7 @@ var se_volume := 0.8:
 var test_mode := false
 
 ## オンラインランキングに載せるプレイヤー名
-var player_name := "プレイヤー":
+var player_name := DEFAULT_NAME:
 	set(value):
 		player_name = value
 		_queue_save()
@@ -69,8 +78,31 @@ func _ready() -> void:
 		"game_id": SW_GAME_ID,
 		"log_level": 0,
 	})
+	_discard_obsolete_saves()
 	_load()
 	_loading = false
+	_ensure_player_name()
+
+
+## 名前が未設定なら "Player000" のように番号を振って保存する。
+## 一度決めたらセーブに残るので、次回以降は振り直さない
+func _ensure_player_name() -> void:
+	if player_name.strip_edges() != "" and player_name != DEFAULT_NAME:
+		return
+	player_name = "%s%03d" % [DEFAULT_NAME, randi() % 1000]
+	print("[Settings] プレイヤー名を自動設定: ", player_name)
+
+
+## 旧セーブを消す。引き継ぎはしないので、残しておくとディスク上のゴミになる
+func _discard_obsolete_saves() -> void:
+	for path in OBSOLETE_SAVE_PATHS:
+		if not FileAccess.file_exists(path):
+			continue
+		var err := DirAccess.remove_absolute(path)
+		if err == OK:
+			print("[Settings] 旧セーブを削除: ", path)
+		else:
+			push_warning("Settings: 旧セーブの削除に失敗 (%s): %s" % [path, error_string(err)])
 
 
 ## 値が変わるたびに保存を予約する。

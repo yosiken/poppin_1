@@ -19,14 +19,12 @@ const PANEL_COLOR := Color(0.06, 0.07, 0.11, 0.92)
 const BORDER_COLOR := Color(0.55, 0.65, 0.85, 0.7)
 const ACCENT_COLOR := Color(1.0, 0.92, 0.4)
 
-const CHARACTER_SCENE := preload("res://scenes/TitleCharacter.tscn")
-
 const RANKING_MAX := 10
 ## ページ送りで切り替えるリーダーボード。先頭が既定表示
 const RANKING_BOARDS: Array[String] = ["total", "stage01", "stage02", "stage03", "stage04",
 	"stage05", "stage06", "stage07", "stage08", "stage09", "stage10"]
-const RANKING_LABELS: Array[String] = ["合計", "ステージ1", "ステージ2", "ステージ3", "ステージ4",
-	"ステージ5", "ステージ6", "ステージ7", "ステージ8", "ステージ9", "ステージ10"]
+const RANKING_LABELS: Array[String] = ["TOTAL", "STAGE 1", "STAGE 2", "STAGE 3", "STAGE 4",
+	"STAGE 5", "STAGE 6", "STAGE 7", "STAGE 8", "STAGE 9", "STAGE 10"]
 
 var _menu: VBoxContainer
 var _options: Control
@@ -53,11 +51,6 @@ func _build_ui() -> void:
 	back.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(back)
 
-	var character := CHARACTER_SCENE.instantiate()
-	character.position = Vector2(1150, 110)
-	character.scale = Vector2(0.7, 0.7)
-	add_child(character)
-
 	var title_label := Label.new()
 	title_label.text = "Popping"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -65,7 +58,7 @@ func _build_ui() -> void:
 	title_label.add_theme_color_override("font_color", ACCENT_COLOR)
 
 	var note := Label.new()
-	note.text = "（仮タイトル）"
+	note.text = "(working title)"
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.add_theme_font_size_override("font_size", 18)
 	note.add_theme_color_override("font_color", Color(0.6, 0.65, 0.75))
@@ -86,9 +79,15 @@ func _build_ui() -> void:
 	_menu.add_theme_constant_override("separation", 20)
 	add_child(_menu)
 
-	_add_menu_button("ゲームスタート", _start_game)
-	_add_menu_button("オプション", _show_options)
-	_add_menu_button("スコアランキング", _show_ranking)
+	_add_menu_button("START", _start_game)
+	_add_menu_button("OPTIONS", _show_options)
+	_add_menu_button("RANKING", _show_ranking)
+
+	# ボタン群と名前欄はひとまとまりに見えないよう間を空ける
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 28)
+	_menu.add_child(gap)
+	_add_name_row(_menu)
 
 	_options = _build_options_panel()
 	add_child(_options)
@@ -161,13 +160,12 @@ func _build_options_panel() -> Control:
 	box.add_theme_constant_override("separation", 20)
 	panel.add_child(box)
 
-	_add_panel_title(box, "オプション")
-	_add_name_row(box)
-	_add_slider_row(box, "BGMボリューム", Settings.bgm_volume,
+	_add_panel_title(box, "OPTIONS")
+	_add_slider_row(box, "BGM VOLUME", Settings.bgm_volume,
 		func(v: float) -> void: Settings.bgm_volume = v)
-	_add_slider_row(box, "SEボリューム", Settings.se_volume,
+	_add_slider_row(box, "SE VOLUME", Settings.se_volume,
 		func(v: float) -> void: Settings.se_volume = v)
-	_add_slider_row(box, "ランキング文字サイズ", Settings.ranking_font_size,
+	_add_slider_row(box, "RANKING FONT SIZE", Settings.ranking_font_size,
 		func(v: float) -> void: Settings.ranking_font_size = v, 10.0, 32.0, 1.0)
 	_add_back_row(box, func() -> void:
 		Settings.save()
@@ -176,20 +174,25 @@ func _build_options_panel() -> Control:
 	return panel
 
 
+## ランキングに載る名前。タイトル画面に置いて、遊び始める前に必ず目に入るようにする
 func _add_name_row(box: VBoxContainer) -> void:
 	var row := VBoxContainer.new()
-	row.add_theme_constant_override("separation", 4)
+	row.add_theme_constant_override("separation", 6)
 	box.add_child(row)
 
 	var label := Label.new()
-	label.text = "プレイヤー名（ランキング表示用）"
-	label.add_theme_font_size_override("font_size", 20)
+	label.text = "PLAYER NAME (shown in ranking)"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 18)
+	label.add_theme_color_override("font_color", Color(0.6, 0.65, 0.75))
 	row.add_child(label)
 
 	var edit := LineEdit.new()
 	edit.text = Settings.player_name
 	edit.max_length = 16
-	edit.custom_minimum_size = Vector2(300, 32)
+	edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	edit.custom_minimum_size = Vector2(280, 40)
+	edit.add_theme_font_size_override("font_size", 20)
 	edit.text_changed.connect(func(v: String) -> void: Settings.player_name = v)
 	row.add_child(edit)
 
@@ -204,7 +207,7 @@ func _build_ranking_panel() -> Control:
 	box.add_theme_constant_override("separation", 14)
 	panel.add_child(box)
 
-	_add_panel_title(box, "スコアランキング")
+	_add_panel_title(box, "RANKING")
 	_add_ranking_page_row(box)
 
 	_ranking_status = Label.new()
@@ -270,7 +273,7 @@ func _add_ranking_page_row(box: VBoxContainer) -> void:
 	box.add_child(row)
 
 	var prev := Button.new()
-	prev.text = "◀"
+	prev.text = "<"
 	prev.custom_minimum_size = Vector2(44, 40)
 	prev.pressed.connect(func() -> void: _change_ranking_page(-1))
 	row.add_child(prev)
@@ -282,7 +285,7 @@ func _add_ranking_page_row(box: VBoxContainer) -> void:
 	row.add_child(_ranking_page_label)
 
 	var next := Button.new()
-	next.text = "▶"
+	next.text = ">"
 	next.custom_minimum_size = Vector2(44, 40)
 	next.pressed.connect(func() -> void: _change_ranking_page(1))
 	row.add_child(next)
@@ -295,7 +298,7 @@ func _change_ranking_page(direction: int) -> void:
 
 func _add_back_row(box: VBoxContainer, callback: Callable) -> void:
 	var b := Button.new()
-	b.text = "戻る"
+	b.text = "BACK"
 	b.custom_minimum_size = Vector2(160, 44)
 	b.pressed.connect(callback)
 	box.add_child(b)
@@ -334,7 +337,7 @@ func _load_ranking() -> void:
 	for c in _ranking_list.get_children():
 		_ranking_list.remove_child(c)
 		c.queue_free()
-	_ranking_status.text = "読み込み中…"
+	_ranking_status.text = "Loading..."
 
 	_ranking_load_gen += 1
 	var gen := _ranking_load_gen
@@ -344,12 +347,12 @@ func _load_ranking() -> void:
 		return          # ページ送りで待っている間に別のページへ切り替わった
 
 	if not sw_result.get("success", false):
-		_ranking_status.text = "取得に失敗しました"
+		_ranking_status.text = "Failed to load"
 		return
 
 	var scores: Array = sw_result.get("scores", [])
 	if scores.is_empty():
-		_ranking_status.text = "まだ記録がありません"
+		_ranking_status.text = "No records yet"
 		return
 
 	# タイム(秒)なので短いほど上位
@@ -397,7 +400,7 @@ func _add_ranking_row(rank: int, total: int, score: Dictionary) -> void:
 		falls = int(metadata["falls"])
 
 	var time_label := Label.new()
-	time_label.text = "%.2f秒（落下%d）" % [float(score.get("score", 0.0)), falls]
+	time_label.text = "%.2fs  (falls %d)" % [float(score.get("score", 0.0)), falls]
 	time_label.add_theme_font_size_override("font_size", font_size)
 	time_label.add_theme_color_override("font_color", color)
 	row.add_child(time_label)
@@ -407,7 +410,7 @@ func _add_ranking_row(rank: int, total: int, score: Dictionary) -> void:
 		var stage_index := _ranking_board_index - 1
 		var replay_data: Dictionary = metadata["replay"]
 		var play_btn := Button.new()
-		play_btn.text = "▶"
+		play_btn.text = "PLAY"
 		play_btn.custom_minimum_size = Vector2(36, 28)
 		play_btn.pressed.connect(func() -> void: _start_replay(stage_index, replay_data))
 		row.add_child(play_btn)

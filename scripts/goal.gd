@@ -14,6 +14,10 @@ extends Area2D
 ## 到達した瞬間に飛ぶ。引数は開始からの経過秒
 signal reached(clear_time: float)
 
+## 判定範囲からこれだけ外に中心があっても「触れている」とみなす (px)。
+## プレイヤーはカプセルなので、中心が矩形の外でも体は入っている
+const BODY_SLACK := 64.0
+
 # ─────────────────────────────── 設定
 ## 判定範囲。スプライトの見た目に対する倍率。
 ## 1.0 だと絵の端をかすめただけでクリアになるので、既定では少し内側に絞る
@@ -33,6 +37,10 @@ var _reached := false
 ## 経過時間。実時間ではなく物理ステップの積算で測る
 var _elapsed := 0.0
 var _overlay: CanvasLayer
+## ツリーに入って最初の物理フレームを終えるまでは判定を受け付けない。
+## ステージ差し替えの瞬間に、前のステージでの立ち位置で計算された
+## 接触通知が遅れて届くため
+var _armed := false
 
 
 # ═══════════════════════════════ ライフサイクル
@@ -52,6 +60,9 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if _reached:
 		return
+	if not _armed:
+		_armed = true          # 差し替え直後の1フレームは判定も時間も動かさない
+		return
 	_elapsed += delta
 
 
@@ -68,11 +79,14 @@ func _unhandled_input(event: InputEvent) -> void:
 ## デバッグ用。触れたときと同じ処理をそのまま走らせる。
 ## 判定を迂回した別処理にすると、デバッグと本番で挙動がずれるので通常経路を使う
 func force_reach(body: Node2D) -> void:
-	_on_body_entered(body)
+	_on_body_entered(body, true)
 
 
-func _on_body_entered(body: Node2D) -> void:
+## forced はデバッグの強制クリア用。位置に関係なく通す
+func _on_body_entered(body: Node2D, forced := false) -> void:
 	if _reached or not body.is_in_group(&"player"):
+		return
+	if not forced and (not _armed or not _really_overlaps(body)):
 		return
 	_reached = true
 
@@ -88,6 +102,20 @@ func _on_body_entered(body: Node2D) -> void:
 	reached.emit(clear_time)
 	if built_in_overlay:
 		_show_overlay(clear_time)
+
+
+## 本当に判定範囲へ入っているかを座標で確かめる。
+##
+## ステージを差し替えた直後、前のステージでの立ち位置を元に計算された
+## body_entered が1フレーム遅れて届くことがある。ステージ1とステージ2の
+## ゴールは世界座標で重なっているため、これを信じると2面が始まった瞬間に
+## クリアになっていた
+func _really_overlaps(body: Node2D) -> bool:
+	if _rect == null or _shape_node == null:
+		return true
+	var local := to_local(body.global_position) - _shape_node.position
+	var half := _rect.size * _shape_node.scale * 0.5 + Vector2(BODY_SLACK, BODY_SLACK)
+	return absf(local.x) <= half.x and absf(local.y) <= half.y
 
 
 # ═══════════════════════════════ 形状構築
@@ -153,7 +181,7 @@ func _show_overlay(clear_time: float) -> void:
 
 	_add_label(box, "GAME CLEAR", 64, Color(1.0, 0.92, 0.4))
 	_add_label(box, "TIME  %.2f" % clear_time, 32, Color(0.9, 0.94, 1.0))
-	_add_label(box, "[R] リトライ", 20, Color(0.65, 0.7, 0.8))
+	_add_label(box, "[R] RETRY", 20, Color(0.65, 0.7, 0.8))
 
 
 func _add_label(parent: Node, text: String, size: int, color: Color) -> void:

@@ -144,10 +144,15 @@ shader_parameter/bottom_y = 1031.0
 
 [node name="Stage05" type="Node2D" unique_id=640078749]
 script = ExtResource("1_thbjj")
-display_name = "たて穴 (仮5)"
-camera_bounds = Rect2(-600, -2000, 3050, 3300)
+display_name = "Shaft (WIP 5)"
 intro = ExtResource("cut_intro")
 outro = ExtResource("cut_outro")
+
+[node name="CameraBounds" type="Polygon2D" parent="." unique_id=416206247]
+position = Vector2(77.91803, 509.3637)
+scale = Vector2(0.96819675, 0.6581818)
+color = Color(1, 0.85, 0.3, 0.15)
+polygon = PackedVector2Array(-600, -2000, 2450, -2000, 2450, 1300, -600, 1300)
 
 [node name="Spawn" type="Marker2D" parent="." unique_id=1703398707]
 position = Vector2(0, 1000)
@@ -453,7 +458,8 @@ copy_from = NodePath("../../Terrain/Block05")
 texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_vs7yr")
-position = Vector2(-380, 400)
+position = Vector2(-380, 443.63696)
+scale = Vector2(1, 1.0456454)
 texture = ExtResource("9_4hncb")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-291, -956, 30, -950, 30, 950, -307, 939)

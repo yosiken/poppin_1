@@ -1,9 +1,9 @@
 extends SceneTree
 
 const REFERENCED := [
-	"DEF-upper_arm.L", "DEF-forearm.L", "DEF-upper_arm.R", "DEF-forearm.R",
-	"DEF-thigh.L", "DEF-shin.L", "DEF-thigh.R", "DEF-shin.R",
-	"DEF-spine.001", "DEF-spine.002", "DEF-spine.004", "DEF-spine.005",
+	"upper_arm.L", "forearm.L", "upper_arm.R", "forearm.R",
+	"thigh.L", "shin.L", "thigh.R", "shin.R",
+	"spine.001", "spine.002", "spine.004", "spine.005", "spine.006",
 ]
 
 var _meshes: Array[String] = []
@@ -12,7 +12,7 @@ var _anim: AnimationPlayer
 
 
 func _initialize() -> void:
-	var ps: PackedScene = load("res://resources/model/player_7.blend")
+	var ps: PackedScene = load("res://resources/model/player_8.blend")
 	var root := ps.instantiate()
 	_tree(root, 0)
 	_walk(root)

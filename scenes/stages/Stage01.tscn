@@ -122,9 +122,15 @@ shader_parameter/bottom_y = 83.0
 
 [node name="Stage01" type="Node2D" unique_id=602930718]
 script = ExtResource("1_4upp5")
-display_name = "はじまりの坂"
+display_name = "First Slope"
 intro = ExtResource("cut_intro")
 outro = ExtResource("cut_outro")
+
+[node name="CameraBounds" type="Polygon2D" parent="." unique_id=1178288945]
+position = Vector2(-24.387085, 26.279999)
+scale = Vector2(1.0174195, 0.9328)
+color = Color(1, 0.85, 0.3, 0.15)
+polygon = PackedVector2Array(-150, -100, 2950, -100, 2949.9998, 512.7466, 2950, 1150, -150, 1150)
 
 [node name="Spawn" type="Marker2D" parent="." unique_id=1695150916]
 position = Vector2(0, 800)

@@ -40,7 +40,7 @@ signal finished
 
 @export_group("Look")
 ## ステージ側で指定が無いときに出す文言
-@export var default_text := "― しばらく後 ―"
+@export var default_text := "- SOME TIME LATER -"
 ## 増えていく点の数
 @export_range(0, 8, 1) var dot_count := 3
 @export var back_color := Color(0.02, 0.02, 0.04)

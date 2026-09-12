@@ -21,6 +21,9 @@ extends Node2D
 ## 作り忘れが埋もれる
 const BOUNDS_SLACK := 64.0
 
+## ポーズメニューから戻る先
+const TITLE_SCENE := "res://scenes/Title.tscn"
+
 signal stage_loaded(index: int, stage: Stage)
 signal all_cleared()
 ## 場外へ落ちて開始位置へ戻された。引数は落ちた地点
@@ -58,6 +61,15 @@ signal player_fell(from_position: Vector2)
 @export var test_play_mode := false
 ## テストプレイの区切りとするステージ番号 (1 始まり)
 @export_range(1, 10, 1) var test_play_stage_count := 5
+## 会話デモ（オープニング・ステージ前後・エンディング）を全て飛ばし、
+## ステージだけを通しで遊ぶ。レベルデザインの確認用。
+## 書き出しプリセットのカスタム機能に "testplay" が付いていると自動で有効になる。
+## Settings.test_mode と違いスコアは通常どおり送信する
+@export var skip_cutscenes := false
+## デバッグ操作（F2 ステージ選択 / F3 即クリア / F4 方眼 / 数字でステージ移動）を
+## 受け付けるか。配布版では切る。押されるとランキングに出鱈目な記録が載るため。
+## skip_cutscenes と同じく "testplay" 付きの書き出しでは自動で false になる
+@export var debug_shortcuts := true
 
 @export_group("Stage title")
 ## ステージ開始時に出す見出しの表示秒数。0 で出さない
@@ -69,7 +81,7 @@ signal player_fell(from_position: Vector2)
 ## 強いバウンドで 1600px 以上上がるため、普通に跳んだだけで落下扱いになる
 @export_range(0.0, 2000.0, 10.0) var fall_margin := 400.0
 ## 復帰地点に到達したとみなす距離 (px)
-@export_range(50.0, 800.0, 10.0) var checkpoint_radius := 220.0
+@export_range(50.0, 800.0, 10.0) var checkpoint_radius := 132.0
 ## 落下から復帰までの演出時間 (秒)。これが実質的なペナルティになる
 @export_range(0.0, 2.0, 0.05) var respawn_time := 0.5
 
@@ -92,6 +104,7 @@ signal player_fell(from_position: Vector2)
 var _index := -1
 var _stage: Stage
 var _clear_overlay: CanvasLayer
+var _pause_overlay: CanvasLayer
 var _select: PanelContainer
 var _advancing := false
 var _respawning := false
@@ -164,7 +177,11 @@ func _ready() -> void:
 	_build_select_ui()
 	# テストモードではタイトルとデモ(オープニング・ステージ冒頭イベント)を
 	# 飛ばして、いきなりステージだけをプレイできるようにする
-	var skip_demo := Settings.test_mode
+	# Web(itch.io)版は通しプレイだけを解放するので、書き出し時のカスタム機能で切り替える
+	if OS.has_feature("testplay"):
+		skip_cutscenes = true
+		debug_shortcuts = false
+	var skip_demo := Settings.test_mode or skip_cutscenes
 	if opening and not skip_demo:
 		await cutscene.play(opening)
 	load_stage(start_index, not skip_demo)
@@ -241,9 +258,15 @@ func _check_fall() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"ui_cancel"):
+		get_viewport().set_input_as_handled()
+		_open_pause_menu()
+		return
 	if event.is_action_pressed(&"pogo_retry"):
 		get_viewport().set_input_as_handled()
 		load_stage(_index)
+		return
+	if not debug_shortcuts:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		var key := (event as InputEventKey).keycode
@@ -259,11 +282,32 @@ func _unhandled_input(event: InputEvent) -> void:
 				grid.visible = not grid.visible
 			get_viewport().set_input_as_handled()
 		elif key >= KEY_1 and key <= KEY_9 or key == KEY_0:
-			# 1〜9 でステージ1〜9、0 で10番目
+			# 1〜9 でステージ1〜9、0 で10番目。
+			# Shift を足すと同じ番号の復帰地点へ飛ぶ（Shift+0 は開始位置）
 			var idx := 9 if key == KEY_0 else key - KEY_1
-			if idx < stages.size():
+			if (event as InputEventKey).shift_pressed:
+				_warp_to_point(-1 if key == KEY_0 else idx)
+				get_viewport().set_input_as_handled()
+			elif idx < stages.size():
 				load_stage(idx, false)
 				get_viewport().set_input_as_handled()
+
+
+## デバッグ用。復帰地点（-1 なら開始位置）へ飛ぶ。
+## 落下したときの戻り先も揃えるので、そこから続けて試せる
+func _warp_to_point(index: int) -> void:
+	if player == null or _stage == null:
+		return
+	if index >= _points.size():
+		print("[Game] デバッグ: 復帰地点 %d は無い（このステージは %d 個）"
+			% [index + 1, _points.size()])
+		return
+	_checkpoint = index
+	player.teleport(_respawn_position())
+	if index < 0:
+		print("[Game] デバッグ: 開始位置へ移動")
+	else:
+		print("[Game] デバッグ: 復帰地点 %d/%d へ移動" % [index + 1, _points.size()])
 
 
 # ═══════════════════════════════ ステージ読み込み
@@ -291,6 +335,10 @@ func load_stage(index: int, manual := true) -> void:
 		push_error("Game: ステージ %d のルートが Stage ではありません" % index)
 		await _reveal()
 		return
+	# ツリーに入れる前に開始位置へ移す。前のステージのゴール前に立ったままだと、
+	# ステージによってはそこが次のステージのゴール判定の中に入っていて、
+	# 始まった瞬間にクリアになりうる（ステージ1と2のゴールは世界座標で重なっている）
+	_reset_player()
 	stage_host.add_child(_stage)
 
 	for h in _stage.get_hazards():
@@ -307,7 +355,6 @@ func load_stage(index: int, manual := true) -> void:
 	_checkpoint = -1
 	_reset_replay()
 	_points = _stage.get_recovery_points()
-	_reset_player()
 	_apply_camera_bounds()
 	_check_stage_bounds()
 	_refresh_select_ui()
@@ -322,7 +369,7 @@ func load_stage(index: int, manual := true) -> void:
 	if gen != _load_gen:
 		return
 
-	if _stage.intro and (manual or play_intro_on_select):
+	if _stage.intro and not skip_cutscenes and (manual or play_intro_on_select):
 		await cutscene.play(_stage.intro)
 		if gen != _load_gen:
 			return          # 待っている間に別のステージへ切り替わった
@@ -573,7 +620,7 @@ func _on_goal_reached(clear_time: float) -> void:
 	_clear_overlay_hide()
 
 	var outro := _stage.outro if _stage else null
-	if outro:
+	if outro and not skip_cutscenes:
 		await cutscene.play(outro)
 
 	if is_test_end:
@@ -581,7 +628,7 @@ func _on_goal_reached(clear_time: float) -> void:
 		return
 
 	if is_last:
-		if ending:
+		if ending and not skip_cutscenes:
 			await cutscene.play(ending)
 		all_cleared.emit()
 		_show_clear(_total_clear_time, true)
@@ -656,14 +703,14 @@ func _show_clear(clear_time: float, is_last: bool, test_end := false) -> void:
 	_clear_overlay.add_child(box)
 
 	if test_end:
-		_add_label(box, "テストプレイありがとうございます！！", 46, Color(1.0, 0.92, 0.4))
+		_add_label(box, "THANKS FOR PLAYTESTING!", 46, Color(1.0, 0.92, 0.4))
 		return
 
 	if is_last:
 		_add_label(box, "ALL CLEAR", 64, Color(1.0, 0.92, 0.4))
 		_add_label(box, "TIME  %.2f" % clear_time, 30, Color(0.9, 0.94, 1.0))
 		_add_label(box, "FALLS  %d" % _total_falls, 26, Color(0.9, 0.94, 1.0))
-		_add_label(box, "[R] もう一度  /  [F2] ステージ選択", 20, Color(0.65, 0.7, 0.8))
+		_add_label(box, "[R] RETRY  /  [F2] STAGE SELECT", 20, Color(0.65, 0.7, 0.8))
 	else:
 		_add_label(box, "STAGE %d CLEAR" % (_index + 1), 52, Color(1.0, 0.92, 0.4))
 		_add_label(box, "TIME  %.2f    FALLS  %d" % [clear_time, _fall_count],
@@ -688,7 +735,7 @@ func _show_stage_ranking(overlay: CanvasLayer, stage_index: int) -> void:
 	box.add_child(title)
 
 	var status := Label.new()
-	status.text = "読み込み中…"
+	status.text = "Loading..."
 	status.add_theme_font_size_override("font_size", 14)
 	status.add_theme_color_override("font_color", Color(0.8, 0.85, 0.95))
 	box.add_child(status)
@@ -699,11 +746,11 @@ func _show_stage_ranking(overlay: CanvasLayer, stage_index: int) -> void:
 		return          # 待っている間にクリア画面が閉じられた
 
 	if not sw_result.get("success", false):
-		status.text = "取得に失敗しました"
+		status.text = "Failed to load"
 		return
 	var scores: Array = sw_result.get("scores", [])
 	if scores.is_empty():
-		status.text = "まだ記録がありません"
+		status.text = "No records yet"
 		return
 
 	# タイム(秒)なので短いほど上位
@@ -755,9 +802,9 @@ func _build_select_ui() -> void:
 	box.add_theme_constant_override("separation", 2)
 	scroll.add_child(box)
 	_add_label(box, "STAGE SELECT  [F2]", 13, Color(0.55, 0.85, 1.0))
-	_add_hint(box, "[F1] チューナー    [F3] このステージをクリア")
-	_add_hint(box, "[F4] 方眼(250px)")
-	_add_hint(box, "[R] やり直し    数字 1〜9 / 0 でステージ移動")
+	_add_hint(box, "[F1] TUNER    [F3] CLEAR THIS STAGE")
+	_add_hint(box, "[F4] GRID (250px)")
+	_add_hint(box, "[R] RETRY    1-9 / 0 TO JUMP TO STAGE")
 
 	for i in stages.size():
 		var b := Button.new()
@@ -793,6 +840,72 @@ func _add_hint(parent: Node, text: String) -> void:
 	label.add_theme_font_size_override("font_size", 11)
 	label.add_theme_color_override("font_color", Color(0.62, 0.67, 0.74))
 	parent.add_child(label)
+
+
+# ═══════════════════════════════ ポーズメニュー
+
+## ESC で開く。ツリーごと止めるので、クリアタイム（物理ステップの積算）も止まる
+func _open_pause_menu() -> void:
+	if _pause_overlay or _advancing or _respawning:
+		return
+	if cutscene and cutscene.visible:
+		return          # イベント中は送りの ESC と取り合いになるので出さない
+
+	_pause_overlay = CanvasLayer.new()
+	_pause_overlay.layer = 72          # クリア表示(64)より上、チューナー(128)より下
+	# ツリーを止めても操作できるようにする
+	_pause_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_pause_overlay)
+
+	var back := ColorRect.new()
+	back.color = Color(0.05, 0.06, 0.09, 0.7)
+	back.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_pause_overlay.add_child(back)
+
+	var box := VBoxContainer.new()
+	box.set_anchors_preset(Control.PRESET_CENTER)
+	box.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	box.grow_vertical = Control.GROW_DIRECTION_BOTH
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_theme_constant_override("separation", 18)
+	_pause_overlay.add_child(box)
+
+	_add_label(box, "PAUSED", 52, Color(1.0, 0.92, 0.4))
+	# ESC でも閉じられるようにショートカットを持たせる。ツリーが止まっている間は
+	# Game 側の _unhandled_input が動かないので、ボタン自身に持たせるのが確実
+	var resume := _add_pause_button(box, "RESUME", _close_pause_menu)
+	var shortcut := Shortcut.new()
+	var esc := InputEventKey.new()
+	esc.keycode = KEY_ESCAPE
+	shortcut.events = [esc]
+	resume.shortcut = shortcut
+	_add_pause_button(box, "RETURN TO TITLE", _return_to_title)
+	resume.grab_focus()
+
+	get_tree().paused = true
+
+
+func _add_pause_button(parent: Node, text: String, callback: Callable) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.custom_minimum_size = Vector2(360, 56)
+	b.add_theme_font_size_override("font_size", 26)
+	b.pressed.connect(callback)
+	parent.add_child(b)
+	return b
+
+
+func _close_pause_menu() -> void:
+	if _pause_overlay == null:
+		return
+	_pause_overlay.queue_free()
+	_pause_overlay = null
+	get_tree().paused = false
+
+
+func _return_to_title() -> void:
+	_close_pause_menu()
+	get_tree().change_scene_to_file(TITLE_SCENE)
 
 
 func _add_label(parent: Node, text: String, size: int, color: Color) -> void:

@@ -100,23 +100,29 @@ shader_parameter/bottom_y = 723.0
 [node name="Stage02" type="Node2D" unique_id=1066997681]
 script = ExtResource("1_hlboq")
 display_name = "とび石"
-camera_bounds = Rect2(-250, -100, 3300, 1600)
 intro = ExtResource("cut_intro")
 outro = ExtResource("cut_outro")
 
+[node name="CameraBounds" type="Polygon2D" parent="." unique_id=324340871]
+position = Vector2(7.65152, -18.3125)
+scale = Vector2(1.030606, 0.816875)
+color = Color(1, 0.85, 0.3, 0.15)
+polygon = PackedVector2Array(-250, -100, 3050, -100, 3050, 1500, -250, 1500)
+
 [node name="Spawn" type="Marker2D" parent="." unique_id=1821184119]
-position = Vector2(0, 700)
+position = Vector2(142, 695)
 
 [node name="RecoveryPoints" type="Node2D" parent="Spawn" unique_id=325976913]
+position = Vector2(245, 0)
 
 [node name="Point1" type="Marker2D" parent="Spawn/RecoveryPoints" unique_id=1256782558]
-position = Vector2(610, 155)
+position = Vector2(288, 150)
 
 [node name="Point2" type="Marker2D" parent="Spawn/RecoveryPoints" unique_id=832926895]
-position = Vector2(950, 149)
+position = Vector2(663, 131)
 
 [node name="Point3" type="Marker2D" parent="Spawn/RecoveryPoints" unique_id=1112559076]
-position = Vector2(1531, 85)
+position = Vector2(1247, 67)
 
 [node name="Terrain" type="StaticBody2D" parent="." unique_id=728267565]
 

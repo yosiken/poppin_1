@@ -130,7 +130,7 @@ func _build_ui(stage_index: int) -> void:
 	add_child(layer)
 
 	var top := Label.new()
-	top.text = "STAGE %d リプレイ再生中　[R] 最初から　[ESC] タイトルへ戻る" % (stage_index + 1)
+	top.text = "STAGE %d REPLAY    [R] RESTART    [ESC] TITLE" % (stage_index + 1)
 	top.add_theme_font_size_override("font_size", 20)
 	top.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.9))
 	top.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -139,7 +139,7 @@ func _build_ui(stage_index: int) -> void:
 	layer.add_child(top)
 
 	_end_label = Label.new()
-	_end_label.text = "再生終了　　[R] もう一度　　[ESC] タイトルへ戻る"
+	_end_label.text = "REPLAY END    [R] AGAIN    [ESC] TITLE"
 	_end_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_end_label.add_theme_font_size_override("font_size", 36)
 	_end_label.add_theme_color_override("font_color", Color(1.0, 0.92, 0.4))

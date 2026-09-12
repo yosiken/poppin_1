@@ -136,10 +136,15 @@ shader_parameter/bottom_y = 950.0
 
 [node name="Stage03" type="Node2D" unique_id=740633051]
 script = ExtResource("1_thbjj")
-display_name = "たて穴"
-camera_bounds = Rect2(-200, -900, 2000, 2200)
+display_name = "The Shaft"
 intro = ExtResource("cut_intro")
 outro = ExtResource("cut_outro")
+
+[node name="CameraBounds" type="Polygon2D" parent="." unique_id=1757847507]
+position = Vector2(-250.19998, 0)
+scale = Vector2(1.139, 1)
+color = Color(1, 0.85, 0.3, 0.15)
+polygon = PackedVector2Array(-200, -900, 1800, -900, 1800, 1300, -200, 1300)
 
 [node name="Spawn" type="Marker2D" parent="." unique_id=1606277033]
 position = Vector2(0, 1000)
@@ -250,13 +255,13 @@ shape = SubResource("RectangleShape2D_thbjj")
 [node name="RecoveryPoints" type="Node2D" parent="." unique_id=579901931]
 
 [node name="Point1" type="Marker2D" parent="RecoveryPoints" unique_id=229275393]
-position = Vector2(729, 919)
+position = Vector2(851, 858)
 
 [node name="Point2" type="Marker2D" parent="RecoveryPoints" unique_id=1163612535]
-position = Vector2(886, 602)
+position = Vector2(861, 539)
 
 [node name="Point3" type="Marker2D" parent="RecoveryPoints" unique_id=1861501115]
-position = Vector2(1265, 162)
+position = Vector2(1176, 120)
 
 [node name="Graphics" type="Node2D" parent="." unique_id=781000624]
 
