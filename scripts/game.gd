@@ -388,8 +388,17 @@ func _reveal() -> void:
 func _reset_player() -> void:
 	if player == null:
 		return
+	var visual := _player_visual()
+	if visual:
+		visual.stop_clip()          # 勝利モーションが残っていれば通常の姿勢へ戻す
 	player.teleport(_stage.get_spawn_position())
 	player.set_physics_process(true)
+
+
+func _player_visual() -> PlayerVisual:
+	if player == null:
+		return null
+	return player.get_node_or_null(^"Visual") as PlayerVisual
 
 
 ## stage_bgm[index] の曲を鳴らす。
@@ -606,6 +615,9 @@ func _on_goal_reached(clear_time: float) -> void:
 		bgm_player.stop()          # ステージBGMを止めて、ジングルと重ならないようにする
 	if sfx_goal:
 		sfx_goal.play()
+	var visual := _player_visual()
+	if visual:
+		visual.play_goal_clip()          # 勝利モーション。次のステージへ移るまで踊り続ける
 	var is_last := _index >= stages.size() - 1
 	var is_test_end := test_play_mode and _index + 1 >= test_play_stage_count
 	_total_clear_time += clear_time

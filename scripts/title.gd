@@ -19,6 +19,27 @@ const PANEL_COLOR := Color(0.06, 0.07, 0.11, 0.92)
 const BORDER_COLOR := Color(0.55, 0.65, 0.85, 0.7)
 const ACCENT_COLOR := Color(1.0, 0.92, 0.4)
 
+## タイトルでキャラクターを踊らせるか。
+## 今は非表示にしている。戻したくなったら true にするだけでよい
+## （表示まわりの実装は _add_dancer() にそのまま残してある）
+const SHOW_DANCER := false
+
+## タイトルで踊らせるモデルとモーション。本編と同じプレイヤーを使う。
+## モーションは別リグ由来だが、PlayerVisual が載せ替えてくれる
+const DANCER_MODEL := preload("res://resources/model/player_8.blend")
+const DANCER_POSE := preload("res://resources/pogo_pose_default.tres")
+## モーション素材はリポジトリに含めていない（.gitignore 参照）ので実行時に読む。
+## preload だと無いときにこのスクリプトごとコンパイルできなくなる
+const DANCER_CLIP_PATH := "res://resources/model/Twist Dance.fbx"
+## 本編と同じ見え方にするため、ゲーム側の調整値をそのまま借りる
+const DANCER_STATS := preload("res://resources/pogo_visual_default.tres")
+## タイトルでの表示サイズ。camera_view_units ぶんを何pxで描くか
+const DANCER_HEIGHT_PX := 840.0
+## 画面右端からキャラクター中心までの距離 (px)
+const DANCER_MARGIN_X := 340.0
+## 画面中央からの上下のずらし (px)。カメラは足元より上を見ているので少し上げる
+const DANCER_OFFSET_Y := 10.0
+
 const RANKING_MAX := 10
 ## ページ送りで切り替えるリーダーボード。先頭が既定表示
 const RANKING_BOARDS: Array[String] = ["total", "stage01", "stage02", "stage03", "stage04",
@@ -71,6 +92,9 @@ func _build_ui() -> void:
 	top_box.add_child(title_label)
 	top_box.add_child(note)
 	add_child(top_box)
+
+	if SHOW_DANCER:
+		_add_dancer()
 
 	_menu = VBoxContainer.new()
 	_menu.set_anchors_preset(Control.PRESET_CENTER)
@@ -139,6 +163,39 @@ func _find_focusable(node: Node) -> Control:
 		if found:
 			return found
 	return null
+
+
+## 踊るキャラクターを出す。3Dを SubViewport へ描いて、その絵を2Dとして貼る。
+## ゲーム本編の PlayerVisual と同じ考え方で、シーンに3Dノードを積まずに済ませる
+func _add_dancer() -> void:
+	# Sprite2D は Control の座標で描かれるので、位置合わせ用の空の Control を挟む。
+	# こうしておけば解像度が変わってもアンカーが面倒を見てくれる
+	var holder := Control.new()
+	holder.name = "Dancer"
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+	holder.offset_left = -DANCER_MARGIN_X
+	holder.offset_right = -DANCER_MARGIN_X
+	holder.offset_top = DANCER_OFFSET_Y
+	holder.offset_bottom = DANCER_OFFSET_Y
+	add_child(holder)
+
+	# 本編のプレイヤー表示をそのまま流用する。トゥーン・輪郭線・ライトが
+	# ゲーム中と揃うので、タイトルだけ別の見た目になる心配がない
+	var visual := PlayerVisual.new()
+	visual.name = "DancerVisual"
+	visual.model = DANCER_MODEL
+	visual.pose = DANCER_POSE
+	# world_height_px だけ変えたいので、ゲーム側の調整値は複製して触る
+	var stats := DANCER_STATS.duplicate() as PogoVisualStats
+	stats.world_height_px = DANCER_HEIGHT_PX
+	visual.visual_stats = stats
+	visual.view_size = Vector2i(768, 768)
+	if ResourceLoader.exists(DANCER_CLIP_PATH):
+		visual.clip_source = load(DANCER_CLIP_PATH) as PackedScene
+	visual.show_ball = false          # タイトルではキャラクターだけ見せる
+	holder.add_child(visual)          # ここで _ready が走り、ビューポートが組み上がる
+	visual.play_clip()
 
 
 func _add_menu_button(text: String, callback: Callable) -> void:

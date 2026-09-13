@@ -16,7 +16,7 @@ extends Resource
 const GROUPS := {
 	"camera": ["camera_view_units", "camera_height", "world_height_px",
 			   "model_yaw_right_deg", "model_yaw_left_deg",
-			   "model_yaw_turn_speed", "facing_deadzone"],
+			   "model_yaw_turn_speed", "facing_deadzone", "clip_view_zoom"],
 	"light":  ["light_pitch_deg", "light_yaw_deg", "light_energy", "light_color",
 			   "ambient_energy", "ambient_color"],
 	"squash": ["ball_squash_y", "squash_recover_frames", "ball_stretch_y", "stretch_speed_ref",
@@ -27,7 +27,7 @@ const GROUPS := {
 				  "ear_gain", "ear_stiffness", "ear_damping",
 				  "hair_gain", "hair_stiffness", "hair_damping",
 				  "hair_follow", "hair_follow_ramp", "hair_softening", "hair_stretch",
-				  "hair_fall_lift"],
+				  "hair_fall_lift", "clip_head_speed_ref"],
 	"toon":   ["toon_band_count", "toon_shadow_floor"],
 	"outline": ["outline_color", "outline_width"],
 }
@@ -50,6 +50,10 @@ const GROUPS := {
 ## この横速度 (px/s) を超えたときだけ向きを更新する。
 ## 小さすぎると停止間際に左右がばたつく
 @export_range(0.0, 300.0, 5.0) var facing_deadzone := 30.0
+## 全身アニメーション（ゴールの勝利モーション）中に写す範囲を広げる倍率。
+## 手を上げる動きで頭や腕が枠の外へ出るのを防ぐ。
+## ビューポートとカメラを同じ倍率で広げるので、画面上の大きさも粗さも変わらない
+@export_range(1.0, 3.0, 0.05) var clip_view_zoom := 1.6
 
 # ─────────────────────────────── ライティング
 @export_group("Light")
@@ -139,6 +143,12 @@ const GROUPS := {
 ## 落下中に髪の根元を持ち上げる角度 (度)。下向きの速度1000px/sでこの値になる。
 ## 左右の流れとは別枠で、付け根から角度が付いて毛先が肩の上へ回る
 @export_range(0.0, 180.0, 1.0) var hair_fall_lift := 48.0
+## 全身アニメーション中に髪を揺らす、頭の速さの基準 (3Dワールド単位/秒)。
+## 再生中はプレイヤーが止まっている（タイトルではそもそも居ない）ので、
+## 移動速度の代わりに頭ボーンの動きから揺れを作る。その換算の基準がこれ。
+## 頭がこの速さで動いたときに、ゲーム中の 1000px/s と同じ振れ幅になる。
+## 小さくするほど、わずかな首振りでも髪が大きく流れる
+@export_range(0.5, 30.0, 0.5) var clip_head_speed_ref := 8.0
 
 # ─────────────────────────────── トゥーンシェーディング
 @export_group("Toon")

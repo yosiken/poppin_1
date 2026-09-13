@@ -76,15 +76,33 @@ class_name PlayerVisual
 ## 名前が安定しているメッシュ側で見分ける
 @export var ball_mesh_name: StringName = &"ball"
 
+## ボールを描画するか。タイトル画面のようにキャラクターだけ見せたいときは false
+@export var show_ball := true
+
 @export_group("Animation")
 ## 再生するアニメーション名。空ならモデルが持つ最初のアニメーションを使う。
 ## モデルにアニメーションが無い場合は pose が使われる
 @export var idle_animation: StringName = &""
 
+## ゴール演出など、一時的に全身を動かすアニメーションの供給元。
+## プレイヤーのモデルと別物でもよく、ボーン名が一致していればそのまま流し込める
+## （使うのは回転トラックだけなので、モデル間のスケール差は影響しない）。
+## 未設定なら DEFAULT_CLIP_PATH を使う
+@export var clip_source: PackedScene
+
+## ゴール到達時に再生するアニメーション名。空なら clip_source の最初のものを使う
+@export var goal_clip: StringName = &""
+
 @export_group("Toon")
 ## この名前のマテリアルはトゥーンを掛けず、陰影なし(unlit)で描く。
 ## ライトの向きで暗くなってほしくない部分（白目やハイライトなど）に使う
 @export var unlit_materials: Array[StringName] = [&"white_unlit"]
+
+## clip_source 未設定のときに使う全身アニメーション。
+## この素材はリポジトリに含めていない（.gitignore 参照）ので preload は使えない。
+## preload は解析時に解決されるため、ファイルが無いとこのスクリプト自体が
+## コンパイルできずゲームが起動しなくなる。実行時に読んで、無ければ諦める
+const DEFAULT_CLIP_PATH := "res://resources/model/Northern Soul Spin.fbx"
 
 const TOON_SHADER := preload("res://resources/shader/toon_character.gdshader")
 const OUTLINE_SHADER := preload("res://resources/shader/sprite_outline.gdshader")
@@ -101,6 +119,17 @@ var _light: DirectionalLight3D
 var _env: Environment
 var _anim: AnimationPlayer
 var _anim_name := ""                   ## 再生中のアニメーション名。空ならポーズ運用
+var _clip_player: AnimationPlayer      ## clip_source から取り込んだ全身アニメーション用
+var _clip_names: PackedStringArray = []
+var _clip_playing := false
+var _clip_saved_pose: Array[Transform3D] = []          ## 再生前のボーン姿勢（戻す用）
+var _clip_root: Node3D                 ## 全身の向きを持つノード（キャラ側スケルトンの親）
+var _clip_root_rest := Quaternion.IDENTITY
+var _clip_zoom := 1.0                  ## 1.0 以外なら枠を広げている最中
+## クリップ再生中に髪を揺らすための、頭ボーンの前フレーム位置
+var _clip_head_pos := Vector3.ZERO
+var _clip_head_ready := false
+var _clip_head_time := 0.0             ## 前フレームの再生位置。ループの折り返し検出用
 var _player: PogoPlayer
 var _flail_base: Dictionary[int, Quaternion] = {}   ## 振れを乗せる土台の姿勢
 var _anim_driven: Dictionary[int, bool] = {}        ## アニメーションが毎フレーム上書きするボーン
@@ -133,9 +162,10 @@ var _recover_t := 1.0                  ## 0=潰れきった直後, 1=元通り
 # ═══════════════════════════════ ライフサイクル
 
 func _ready() -> void:
+	# 親が PogoPlayer ならプレイ中の見た目として振る舞う。
+	# タイトル画面のように単体で置いたときは、モデルとアニメーションだけを描く
+	# （傾き・振れ・ボールの伸縮はプレイヤーの状態が要るので動かない）
 	_player = get_parent() as PogoPlayer
-	if _player == null:
-		push_warning("PlayerVisual: 親が PogoPlayer ではありません")
 	if model == null:
 		push_warning("PlayerVisual: model が未設定です")
 		return
@@ -144,6 +174,7 @@ func _ready() -> void:
 
 	_build_viewport()
 	_setup_animation()
+	_setup_clips()
 	_apply_pose()
 	# 初期の向きは補間の途中から始めないよう、右向きの角度で直接置く
 	_yaw_deg = visual_stats.model_yaw_right_deg
@@ -156,14 +187,17 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if _rig == null or _player == null:
+	if _rig == null:
 		return
-	# 2Dの傾き角をそのまま3Dへ。カメラが+Z側から見ているのでZ軸回りが2Dの回転に対応する
-	_rig.rotation.z = -deg_to_rad(_player.tilt_deg)
-	_update_facing(_delta)
-	_update_squash(_delta)
-	_update_flail(_delta)
-	# 頭が動いた結果に遅れて付いてくるので、体の処理より後に回す
+	# プレイヤーの状態が要る処理。タイトル画面のように単体で置いたときは飛ばす
+	if _player:
+		# 2Dの傾き角をそのまま3Dへ。カメラが+Z側から見ているのでZ軸回りが2Dの回転に対応する
+		_rig.rotation.z = -deg_to_rad(_player.tilt_deg)
+		_update_facing(_delta)
+		_update_squash(_delta)
+		_update_flail(_delta)
+	# 頭が動いた結果に遅れて付いてくるので、体の処理より後に回す。
+	# クリップ再生中は頭ボーンの動きから揺らすので、プレイヤーが居なくても走らせる
 	_update_secondary(_delta)
 
 
@@ -198,6 +232,7 @@ func _resolve_skeletons() -> void:
 			_ball_skeleton = skel
 			_ball_bone_idx = 0          # ボールは根ボーン1本で動かす
 			_ball_base_scale = skel.get_bone_pose_scale(0)
+			skel.visible = show_ball
 		elif _skeleton == null:
 			_skeleton = skel
 	if _skeleton == null:
@@ -298,6 +333,8 @@ func _on_bounced(strength: float, _normal: Vector2) -> void:
 func _update_flail(delta: float) -> void:
 	if _skeleton == null or delta <= 0.0 or flail_bones.is_empty():
 		return
+	if _clip_playing:
+		return          # 全身アニメーション中は姿勢をそちらに明け渡す
 
 	var limit: float = _v(&"flail_max_deg")
 
@@ -347,12 +384,19 @@ func _update_flail(delta: float) -> void:
 ## 「キーを押した瞬間に髪が動く」不自然な見え方になっていた。
 ## 実際に跳んだり落ちたりした速度で振らせると、ジャンプに遅れて付いてくる
 func _update_secondary(delta: float) -> void:
-	if _skeleton == null or _player == null or delta <= 0.0:
+	if _skeleton == null or delta <= 0.0:
 		return
+	_build_hair_chain()
 
 	# 画面の右方向が +x、下方向が +y。髪は進行方向と逆へ流れるので符号を反転する。
 	# 1000px/s でちょうど gain と同じ角度(度)になるようにしておく
-	var v := _player.velocity / 1000.0
+	var v := Vector2.ZERO
+	if _clip_playing:
+		v = _clip_head_drive(delta)
+	elif _player:
+		v = _player.velocity / 1000.0
+	else:
+		return
 	var smooth: float = _v(&"secondary_smoothing")
 	_drive = _drive.lerp(v, 1.0 - exp(-smooth * delta))
 	# x(左右の移動) → Z軸まわりの振れ、y(上下の移動) → X軸まわりの振れ
@@ -362,16 +406,18 @@ func _update_secondary(delta: float) -> void:
 	# 目標の振れ角へ引き寄せる形にする。
 	# ばね定数で割られないので、硬さを変えても振れ幅は変わらず、
 	# 追従の速さと戻り方だけが変わる
-	# 耳: 硬いばね。すぐ戻る
-	var ear_push: Vector2 = swing * _v(&"ear_gain")
-	_ear_vel += (_v(&"ear_stiffness") * (ear_push - _ear_angle)
-		- _v(&"ear_damping") * _ear_vel) * delta
-	_ear_angle = (_ear_angle + _ear_vel * delta).limit_length(limit)
-	_apply_secondary(ear_bones, _ear_angle)
+	# 耳: 硬いばね。すぐ戻る。
+	# クリップ側は耳にキーを持っているので、再生中はそちらに任せる。
+	# 重ねると、キーのある耳と無い耳で左右が食い違って見える
+	if not _clip_playing:
+		var ear_push: Vector2 = swing * _v(&"ear_gain")
+		_ear_vel += (_v(&"ear_stiffness") * (ear_push - _ear_angle)
+			- _v(&"ear_damping") * _ear_vel) * delta
+		_ear_angle = (_ear_angle + _ear_vel * delta).limit_length(limit)
+		_apply_secondary(ear_bones, _ear_angle)
 
 	# 髪: 段ごとに別のばね。根元は移動速度、2段目以降は「一つ前の段の今の角度」を
 	# 目標にする。段を追うごとに遅れが積み重なり、毛先へ波が伝わっていく
-	_build_hair_chain()
 	var follow: float = _v(&"hair_follow")
 	var follow_ramp: float = _v(&"hair_follow_ramp")
 	var soften: float = _v(&"hair_softening")
@@ -398,6 +444,39 @@ func _update_secondary(delta: float) -> void:
 		if i == 0:
 			applied.x += lift
 		_apply_bone_swing(_hair_chain[i], applied, float(i) / float(last))
+
+
+## クリップ再生中に髪を揺らすための駆動源。
+##
+## 再生中はプレイヤーが止まっている（タイトルではそもそも居ない）ので、
+## 移動速度は使えない。代わりに、髪の付け根の親＝頭ボーンが画面上を
+## どれだけ動いたかを測る。踊りの首振りやしゃがみがそのまま髪へ伝わる。
+## 戻り値の単位は _player.velocity / 1000 と揃えてあるので、
+## ゲーム中と同じ gain / ばねのパラメータがそのまま効く
+func _clip_head_drive(delta: float) -> Vector2:
+	if _hair_chain.is_empty():
+		return Vector2.ZERO
+	var head := _skeleton.get_bone_parent(_hair_chain[0])
+	if head < 0:
+		return Vector2.ZERO
+	# スケルトンの外側（体の向き）ごと含めたいのでグローバルで測る
+	var now: Vector3 = (_skeleton.global_transform
+		* _skeleton.get_bone_global_pose(head)).origin
+	# ループで先頭へ戻った瞬間は頭が瞬間移動する。そのまま速度として読むと
+	# 一周ごとに髪が弾かれるので、折り返しのフレームは捨てる
+	var at := _clip_player.current_animation_position if _clip_player else 0.0
+	var looped := at < _clip_head_time
+	_clip_head_time = at
+
+	var drive := Vector2.ZERO
+	if _clip_head_ready and not looped:
+		var ref: float = maxf(_v(&"clip_head_speed_ref"), 0.001)
+		# 3Dは上が +y、2Dは下が +y。ゲーム中の速度と符号を揃える
+		var moved := Vector2(now.x - _clip_head_pos.x, _clip_head_pos.y - now.y)
+		drive = moved / (delta * ref)
+	_clip_head_pos = now
+	_clip_head_ready = true
+	return drive
 
 
 ## hair_bones の並び順（根元→毛先）をボーン番号の配列にしておく
@@ -505,7 +584,13 @@ func _build_viewport() -> void:
 func _apply_visual_stats() -> void:
 	if visual_stats == null or _cam == null or _light == null:
 		return          # ビューポート構築前に setter から呼ばれた場合は何もしない
-	_cam.size = visual_stats.camera_view_units
+	# ビューポートとカメラを同じ倍率で広げると、1ワールド単位あたりの画面px
+	# (world_height_px / camera_view_units) も1ワールド単位あたりのテクセル数も
+	# 変わらない。つまり大きさ・粗さはそのままで、周りの余白だけが増える
+	var vsize := Vector2i(Vector2(view_size) * _clip_zoom)
+	if _viewport and _viewport.size != vsize:
+		_viewport.size = vsize
+	_cam.size = visual_stats.camera_view_units * _clip_zoom
 	_cam.position = Vector3(0.0, visual_stats.camera_height, 6.0)
 	_light.rotation_degrees = Vector3(visual_stats.light_pitch_deg,
 		visual_stats.light_yaw_deg, 0.0)
@@ -514,6 +599,8 @@ func _apply_visual_stats() -> void:
 	if _env:
 		_env.ambient_light_color = visual_stats.ambient_color
 		_env.ambient_light_energy = visual_stats.ambient_energy
+	# 枠を広げても画面上の大きさは変えない。ビューポートを z 倍したぶんは
+	# ここで割り戻す（vsize.y = view_size.y * z なので、式としては元のまま）
 	var s := visual_stats.world_height_px / float(view_size.y)
 	scale = Vector2(s, s)
 	for mat in _toon_materials:
@@ -619,7 +706,184 @@ func _setup_animation() -> void:
 func _apply_pose() -> void:
 	if _skeleton == null:
 		return          # ビューポート構築前に setter から呼ばれた場合は何もしない
-	if _anim_name != "":
+	if _anim_name != "" or _clip_playing:
 		return          # アニメーションが姿勢を握っているので触らない
 	if pose:
 		pose.apply_to(_skeleton)
+
+
+# ═══════════════════════════════ 全身アニメーション（ゴール演出など）
+
+## 全身アニメーションを再生する。名前を省略すると goal_clip、
+## それも空なら clip_source の最初のアニメーションを使う。
+## 再生中は手付けポーズ・手足の振れ・耳髪の揺れを止めてアニメーションに明け渡す
+func play_clip(clip_name: StringName = &"") -> bool:
+	if _clip_player == null or _skeleton == null:
+		return false
+	var clip := String(clip_name)
+	if clip == "":
+		clip = String(goal_clip)
+	if clip == "":
+		clip = _clip_names[0] if not _clip_names.is_empty() else ""
+	if clip == "" or not _clip_player.has_animation(clip):
+		push_warning("PlayerVisual: アニメーション '%s' がありません（候補: %s）"
+			% [clip, ", ".join(_clip_names)])
+		return false
+
+	# 終わったあとに戻せるよう、今の姿勢を控えておく。
+	# PogoPose は一部のボーンしか指定していないので、_apply_pose では戻しきれない
+	_clip_saved_pose.resize(_skeleton.get_bone_count())
+	for i in _skeleton.get_bone_count():
+		_clip_saved_pose[i] = _skeleton.get_bone_pose(i)
+	if _clip_root:
+		_clip_root_rest = _clip_root.quaternion
+
+	# 土台をレスト姿勢に戻してから流す。
+	# PogoPose はボールにまたがる姿勢なので、そこへ立ち姿のモーションを重ねると
+	# 二つの姿勢が足し合わさって体が倒れる。供給元のモデルでは、キーの無いボーンは
+	# レスト姿勢のままなので、こちらもその状態に揃える
+	_skeleton.reset_bone_poses()
+	# レスト姿勢は「直立」なので、またがる姿勢の前提で置いてあるボールに
+	# 脚が丸ごと埋まってしまう。踊っている間はボールを隠して地面に降りたことにする
+	if _ball_skeleton:
+		_ball_skeleton.visible = false
+	# 土台が変わるので、揺れの基準と溜まった角度は捨てる
+	_reset_secondary_state()
+	_clip_playing = true
+	_clip_zoom = maxf(visual_stats.clip_view_zoom, 1.0)
+	_apply_visual_stats()
+	_clip_player.play(clip)
+	return true
+
+
+## ゴール到達時の勝利モーション
+func play_goal_clip() -> bool:
+	return play_clip(goal_clip)
+
+
+func is_clip_playing() -> bool:
+	return _clip_playing
+
+
+## 再生を止めて、始める前の姿勢へ戻す。
+## 揺れの基準も取り直す（アニメーションが書いた値を基準にすると角度が流れていく）
+func stop_clip() -> void:
+	if not _clip_playing:
+		return
+	_clip_playing = false
+	_clip_zoom = 1.0
+	_apply_visual_stats()
+	if _clip_player:
+		_clip_player.stop()
+	if _ball_skeleton:
+		_ball_skeleton.visible = show_ball
+	if _clip_root:
+		_clip_root.quaternion = _clip_root_rest
+	if _skeleton:
+		for i in mini(_clip_saved_pose.size(), _skeleton.get_bone_count()):
+			var saved := _clip_saved_pose[i]
+			_skeleton.set_bone_pose_position(i, saved.origin)
+			_skeleton.set_bone_pose_rotation(i, saved.basis.get_rotation_quaternion())
+			_skeleton.set_bone_pose_scale(i, saved.basis.get_scale())
+	_clip_saved_pose.clear()
+	_flail_base.clear()
+	_flail_angle = 0.0
+	_flail_vel = 0.0
+	_reset_secondary_state()
+	_apply_pose()
+	_capture_flail_base()
+
+
+## 揺れの基準と溜まった角度を捨てる。
+## 土台の姿勢が変わったあとに呼ぶこと。古い基準のまま続けると、
+## 自分が書いた値を基準として読み戻して角度が流れていく
+func _reset_secondary_state() -> void:
+	_secondary_base.clear()
+	_secondary_pos_base.clear()
+	_drive = Vector2.ZERO
+	_ear_angle = Vector2.ZERO
+	_ear_vel = Vector2.ZERO
+	_clip_head_ready = false
+	_clip_head_time = 0.0
+	for i in _hair_ang.size():
+		_hair_ang[i] = Vector2.ZERO
+		_hair_vel[i] = Vector2.ZERO
+
+
+## clip_source のアニメーションをプレイヤーのリグ向けに載せ替えて持っておく。
+## 供給元のモデルは読み取るだけで、ビューポートには入れない
+func _setup_clips() -> void:
+	var source := clip_source
+	if source == null and ResourceLoader.exists(DEFAULT_CLIP_PATH):
+		source = load(DEFAULT_CLIP_PATH) as PackedScene
+	if source == null or _skeleton == null or _yaw == null:
+		return
+	var src := source.instantiate()
+	var src_anim := _find_node_of_type(src, "AnimationPlayer") as AnimationPlayer
+	if src_anim == null:
+		push_warning("PlayerVisual: clip_source に AnimationPlayer がありません")
+		src.free()
+		return
+
+	_clip_root = _skeleton.get_parent() as Node3D
+	var lib := AnimationLibrary.new()
+	for clip in src_anim.get_animation_list():
+		var converted := _retarget_clip(src_anim.get_animation(clip), src)
+		if converted.get_track_count() == 0:
+			push_warning("PlayerVisual: '%s' に流し込めるトラックがありません（ボーン名の不一致）"
+				% clip)
+			continue
+		lib.add_animation(clip, converted)
+		_clip_names.append(clip)
+	src.free()
+	if _clip_names.is_empty():
+		return
+
+	_clip_player = AnimationPlayer.new()
+	_clip_player.name = "ClipPlayer"
+	# root_node の既定は "..", つまり親の _yaw。トラックのパスもそこ基準で作る
+	_yaw.add_child(_clip_player)
+	_clip_player.add_animation_library("", lib)
+
+
+## 別モデルのアニメーションをこちらのリグへ載せ替える。
+##
+## 使うのは回転トラックだけ。位置トラックはモデルごとに単位（骨の長さ）が違うので
+## 流し込むと体が崩れる。回転はリグの構造が同じなら単位に依らずそのまま通る。
+## ルートの移動も捨てる（ボールの上から滑り出てしまうため）が、
+## 向きだけは残したいので、軸変換ぶんを打ち消してからこちらのノードへ乗せ替える
+func _retarget_clip(src: Animation, src_root: Node) -> Animation:
+	var skel_path := String(_yaw.get_path_to(_skeleton))
+	var root_path := String(_yaw.get_path_to(_clip_root)) if _clip_root else ""
+	var out := Animation.new()
+	out.length = src.length
+	out.loop_mode = Animation.LOOP_LINEAR      # 次のステージへ移るまで踊り続ける
+	for t in src.get_track_count():
+		if src.track_get_type(t) != Animation.TYPE_ROTATION_3D:
+			continue
+		var path := src.track_get_path(t)
+		var bone := String(path.get_concatenated_subnames())
+		var dest := ""
+		var fix := Quaternion.IDENTITY
+		if bone != "":
+			if _skeleton.find_bone(bone) < 0:
+				continue          # こちらに無いボーン（末端の _end など）は捨てる
+			dest = "%s:%s" % [skel_path, bone]
+		else:
+			if root_path == "":
+				continue
+			var node := src_root.get_node_or_null(path) as Node3D
+			if node == null:
+				continue
+			# キーは供給元ノードの絶対姿勢。供給元は軸変換で寝ている（Z-up のまま
+			# ノード側で -90 度倒している）ので、その基準を割ってこちらの基準へ掛け直す。
+			# 右から掛けること。左から掛けると差分を供給元のローカル軸で解釈してしまい、
+			# 向き変え(ヨー)が横転(ロール)になって体が倒れる
+			fix = node.quaternion.inverse() * _clip_root.quaternion
+			dest = root_path
+		var dst := out.add_track(Animation.TYPE_ROTATION_3D)
+		out.track_set_path(dst, NodePath(dest))
+		for k in src.track_get_key_count(t):
+			out.rotation_track_insert_key(dst, src.track_get_key_time(t, k),
+				(src.track_get_key_value(t, k) as Quaternion) * fix)
+	return out

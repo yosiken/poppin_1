@@ -9,3 +9,11 @@ build/
 
 # Claude Codeの個人環境専用設定（各自のPCごとに異なるため共有しない）
 .claude/settings.local.json
+
+# Mixamo から持ってきたモーション。素材単体での再配布は規約上できないので、
+# リポジトリには含めず各自の手元に置く。
+# 無い状態でも起動はする（タイトルとゴールでモーションが再生されないだけ）
+resources/model/Northern Soul Spin.fbx
+resources/model/Northern Soul Spin.fbx.import
+resources/model/Twist Dance.fbx
+resources/model/Twist Dance.fbx.import
