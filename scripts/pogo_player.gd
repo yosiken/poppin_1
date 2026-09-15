@@ -22,6 +22,9 @@ signal charged_jump(ratio: float, is_super: bool)
 ## これを受けて状態を捨てること（捨てないとステージを横断する線が引かれる）
 signal teleported()
 
+## 着地の土煙。Effekseer が使えるときだけ読み込む
+const LAND_EFFECT_PATH := "res://resources/effects/smoke.efkefc"
+
 const UP := Vector2.UP
 
 # ─────────────────────────────── 設定
@@ -47,8 +50,12 @@ const UP := Vector2.UP
 ## ブロックの継ぎ目などで接触が一瞬途切れても連続で鳴らないようにする
 @export_range(0.0, 3.0, 0.05) var slip_se_cooldown := 0.6
 
-## 着地時の土煙。null なら何も出さない
-@export var land_effect: EffekseerEffect = preload("res://resources/effects/smoke.efkefc")
+## 着地時の土煙 (EffekseerEffect)。未設定なら LAND_EFFECT_PATH を実行時に読む。
+##
+## 型を EffekseerEffect と書いたり preload したりしてはいけない。どちらも解析時に
+## 解決されるため、Effekseer が使えない環境ではこのスクリプト自体がコンパイルできず、
+## プレイヤーが丸ごと動かなくなる（GDExtension 非対応の Web 書き出しで実際に起きた）
+@export var land_effect: Resource
 ## この速さ(px/s)以上で着地したときだけ出す。
 ## 通常のバウンドの進入速度は 300px/s 前後なので、既定値ではそれも土煙が立つ。
 ## 大きく落ちたときだけにしたいなら 400 以上へ上げる
@@ -82,6 +89,7 @@ var _sfx_voice: AudioStreamPlayer   ## ためジャンプの掛け声
 var _sfx_slip: AudioStreamPlayer    ## 壁(32°超)に触れて滑り始めた瞬間
 var _sfx_charge: AudioStreamPlayer  ## 溜めている間だけ鳴らす（接地中のみ）
 var _charge_sfx_on := false         ## 溜め音を鳴らしている最中か
+var _efk: Object                    ## EffekseerSystem。使えない環境では null
 var _sfx_sjump: AudioStreamPlayer   ## 溜めジャンプの発射音
 var _was_grounded := false          ## 前フレームに接地していたか（着地音の重複防止）
 var _grounded_now := false          ## このフレームで接地したか
@@ -100,6 +108,7 @@ func _ready() -> void:
 	_sfx_jump = get_node_or_null(^"SfxJump") as AudioStreamPlayer
 	_sfx_voice = get_node_or_null(^"SfxVoice") as AudioStreamPlayer
 	_sfx_slip = get_node_or_null(^"SfxSlip") as AudioStreamPlayer
+	_resolve_effekseer()
 	_sfx_charge = get_node_or_null(^"SfxCharge") as AudioStreamPlayer
 	_sfx_sjump = get_node_or_null(^"SfxSJump") as AudioStreamPlayer
 
@@ -327,12 +336,24 @@ func _resolve_ground(normal: Vector2, delta: float) -> void:
 		_charge_hold_timer = _s("charge_hold_time")
 
 
+## Effekseer が使える環境かを調べ、使えるならエフェクトを読み込む。
+##
+## Web の書き出しテンプレートは GDExtension に対応しておらず、
+## シングルトンもクラスも存在しない。その場合は土煙だけを諦めて先へ進む
+func _resolve_effekseer() -> void:
+	if not Engine.has_singleton(&"EffekseerSystem"):
+		return
+	_efk = Engine.get_singleton(&"EffekseerSystem")
+	if land_effect == null and ResourceLoader.exists(LAND_EFFECT_PATH):
+		land_effect = load(LAND_EFFECT_PATH)
+
+
 ## 着地した位置に土煙を出す。
 ##
 ## プレイヤーの子にすると煙が一緒に飛んでいってしまうので、親（ワールド側）へ置く。
 ## 出したあとは放置でよい（再生し終わると自分で消える）
 func _spawn_land_effect(normal: Vector2, impact_speed: float) -> void:
-	if land_effect == null or impact_speed < land_effect_min_speed:
+	if _efk == null or land_effect == null or impact_speed < land_effect_min_speed:
 		return
 	var world := get_parent()
 	if world == null or Engine.is_editor_hint():
@@ -341,7 +362,8 @@ func _spawn_land_effect(normal: Vector2, impact_speed: float) -> void:
 	var foot := global_position - normal * (_s("body_height") * 0.5)
 	# 煙の上方向を地面の法線に合わせる。斜面では斜めに吹き上がる
 	var xform := Transform2D(normal.angle() + PI * 0.5, foot)
-	var emitter := EffekseerSystem.spawn_effect_2d(land_effect, world, xform) as Node2D
+	# 識別子で直接書くと解析時に解決されてしまうので、シングルトン越しに呼ぶ
+	var emitter := _efk.call(&"spawn_effect_2d", land_effect, world, xform) as Node2D
 	if emitter:
 		emitter.scale = Vector2.ONE * land_effect_scale
 
