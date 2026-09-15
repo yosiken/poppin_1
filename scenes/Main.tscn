@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://c4gyuno60iuka" path="res://scripts/player_visual.gd" id="8_visual"]
 [ext_resource type="PackedScene" uid="uid://ckfpdkck8xf45" path="res://resources/model/player_8.blend" id="9_model"]
 [ext_resource type="Resource" uid="uid://c5fl7iacd3rmx" path="res://resources/pogo_pose_default.tres" id="10_pose"]
-[ext_resource type="Resource" path="res://resources/pogo_visual_default.tres" id="11_visual"]
+[ext_resource type="Resource" uid="uid://dvkv0kyhsqan" path="res://resources/pogo_visual_default.tres" id="11_visual"]
 [ext_resource type="Script" uid="uid://c45rwpy51ubv7" path="res://scripts/game.gd" id="14_game"]
 [ext_resource type="AudioStream" uid="uid://guwxvwfo18cw" path="res://resources/sound/fall.mp3" id="15_fall"]
 [ext_resource type="AudioStream" uid="uid://dqy34e440bof" path="res://resources/sound/goal1.mp3" id="16_goal"]
@@ -19,8 +19,11 @@
 [ext_resource type="Script" uid="uid://cvdwqytmo4yrh" path="res://scripts/time_passage.gd" id="20_pass"]
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="21_bg"]
 [ext_resource type="AudioStream" uid="uid://bdwrqq6652bkc" path="res://resources/sound/bgm/bgm01.ogg" id="22_bgm1"]
+[ext_resource type="Script" uid="uid://blrdn7l2mu5jx" path="res://scripts/jump_trail.gd" id="22_trail"]
 [ext_resource type="AudioStream" uid="uid://gjhty2yhbfjp" path="res://resources/sound/bgm/bgm02.ogg" id="23_bgm2"]
+[ext_resource type="AudioStream" uid="uid://307vktglcbes" path="res://resources/sound/charge.mp3" id="23_charge"]
 [ext_resource type="AudioStream" uid="uid://cg6gq73hn7xk" path="res://resources/sound/bgm/bgm03.ogg" id="24_bgm3"]
+[ext_resource type="AudioStream" uid="uid://b6rdsnglml54g" path="res://resources/sound/s_jump.mp3" id="24_sjump"]
 [ext_resource type="AudioStream" uid="uid://d2niaoo6qoreq" path="res://resources/sound/slip.mp3" id="25_slip"]
 [ext_resource type="PackedScene" uid="uid://dmxypaq2h05nx" path="res://scenes/stages/Stage01.tscn" id="st01"]
 [ext_resource type="PackedScene" uid="uid://em4oh00jbg7u" path="res://scenes/stages/Stage02.tscn" id="st02"]
@@ -32,6 +35,16 @@
 [ext_resource type="PackedScene" uid="uid://bkkdpfs445ghc" path="res://scenes/stages/Stage08.tscn" id="st08"]
 [ext_resource type="PackedScene" uid="uid://bck8a0allkbw8" path="res://scenes/stages/Stage09.tscn" id="st09"]
 [ext_resource type="PackedScene" uid="uid://b4k5ycujv3f7s" path="res://scenes/stages/Stage10.tscn" id="st10"]
+
+[sub_resource type="Curve" id="Curve_g6wdg"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_hq6as"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.8)
+
+[sub_resource type="Gradient" id="Gradient_g6wdg"]
+colors = PackedColorArray(0.8235294, 0, 0.2627451, 0, 1, 1, 1, 1)
 
 [node name="Main" type="Node2D" unique_id=377847871]
 script = ExtResource("14_game")
@@ -72,6 +85,18 @@ collision_layer = 2
 safe_margin = 0.4
 script = ExtResource("1_player")
 stats = ExtResource("3_stats")
+land_effect_scale = 0.9
+
+[node name="Trail" type="Line2D" parent="Player" unique_id=721328804]
+show_behind_parent = true
+width_curve = SubResource("Curve_g6wdg")
+gradient = SubResource("Gradient_hq6as")
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+script = ExtResource("22_trail")
+trail_color = Color(1, 1, 1, 0.8)
+trail_gradient = SubResource("Gradient_g6wdg")
 
 [node name="Visual" type="Sprite2D" parent="Player" unique_id=978198732]
 script = ExtResource("8_visual")
@@ -97,6 +122,15 @@ bus = &"SE"
 
 [node name="SfxSlip" type="AudioStreamPlayer" parent="Player" unique_id=100710375]
 stream = ExtResource("25_slip")
+bus = &"SE"
+
+[node name="SfxCharge" type="AudioStreamPlayer" parent="Player" unique_id=1747195259]
+stream = ExtResource("23_charge")
+bus = &"SE"
+
+[node name="SfxSJump" type="AudioStreamPlayer" parent="Player" unique_id=1457433300]
+stream = ExtResource("24_sjump")
+max_polyphony = 2
 bus = &"SE"
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1924607058]

@@ -17,3 +17,16 @@ resources/model/Northern Soul Spin.fbx
 resources/model/Northern Soul Spin.fbx.import
 resources/model/Twist Dance.fbx
 resources/model/Twist Dance.fbx.import
+
+# Effekseer の、このプロジェクトが書き出さないプラットフォーム向けバイナリ。
+# Windows と Web しか出さないので、残り(iOS 124MB / Android 11MB / Linux 9.7MB /
+# macOS 2.6MB)はリポジトリに入れない。gitの履歴は後から消せないため。
+# 必要になったらここの行を消してコミットすること（アドオンの配布物に入っている）
+addons/effekseer/bin/ios/
+addons/effekseer/bin/android/
+addons/effekseer/bin/linux/
+addons/effekseer/bin/macos/
+
+# Godot がGDExtensionのDLLを差し替える際に残す一時ファイル
+*.TMP
+~*

@@ -14,6 +14,13 @@ extends CharacterBody2D
 signal bounced(strength: float, normal: Vector2)
 signal fell(fall_distance: float, from_position: Vector2)
 signal charge_changed(ratio: float)
+## 溜めを乗せて発射した瞬間。ratio は消費した溜め量(0〜1)、
+## is_super はスーパージャンプが発動したかどうか。
+## bounced と違い、溜めていないただのバウンドでは飛ばない
+signal charged_jump(ratio: float, is_super: bool)
+## teleport() で座標が飛んだ。軌跡のように過去の位置を溜めている側は、
+## これを受けて状態を捨てること（捨てないとステージを横断する線が引かれる）
+signal teleported()
 
 const UP := Vector2.UP
 
@@ -40,6 +47,16 @@ const UP := Vector2.UP
 ## ブロックの継ぎ目などで接触が一瞬途切れても連続で鳴らないようにする
 @export_range(0.0, 3.0, 0.05) var slip_se_cooldown := 0.6
 
+## 着地時の土煙。null なら何も出さない
+@export var land_effect: EffekseerEffect = preload("res://resources/effects/smoke.efkefc")
+## この速さ(px/s)以上で着地したときだけ出す。
+## 通常のバウンドの進入速度は 300px/s 前後なので、既定値ではそれも土煙が立つ。
+## 大きく落ちたときだけにしたいなら 400 以上へ上げる
+@export_range(0.0, 2000.0, 10.0) var land_effect_min_speed := 150.0
+## 土煙の大きさ。エフェクト側のスケール(インポート設定 scale=100)に掛かるので、
+## ここが 1.0 でもそれなりの大きさになる。小さく出したいときは 1.0 未満へ
+@export_range(0.01, 20.0, 0.01) var land_effect_scale := 2.0
+
 # ─────────────────────────────── 内部状態
 var tilt_deg := 0.0            ## 現在の傾き角（右が正）
 var charge := 0.0              ## 0.0〜1.0
@@ -63,6 +80,9 @@ var _sfx_land: AudioStreamPlayer    ## 着地
 var _sfx_jump: AudioStreamPlayer    ## 地面を離れる瞬間
 var _sfx_voice: AudioStreamPlayer   ## ためジャンプの掛け声
 var _sfx_slip: AudioStreamPlayer    ## 壁(32°超)に触れて滑り始めた瞬間
+var _sfx_charge: AudioStreamPlayer  ## 溜めている間だけ鳴らす（接地中のみ）
+var _charge_sfx_on := false         ## 溜め音を鳴らしている最中か
+var _sfx_sjump: AudioStreamPlayer   ## 溜めジャンプの発射音
 var _was_grounded := false          ## 前フレームに接地していたか（着地音の重複防止）
 var _grounded_now := false          ## このフレームで接地したか
 var _slip_se_timer := 0.0           ## 滑落SEの残りクールタイム
@@ -80,6 +100,8 @@ func _ready() -> void:
 	_sfx_jump = get_node_or_null(^"SfxJump") as AudioStreamPlayer
 	_sfx_voice = get_node_or_null(^"SfxVoice") as AudioStreamPlayer
 	_sfx_slip = get_node_or_null(^"SfxSlip") as AudioStreamPlayer
+	_sfx_charge = get_node_or_null(^"SfxCharge") as AudioStreamPlayer
+	_sfx_sjump = get_node_or_null(^"SfxSJump") as AudioStreamPlayer
 
 
 func _physics_process(delta: float) -> void:
@@ -96,6 +118,10 @@ func _physics_process(delta: float) -> void:
 	_apply_air_control(delta)
 	_track_apex()
 	_move_and_bounce(delta)
+
+	# 溜め音は接地判定が確定してから決める。_process_charge の時点では
+	# _grounded_now がまだ今フレームの結果を持っていない
+	_update_charge_sfx()
 
 	# 接地フラグは _move_and_bounce の結果を見てから更新する。
 	# チャージ固定中は毎フレーム _resolve_ground を通るが、接地は継続扱いなので着地音は鳴らない
@@ -216,9 +242,11 @@ func _move_and_bounce(delta: float) -> void:
 
 
 func _resolve_ground(normal: Vector2, delta: float) -> void:
-	# ── 着地音。空中から接地に変わった瞬間の1回だけ鳴らす
+	# ── 着地音と土煙。空中から接地に変わった瞬間の1回だけ出す。
+	#    この時点の velocity はまだ反発前＝進入速度なので、そのまま衝撃の強さに使える
 	if not _was_grounded:
 		_play(_sfx_land)
+		_spawn_land_effect(normal, velocity.length())
 	_grounded_now = true
 
 	# ── チャージ中（Space押しっぱなし）は跳ねさせず、その場で角度だけ動かせるようにする。
@@ -260,10 +288,12 @@ func _resolve_ground(normal: Vector2, delta: float) -> void:
 	var c := _consume_charge()
 	var mult := lerpf(1.0, _s("charge_mult"), c)
 	var rest_mult := lerpf(1.0, _s("charge_restitution_mult"), c)
+	var is_super := false
 	if super_jump_unlocked and c >= 0.999 and _super_cd <= 0.0:
 		mult = _s("super_mult")
 		rest_mult = _s("super_mult")
 		_super_cd = _s("super_cooldown")
+		is_super = true
 
 	var reflected := v_in.bounce(normal) * _s("restitution") * rest_mult
 	var dir := UP.rotated(deg_to_rad(tilt_deg))
@@ -283,14 +313,37 @@ func _resolve_ground(normal: Vector2, delta: float) -> void:
 	velocity = out
 	# ── 地面を離れる瞬間の音。ためジャンプなら掛け声を重ねる
 	_play(_sfx_jump)
-	if c >= voice_charge_threshold:
-		_play(_sfx_voice)
 	bounced.emit(out.length(), normal)
+	if c > 0.0:
+		# 溜めを消費して飛んだときだけ鳴らす。ただのバウンドでは鳴らさない。
+		# 発射音と掛け声は必ずセットで鳴らす。片方だけだと溜めた手応えが薄い
+		_play(_sfx_sjump)
+		_play(_sfx_voice)
+		charged_jump.emit(c, is_super)
 
 	# ── ボタンを離さず押しっぱなしにしていても、発射直後にホールド時間を満タンへ戻す。
 	#    こうしないと is_action_just_pressed が二度と発火せず、次の着地でチャージが効かなくなる
 	if Input.is_action_pressed(&"pogo_charge"):
 		_charge_hold_timer = _s("charge_hold_time")
+
+
+## 着地した位置に土煙を出す。
+##
+## プレイヤーの子にすると煙が一緒に飛んでいってしまうので、親（ワールド側）へ置く。
+## 出したあとは放置でよい（再生し終わると自分で消える）
+func _spawn_land_effect(normal: Vector2, impact_speed: float) -> void:
+	if land_effect == null or impact_speed < land_effect_min_speed:
+		return
+	var world := get_parent()
+	if world == null or Engine.is_editor_hint():
+		return
+	# 体の中心ではなく接地している足元へ。法線方向へカプセルの半分だけ下がった点
+	var foot := global_position - normal * (_s("body_height") * 0.5)
+	# 煙の上方向を地面の法線に合わせる。斜面では斜めに吹き上がる
+	var xform := Transform2D(normal.angle() + PI * 0.5, foot)
+	var emitter := EffekseerSystem.spawn_effect_2d(land_effect, world, xform) as Node2D
+	if emitter:
+		emitter.scale = Vector2.ONE * land_effect_scale
 
 
 func _resolve_wall(normal: Vector2) -> void:
@@ -342,6 +395,9 @@ func is_grounded() -> bool:
 
 
 func teleport(to: Vector2) -> void:
+	teleported.emit()
+	_stop(_sfx_charge)          # 溜め中にリスポーンしても音を残さない
+	_charge_sfx_on = false
 	global_position = to
 	velocity = Vector2.ZERO
 	tilt_deg = 0.0
@@ -389,10 +445,32 @@ func _now() -> float:
 
 
 ## SE 再生。ノードが無いシーン（テスト用など）でも落ちないように握りつぶす
+## 溜め音の入り切りを一箇所で決める。
+##
+## 鳴らす条件は「溜めボタンを押している」かつ「接地している」。
+## 空中で溜め始めても鳴らさず、着地した時点で鳴り始める。
+## 押した瞬間だけで判定すると、空中で押して着地した場合に鳴らないままになる
+func _update_charge_sfx() -> void:
+	var want := Input.is_action_pressed(&"pogo_charge") and is_grounded()
+	if want == _charge_sfx_on:
+		return          # 状態が変わったときだけ触る。鳴り直しを防ぐ
+	_charge_sfx_on = want
+	if want:
+		_play(_sfx_charge)
+	else:
+		_stop(_sfx_charge)
+
+
 func _play(player: AudioStreamPlayer) -> void:
 	if player == null:
 		return
 	player.play()
+
+
+## 鳴り続ける音を止める。溜め音のように「押している間だけ」の音に使う
+func _stop(player: AudioStreamPlayer) -> void:
+	if player and player.playing:
+		player.stop()
 
 
 func _draw() -> void:
