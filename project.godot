@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="Popping"
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="res://scenes/Title.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[autoload]
+
+Settings="*res://scripts/settings.gd"
+SilentWolf="*uid://c813r2vqw4w11"
 
 [display]
 
@@ -20,6 +25,14 @@ window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/design_grid/plugin.cfg", "res://addons/effekseer/plugin.cfg", "res://addons/silent_wolf/plugin.cfg")
+
+[gui]
+
+theme/custom_font="res://resources/font/NotoSansJP-Subset.ttf"
 
 [input]
 
@@ -54,6 +67,7 @@ pogo_retry={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.09, 0.1, 0.13, 1)
