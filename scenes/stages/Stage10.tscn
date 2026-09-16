@@ -303,8 +303,8 @@ z_index = -200
 
 [node name="BgE01" type="Sprite2D" parent="BackGraphics" unique_id=670917566]
 texture_filter = 1
-position = Vector2(600, -1418.75)
-scale = Vector2(1.7871112, 2.3718748)
+position = Vector2(607.12036, -1916.4751)
+scale = Vector2(7.646729, 10.148828)
 texture = ExtResource("4_8ba8c")
 
 [node name="Spawn" type="Marker2D" parent="." unique_id=227428821]

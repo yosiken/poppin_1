@@ -2,24 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4qblhe02bmo2"
-path.s3tc="res://.godot/imported/player_8_LOW_basecolor.png.png-4d25fa90b5433f532d4f75bc6f4c9eac.s3tc.ctex"
+uid="uid://bru0r4pigeoxt"
+path="res://.godot/imported/signboard01.png-ee0f23da7bfb6db60850373b553f75ff.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
-}
-generator_parameters={
-"md5": "55e041d4c533454687b80f13b127ebcd"
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/model/player_8_LOW_basecolor.png.png"
-dest_files=["res://.godot/imported/player_8_LOW_basecolor.png.png-4d25fa90b5433f532d4f75bc6f4c9eac.s3tc.ctex"]
+source_file="res://resources/texture/signboard01.png"
+dest_files=["res://.godot/imported/signboard01.png-ee0f23da7bfb6db60850373b553f75ff.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -27,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -41,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

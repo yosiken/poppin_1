@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="9_bx06a"]
 [ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="10_2q64c"]
 [ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="11_x54o4"]
+[ext_resource type="Texture2D" uid="uid://bqc74e5t6rlcs" path="res://resources/texture/signboard02.png" id="12_bx06a"]
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qmy6f"]
@@ -150,6 +151,7 @@ intro = ExtResource("2_u52tn")
 outro = ExtResource("3_k0dtr")
 
 [node name="CameraBounds" type="Polygon2D" parent="." unique_id=590668712]
+visible = false
 position = Vector2(-77.41936, 0)
 scale = Vector2(0.6903226, 1)
 color = Color(1, 0.85, 0.3, 0.15)
@@ -283,23 +285,23 @@ collision_mask = 2
 script = ExtResource("7_k0dtr")
 
 [node name="Deadly1" type="CollisionPolygon2D" parent="Hazards" unique_id=1898899836]
-position = Vector2(1654, 522)
-scale = Vector2(0.05187197, -0.70737416)
-polygon = PackedVector2Array(-800, -60, 800, -60, 800, 60, -800, 60)
+position = Vector2(1613.9578, 562.954)
+scale = Vector2(0.020588983, -0.28077042)
+polygon = PackedVector2Array(1142.7891, 82.46509, 2742.789, 82.46509, 2742.789, 202.46509, 1142.7891, 202.46509)
 script = ExtResource("2_4rvt0")
 fill_color = Color(0.62, 0.16, 0.19, 1)
 
 [node name="Deadly2" type="CollisionPolygon2D" parent="Hazards" unique_id=1596642476]
-position = Vector2(1449, 655)
-scale = Vector2(0.05187197, -0.70737416)
-polygon = PackedVector2Array(-800, -60, 800, -60, 800, 60, -800, 60)
+position = Vector2(1411.4021, 693.454)
+scale = Vector2(0.022498634, -0.30681217)
+polygon = PackedVector2Array(711.2031, 67.11377, 2311.2031, 67.11377, 2311.2031, 187.11377, 711.2031, 187.11377)
 script = ExtResource("2_4rvt0")
 fill_color = Color(0.62, 0.16, 0.19, 1)
 
 [node name="Deadly3" type="CollisionPolygon2D" parent="Hazards" unique_id=1905491592]
-position = Vector2(1601.802, 822.954)
-scale = Vector2(0.03999851, -0.5307703)
-polygon = PackedVector2Array(-774.9961, -24.203003, 825.0039, -24.203003, 825.0039, 95.797, -774.9961, 95.797)
+position = Vector2(1586.532, 832.67426)
+scale = Vector2(0.02783112, -0.36931208)
+polygon = PackedVector2Array(-236.03125, 21.828491, 1363.9688, 21.828491, 1363.9688, 141.82849, -236.03125, 141.82849)
 script = ExtResource("2_4rvt0")
 fill_color = Color(0.62, 0.16, 0.19, 1)
 
@@ -535,7 +537,24 @@ copy_from = NodePath("../../Terrain/Ceiling")
 position = Vector2(-68, 582)
 
 [node name="Point2" type="Marker2D" parent="RecoveryPoints" unique_id=301602886]
-position = Vector2(1734, 281)
+position = Vector2(695, 213)
 
-[node name="Point3" type="Marker2D" parent="RecoveryPoints" unique_id=774352480]
-position = Vector2(1537, 436)
+[node name="Signboard02" type="Sprite2D" parent="." unique_id=1264132497]
+position = Vector2(1448, 656)
+scale = Vector2(1.4000001, 1.4)
+texture = ExtResource("12_bx06a")
+
+[node name="Signboard02" type="Sprite2D" parent="Signboard02" unique_id=882023360]
+position = Vector2(110.09206, 105.571434)
+scale = Vector2(0.9333338, 0.93333364)
+texture = ExtResource("12_bx06a")
+
+[node name="Signboard03" type="Sprite2D" parent="Signboard02" unique_id=717581722]
+position = Vector2(-294.99994, -300.71432)
+scale = Vector2(0.53095275, 0.5309527)
+texture = ExtResource("12_bx06a")
+
+[node name="Signboard03" type="Sprite2D" parent="." unique_id=599647613]
+position = Vector2(1655.9999, 522.00006)
+scale = Vector2(1.4000001, 1.4)
+texture = ExtResource("12_bx06a")
