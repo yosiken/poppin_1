@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 """イベントの .tres に、仮の絵（背景・ポップアップ）を割り当てる。
 
-    python tools/assign_event_art.py [--dry-run]
+    python tools/assign_event_art.py [--dry-run] [--force] [--only <イベント名>]
 
 割り当ては資材リストのカット表どおり。本番の絵が来るまでの仮置きで、
 どのコマに何が出るかを実際に動かして確かめられるようにするためのもの。
 
 既に入っている指定は書き換えない。手で入れたものが消えないようにしてある。
+--force を付けると対応表どおりに上書きする。手で入れた指定も消えるので、
+「資材リストの状態に戻したい」ときだけ使うこと。
+--only opening のように書くと、そのイベントだけを対象にする。
+1箇所だけ直したいときに、他の手作業を巻き込まずに済む。
 背景はイベントの先頭のコマに置く（Cutscene は「指定したものだけ変わる」方式なので、
 一度置けばそのイベントの間ずっと出たままになる）。
 
@@ -73,7 +77,13 @@ POPUPS = [
 
 WS = re.compile(r"[\s　]")
 dry = "--dry-run" in sys.argv
-missing, added, kept = [], 0, 0
+force = "--force" in sys.argv
+# --only <イベント名>。指定が無ければ全イベントが対象
+only = ""
+if "--only" in sys.argv:
+    at = sys.argv.index("--only")
+    only = sys.argv[at + 1] if at + 1 < len(sys.argv) else ""
+missing, added, kept, replaced = [], 0, 0, 0
 
 
 def blocks(text):
@@ -104,7 +114,8 @@ def ext_id(text, path):
 
 
 def assign(path_tres, needle, img, prop):
-    global added, kept
+    global added, kept, replaced
+    was_replace = False
     text = path_tres.read_text(encoding="utf-8")
     bl = blocks(text)
     if not bl:
@@ -118,8 +129,17 @@ def assign(path_tres, needle, img, prop):
             missing.append("%s : %s (%s)" % (path_tres.stem, needle, img))
             return
     if re.search(r"^%s = " % prop, target[2], re.M):
-        kept += 1
-        return
+        if not force:
+            kept += 1
+            return
+        # 対応表どおりに差し替える。古い指定の行を落としてから入れ直す
+        body = re.sub(r"^(%s|popup_kind) = .*\n" % prop, "", target[2], flags=re.M)
+        text = text[:target[0]] + body + text[target[1]:]
+        bl = blocks(text)
+        target = bl[0] if needle is None else next(
+            b for b in bl if WS.sub("", needle) in WS.sub("", b[2]))
+        replaced += 1
+        was_replace = True
     text, rid = ext_id(text, img)
     bl = blocks(text)
     target = bl[0] if needle is None else next(
@@ -135,21 +155,23 @@ def assign(path_tres, needle, img, prop):
     if prop == "popup" and Path(img).stem.startswith("MISS"):
         line += "popup_kind = 1\n"
     text = text[:ins] + line + text[ins:]
-    added += 1
+    if not was_replace:
+        added += 1
     if not dry:
         path_tres.write_text(text, encoding="utf-8")
 
 
 for event, needle, name in BACKGROUNDS:
     f = CUT / (event + ".tres")
-    if f.exists():
+    if f.exists() and (not only or only == event):
         assign(f, needle, BG % name, "background")
 for event, needle, name in POPUPS:
     f = CUT / (event + ".tres")
-    if f.exists():
+    if f.exists() and (not only or only == event):
         assign(f, needle, POP % name, "popup")
 
-print("追加 %d 件 / 既に指定があり据え置き %d 件" % (added, kept))
+print("追加 %d 件 / 差し替え %d 件 / 既に指定があり据え置き %d 件"
+      % (added, replaced, kept))
 if missing:
     print("\n本文が見つからず割り当てられなかったもの:")
     for m in missing:

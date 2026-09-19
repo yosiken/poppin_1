@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-01.png" id="91_art"]
 [ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-04.png" id="92_art"]
 [ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-05.png" id="93_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-01.png" id="94_art"]
 
 [sub_resource type="Resource" id="Resource_yji8q"]
 script = ExtResource("1_yji8q")
@@ -16,9 +17,9 @@ speaker = "OB"
 text = "いやぁ……今日もいい配信だった……。もうお酒は控えよう……明日から……"
 speaking = 2
 right = ExtResource("2_2ssu3")
-background = ExtResource("2_tlocn")
 note = "演出：深夜
 演出：ゲーム配信を終え、すっかり泥酔したOBは、ふらふらしながら自宅へ帰ってきた"
+background = ExtResource("94_art")
 
 [sub_resource type="Resource" id="Resource_2ssu3"]
 script = ExtResource("1_yji8q")
