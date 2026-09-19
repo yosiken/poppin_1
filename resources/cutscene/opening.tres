@@ -45,8 +45,8 @@ speaking = 2
 note = "演出：タンスの角に小指を直撃
 演出：その瞬間、視界が真っ白になる
 演出：気がつくと、OBは見知らぬ世界に立っていた
-演出：道頓堀のような巨大な街
-演出：しかし、空には巨大な月が浮かび、看板には見たことのない文字
+演出：石畳の広場。見上げるほど高い塔
+演出：空には巨大な月が浮かび、看板には見たことのない文字
 演出：そして何より――"
 
 [sub_resource type="Resource" id="Resource_yime8"]
@@ -161,7 +161,7 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_ikt8q"]
 script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
-text = "全部思い出せば、現世へのゲートが開く"
+text = "全部思い出したら、現世へのゲートが開くんや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_fx44p"]
@@ -185,28 +185,52 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_8r17r"]
 script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
-text = "心配せんでも、見ればお前の本能が思い出す"
+text = "ワイがヒントを出したる。ただし、中身は言わん"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_fdyrt"]
 script = ExtResource("1_yji8q")
 speaker = "OB"
-text = "本能？"
+text = "えっ、なんで？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_vfmkv"]
 script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
-text = "酒とカニと金に関してだけは、記憶力ええからな"
+text = "答え聞いてから思い出すんは、思い出したうちに入らんやろ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_1h462"]
 script = ExtResource("1_yji8q")
 speaker = "OB"
-text = "……なんか失礼じゃない？"
+text = "…………正論"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_uwg6m"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "心配せんでも、見たらお前の本能が思い出すわ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_88qxy"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "本能？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_q2dq3"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "酒とカニと金に関してだけは、記憶力ええからな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_8qr0o"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "……なんか失礼じゃない？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_3ubda"]
 script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
 text = "ほな行くで"
@@ -214,4 +238,4 @@ speaking = 1
 
 [resource]
 script = ExtResource("4_crtyr")
-lines = Array[ExtResource("1_yji8q")]([SubResource("Resource_yji8q"), SubResource("Resource_2ssu3"), SubResource("Resource_tlocn"), SubResource("Resource_crtyr"), SubResource("Resource_xrrmf"), SubResource("Resource_yime8"), SubResource("Resource_v46gj"), SubResource("Resource_nviov"), SubResource("Resource_mgmiw"), SubResource("Resource_yd60s"), SubResource("Resource_xkdfa"), SubResource("Resource_1jbvs"), SubResource("Resource_n1ewt"), SubResource("Resource_jiib1"), SubResource("Resource_oowkn"), SubResource("Resource_hm1xt"), SubResource("Resource_212ne"), SubResource("Resource_rci5l"), SubResource("Resource_4asgv"), SubResource("Resource_fwxhe"), SubResource("Resource_juxf4"), SubResource("Resource_63rlw"), SubResource("Resource_1lrai"), SubResource("Resource_ikt8q"), SubResource("Resource_fx44p"), SubResource("Resource_105or"), SubResource("Resource_jf354"), SubResource("Resource_8r17r"), SubResource("Resource_fdyrt"), SubResource("Resource_vfmkv"), SubResource("Resource_1h462"), SubResource("Resource_uwg6m")])
+lines = Array[ExtResource("1_yji8q")]([SubResource("Resource_yji8q"), SubResource("Resource_2ssu3"), SubResource("Resource_tlocn"), SubResource("Resource_crtyr"), SubResource("Resource_xrrmf"), SubResource("Resource_yime8"), SubResource("Resource_v46gj"), SubResource("Resource_nviov"), SubResource("Resource_mgmiw"), SubResource("Resource_yd60s"), SubResource("Resource_xkdfa"), SubResource("Resource_1jbvs"), SubResource("Resource_n1ewt"), SubResource("Resource_jiib1"), SubResource("Resource_oowkn"), SubResource("Resource_hm1xt"), SubResource("Resource_212ne"), SubResource("Resource_rci5l"), SubResource("Resource_4asgv"), SubResource("Resource_fwxhe"), SubResource("Resource_juxf4"), SubResource("Resource_63rlw"), SubResource("Resource_1lrai"), SubResource("Resource_ikt8q"), SubResource("Resource_fx44p"), SubResource("Resource_105or"), SubResource("Resource_jf354"), SubResource("Resource_8r17r"), SubResource("Resource_fdyrt"), SubResource("Resource_vfmkv"), SubResource("Resource_1h462"), SubResource("Resource_uwg6m"), SubResource("Resource_88qxy"), SubResource("Resource_q2dq3"), SubResource("Resource_8qr0o"), SubResource("Resource_3ubda")])

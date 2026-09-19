@@ -8,84 +8,102 @@
 [sub_resource type="Resource" id="Resource_mh7c8"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
-text = "七つ目は宝箱や"
+text = "七つ目のヒントや"
 speaking = 1
 left = ExtResource("2_d1rpl")
 
 [sub_resource type="Resource" id="Resource_d1rpl"]
 script = ExtResource("1_mh7c8")
 speaker = "OB"
-text = "宝箱！"
+text = "はい！"
 speaking = 2
 right = ExtResource("3_ljqqe")
 
 [sub_resource type="Resource" id="Resource_ljqqe"]
 script = ExtResource("1_mh7c8")
-speaker = "OB"
-text = "宝ほしい！宝！たから！"
-speaking = 2
+speaker = "カニエナガ"
+text = "四角い。重い。鍵がかかっとる"
+speaking = 1
 
 [sub_resource type="Resource" id="Resource_jrclr"]
-script = ExtResource("1_mh7c8")
-speaker = "カニエナガ"
-text = "1回おちつけ！"
-speaking = 1
-
-[sub_resource type="Resource" id="Resource_qeown"]
-script = ExtResource("1_mh7c8")
-speaker = "OB"
-text = "むふー！"
-speaking = 2
-
-[sub_resource type="Resource" id="Resource_woajy"]
-script = ExtResource("1_mh7c8")
-speaker = "カニエナガ"
-text = "ただし、この世界の宝箱にはミミックもおる"
-speaking = 1
-
-[sub_resource type="Resource" id="Resource_npvkm"]
-script = ExtResource("1_mh7c8")
-speaker = "OB"
-text = "ミミック？"
-speaking = 2
-
-[sub_resource type="Resource" id="Resource_831vb"]
-script = ExtResource("1_mh7c8")
-speaker = "カニエナガ"
-text = "噛みついてくるから気ぃつけや"
-speaking = 1
-
-[sub_resource type="Resource" id="Resource_g8f0t"]
 script = ExtResource("1_mh7c8")
 speaker = "OB"
 text = "…………"
 speaking = 2
 
+[sub_resource type="Resource" id="Resource_qeown"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "おい"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_woajy"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "宝ほしい！宝！たから！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_npvkm"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "なんでそこだけ即答やねん！"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_831vb"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "むふー！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_g8f0t"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "一回落ち着け！　言うとくけど、この世界のそれにはミミックもおる"
+speaking = 1
+
 [sub_resource type="Resource" id="Resource_pr3q1"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "ミミック？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_f6m3d"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "噛みついてくるから気ぃつけや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_kbpjl"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "…………"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_gvlfi"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
 text = "なんや？"
 speaking = 1
 
-[sub_resource type="Resource" id="Resource_f6m3d"]
+[sub_resource type="Resource" id="Resource_umlfc"]
 script = ExtResource("1_mh7c8")
 speaker = "OB"
 text = "でも宝箱なんだよね？"
 speaking = 2
 
-[sub_resource type="Resource" id="Resource_kbpjl"]
+[sub_resource type="Resource" id="Resource_dlepo"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
 text = "そうやけど"
 speaking = 1
 
-[sub_resource type="Resource" id="Resource_gvlfi"]
+[sub_resource type="Resource" id="Resource_otxmp"]
 script = ExtResource("1_mh7c8")
 speaker = "OB"
 text = "じゃあ問答無用で開ける！"
 speaking = 2
 
-[sub_resource type="Resource" id="Resource_umlfc"]
+[sub_resource type="Resource" id="Resource_snqu4"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
 text = "どうなっても知らんで"
@@ -93,4 +111,4 @@ speaking = 1
 
 [resource]
 script = ExtResource("4_jrclr")
-lines = Array[ExtResource("1_mh7c8")]([SubResource("Resource_mh7c8"), SubResource("Resource_d1rpl"), SubResource("Resource_ljqqe"), SubResource("Resource_jrclr"), SubResource("Resource_qeown"), SubResource("Resource_woajy"), SubResource("Resource_npvkm"), SubResource("Resource_831vb"), SubResource("Resource_g8f0t"), SubResource("Resource_pr3q1"), SubResource("Resource_f6m3d"), SubResource("Resource_kbpjl"), SubResource("Resource_gvlfi"), SubResource("Resource_umlfc")])
+lines = Array[ExtResource("1_mh7c8")]([SubResource("Resource_mh7c8"), SubResource("Resource_d1rpl"), SubResource("Resource_ljqqe"), SubResource("Resource_jrclr"), SubResource("Resource_qeown"), SubResource("Resource_woajy"), SubResource("Resource_npvkm"), SubResource("Resource_831vb"), SubResource("Resource_g8f0t"), SubResource("Resource_pr3q1"), SubResource("Resource_f6m3d"), SubResource("Resource_kbpjl"), SubResource("Resource_gvlfi"), SubResource("Resource_umlfc"), SubResource("Resource_dlepo"), SubResource("Resource_otxmp"), SubResource("Resource_snqu4")])

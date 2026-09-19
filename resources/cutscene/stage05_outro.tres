@@ -8,7 +8,7 @@
 [sub_resource type="Resource" id="Resource_cgvsy"]
 script = ExtResource("1_cgvsy")
 speaker = "OB"
-text = "おもしろい！！"
+text = "あっ、これ！　『葬送のオバーレン』！"
 speaking = 2
 right = ExtResource("2_mr3mf")
 
@@ -34,46 +34,89 @@ speaking = 1
 [sub_resource type="Resource" id="Resource_u8a0j"]
 script = ExtResource("1_cgvsy")
 speaker = "OB"
-text = "むふー！"
+text = "……ん？　オバーレン？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_2vnfm"]
 script = ExtResource("1_cgvsy")
 speaker = "カニエナガ"
-text = "乗ってきたな！"
+text = "なんや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_ee3wo"]
 script = ExtResource("1_cgvsy")
 speaker = "OB"
-text = "この世界って漫画まであるんだね"
+text = "似た名前の有名な漫画、なかったっけ"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_lv627"]
 script = ExtResource("1_cgvsy")
 speaker = "カニエナガ"
-text = "何でもありの異世界やからな"
+text = "あるけど、こっちはオバーレンや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_vi5hp"]
 script = ExtResource("1_cgvsy")
 speaker = "OB"
-text = "……ということは"
+text = "そっか"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_d38md"]
+script = ExtResource("1_cgvsy")
+speaker = "OB"
+text = "おもしろい！！"
+speaking = 2
+right = ExtResource("2_mr3mf")
+
+[sub_resource type="Resource" id="Resource_pbdaf"]
+script = ExtResource("1_cgvsy")
+speaker = "カニエナガ"
+text = "もう読んどる！"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_pvgph"]
+script = ExtResource("1_cgvsy")
+speaker = "OB"
+text = "むふー！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_tdytu"]
+script = ExtResource("1_cgvsy")
+speaker = "カニエナガ"
+text = "乗ってきたな！"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_37k1b"]
+script = ExtResource("1_cgvsy")
+speaker = "OB"
+text = "この世界って漫画まであるんだね"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_o0ex7"]
+script = ExtResource("1_cgvsy")
+speaker = "カニエナガ"
+text = "何でもありの異世界やからな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_d118l"]
+script = ExtResource("1_cgvsy")
+speaker = "OB"
+text = "……ということは"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_vyrg2"]
 script = ExtResource("1_cgvsy")
 speaker = "カニエナガ"
 text = "なんや？"
 speaking = 1
 
-[sub_resource type="Resource" id="Resource_pbdaf"]
+[sub_resource type="Resource" id="Resource_t86xa"]
 script = ExtResource("1_cgvsy")
 speaker = "OB"
 text = "私、本当にゲームの世界に転生したんだ……"
 speaking = 2
 
-[sub_resource type="Resource" id="Resource_pvgph"]
+[sub_resource type="Resource" id="Resource_safx4"]
 script = ExtResource("1_cgvsy")
 speaker = "カニエナガ"
 text = "今さらかい！"
@@ -81,4 +124,4 @@ speaking = 1
 
 [resource]
 script = ExtResource("4_fhkv8")
-lines = Array[ExtResource("1_cgvsy")]([SubResource("Resource_cgvsy"), SubResource("Resource_mr3mf"), SubResource("Resource_q6lt2"), SubResource("Resource_fhkv8"), SubResource("Resource_u8a0j"), SubResource("Resource_2vnfm"), SubResource("Resource_ee3wo"), SubResource("Resource_lv627"), SubResource("Resource_vi5hp"), SubResource("Resource_d38md"), SubResource("Resource_pbdaf"), SubResource("Resource_pvgph")])
+lines = Array[ExtResource("1_cgvsy")]([SubResource("Resource_cgvsy"), SubResource("Resource_mr3mf"), SubResource("Resource_q6lt2"), SubResource("Resource_fhkv8"), SubResource("Resource_u8a0j"), SubResource("Resource_2vnfm"), SubResource("Resource_ee3wo"), SubResource("Resource_lv627"), SubResource("Resource_vi5hp"), SubResource("Resource_d38md"), SubResource("Resource_pbdaf"), SubResource("Resource_pvgph"), SubResource("Resource_tdytu"), SubResource("Resource_37k1b"), SubResource("Resource_o0ex7"), SubResource("Resource_d118l"), SubResource("Resource_vyrg2"), SubResource("Resource_t86xa"), SubResource("Resource_safx4")])

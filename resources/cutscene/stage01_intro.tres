@@ -8,57 +8,57 @@
 [sub_resource type="Resource" id="Resource_ycfur"]
 script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
-text = "まずは一つ目。奈良の日本酒、『風の林』や"
+text = "まずは一つ目。ヒント出すで"
 speaking = 1
 left = ExtResource("2_le35o")
 
 [sub_resource type="Resource" id="Resource_le35o"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
-text = "風の林……？"
+text = "ヒント？"
 speaking = 2
 right = ExtResource("3_4xutf")
 
 [sub_resource type="Resource" id="Resource_4xutf"]
 script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
-text = "お前が一番好きな日本酒や"
+text = "奈良生まれ。透きとおった液体や"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_n6p1y"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
-text = "私が？"
+text = "……水？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_ussie"]
 script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
-text = "せや"
+text = "水であそこまで喜ぶやつおらんわ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_6kvyc"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
-text = "全然思い出せない……"
+text = "じゃあ何なの"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_ckeky"]
 script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
-text = "まあ、現物を見れば思い出すやろ"
+text = "言わん。見たら分かる"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_fwekl"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
-text = "日本酒かぁ……"
+text = "もったいぶるなぁ"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_ouica"]
 script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
-text = "なんや、飲みたそうな顔しとるぞ"
+text = "なんや、ちょっと飲みたそうな顔しとるぞ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_gq6qb"]

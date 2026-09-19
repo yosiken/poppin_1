@@ -8,57 +8,57 @@
 [sub_resource type="Resource" id="Resource_23evt"]
 script = ExtResource("1_23evt")
 speaker = "カニエナガ"
-text = "次はビールや"
+text = "次のヒントや"
 speaking = 1
 left = ExtResource("2_otxka")
 
 [sub_resource type="Resource" id="Resource_otxka"]
 script = ExtResource("1_23evt")
 speaker = "OB"
-text = "ビール！"
+text = "うん"
 speaking = 2
 right = ExtResource("3_x6aby")
 
 [sub_resource type="Resource" id="Resource_x6aby"]
 script = ExtResource("1_23evt")
 speaker = "カニエナガ"
-text = "『ハイパードライ』"
+text = "キンキンに冷えとる。金色で、泡が出る"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_3ft0g"]
 script = ExtResource("1_23evt")
 speaker = "OB"
-text = "……なんか聞いたことある"
+text = "……ジュース？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_8aqdv"]
 script = ExtResource("1_23evt")
 speaker = "カニエナガ"
-text = "お前が一番好きなビールや"
+text = "小学生か"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_dnyg0"]
 script = ExtResource("1_23evt")
 speaker = "OB"
-text = "一番好き……"
+text = "違うの？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_mntkg"]
 script = ExtResource("1_23evt")
 speaker = "カニエナガ"
-text = "忘れとるな"
+text = "お前が配信終わりに必ず一本あけとったやつや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_rl6cv"]
 script = ExtResource("1_23evt")
 speaker = "OB"
-text = "うーん……"
+text = "配信終わりに……"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_8ojgj"]
 script = ExtResource("1_23evt")
 speaker = "カニエナガ"
-text = "まあ、ゴールであの缶を開ける音を聞いたら思い出すやろ"
+text = "ゴールであの缶を開ける音を聞いたら、イヤでも思い出すわ"
 speaking = 1
 
 [resource]

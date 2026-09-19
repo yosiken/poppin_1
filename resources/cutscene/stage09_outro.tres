@@ -22,7 +22,7 @@ left = ExtResource("3_pelsk")
 [sub_resource type="Resource" id="Resource_pelsk"]
 script = ExtResource("1_t1p1n")
 speaker = "OB"
-text = "天城！OBやりとげました"
+text = "天城！　『天城越え』！　OBやりとげました"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_ejyft"]

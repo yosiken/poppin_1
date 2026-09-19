@@ -8,59 +8,71 @@
 [sub_resource type="Resource" id="Resource_tuajt"]
 script = ExtResource("1_tuajt")
 speaker = "カニエナガ"
-text = "五つ目は漫画や"
+text = "五つ目のヒントや"
 speaking = 1
 left = ExtResource("2_50bnv")
 
 [sub_resource type="Resource" id="Resource_50bnv"]
 script = ExtResource("1_tuajt")
 speaker = "OB"
-text = "漫画？"
+text = "うん"
 speaking = 2
 right = ExtResource("3_kccec")
 
 [sub_resource type="Resource" id="Resource_kccec"]
 script = ExtResource("1_tuajt")
 speaker = "カニエナガ"
-text = "『葬送のオバーレン』"
+text = "紙でできとる。めくる。絵と文字が描いたる"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_fvknb"]
 script = ExtResource("1_tuajt")
 speaker = "OB"
-text = "……オバーレン？"
+text = "……教科書？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_0aqf8"]
 script = ExtResource("1_tuajt")
 speaker = "カニエナガ"
-text = "似た名前の有名な漫画があるけど、こっちはオバーレンや"
+text = "お前が教科書好きやったら苦労せんわ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_57cw5"]
 script = ExtResource("1_tuajt")
 speaker = "OB"
-text = "なんか聞いたことあるなぁ"
+text = "じゃあ漫画？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_g0rfd"]
 script = ExtResource("1_tuajt")
 speaker = "カニエナガ"
-text = "お前、好きやったやろ"
+text = "ご名答"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_a56xp"]
 script = ExtResource("1_tuajt")
 speaker = "OB"
-text = "うーん……"
+text = "何の漫画？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_dw85g"]
 script = ExtResource("1_tuajt")
 speaker = "カニエナガ"
-text = "まあ、見つければ思い出すやろ"
+text = "そこまでは言わん"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_8acxc"]
+script = ExtResource("1_tuajt")
+speaker = "OB"
+text = "ケチ！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_qst7m"]
+script = ExtResource("1_tuajt")
+speaker = "カニエナガ"
+text = "まあ、見つけたら思い出すやろ"
 speaking = 1
 
 [resource]
 script = ExtResource("4_fvknb")
-lines = Array[ExtResource("1_tuajt")]([SubResource("Resource_tuajt"), SubResource("Resource_50bnv"), SubResource("Resource_kccec"), SubResource("Resource_fvknb"), SubResource("Resource_0aqf8"), SubResource("Resource_57cw5"), SubResource("Resource_g0rfd"), SubResource("Resource_a56xp"), SubResource("Resource_dw85g")])
+lines = Array[ExtResource("1_tuajt")]([SubResource("Resource_tuajt"), SubResource("Resource_50bnv"), SubResource("Resource_kccec"), SubResource("Resource_fvknb"), SubResource("Resource_0aqf8"), SubResource("Resource_57cw5"), SubResource("Resource_g0rfd"), SubResource("Resource_a56xp"), SubResource("Resource_dw85g"), SubResource("Resource_8acxc"), SubResource("Resource_qst7m")])

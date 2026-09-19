@@ -22,7 +22,7 @@ left = ExtResource("3_gujyp")
 [sub_resource type="Resource" id="Resource_gujyp"]
 script = ExtResource("1_x8fab")
 speaker = "OB"
-text = "私、これ使ってた！"
+text = "ウクレレだ！　私、これ使ってた！"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_br8eg"]
@@ -34,22 +34,34 @@ speaking = 1
 [sub_resource type="Resource" id="Resource_8p4s8"]
 script = ExtResource("1_x8fab")
 speaker = "OB"
-text = "赤いから……レッドアイ……なのかな"
+text = "名前も思い出した。『レッドアイ田中』"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_qbr27"]
 script = ExtResource("1_x8fab")
 speaker = "カニエナガ"
-text = "うん"
+text = "それや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_l5hxo"]
 script = ExtResource("1_x8fab")
 speaker = "OB"
-text = "田中は誰やねん"
+text = "赤いから……レッドアイ……なのかな"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_bpheo"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "うん"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_oaua2"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "田中は誰やねん"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_wy0qh"]
 script = ExtResource("1_x8fab")
 speaker = "カニエナガ"
 text = "ホンマに誰やねん！"
@@ -57,4 +69,4 @@ speaking = 1
 
 [resource]
 script = ExtResource("4_br8eg")
-lines = Array[ExtResource("1_x8fab")]([SubResource("Resource_x8fab"), SubResource("Resource_p2xug"), SubResource("Resource_gujyp"), SubResource("Resource_br8eg"), SubResource("Resource_8p4s8"), SubResource("Resource_qbr27"), SubResource("Resource_l5hxo"), SubResource("Resource_bpheo")])
+lines = Array[ExtResource("1_x8fab")]([SubResource("Resource_x8fab"), SubResource("Resource_p2xug"), SubResource("Resource_gujyp"), SubResource("Resource_br8eg"), SubResource("Resource_8p4s8"), SubResource("Resource_qbr27"), SubResource("Resource_l5hxo"), SubResource("Resource_bpheo"), SubResource("Resource_oaua2"), SubResource("Resource_wy0qh")])

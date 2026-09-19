@@ -27,7 +27,8 @@ script = ExtResource("1_3jl66")
 speaker = "OB"
 text = "……そっか"
 speaking = 2
-note = "演出：肩のシマエナガは「チュン」と鳴くだけ"
+note = "演出：肩のシマエナガは「チュン」と鳴くだけ
+演出：と鳴くだけ"
 
 [sub_resource type="Resource" id="Resource_7h71w"]
 script = ExtResource("1_3jl66")

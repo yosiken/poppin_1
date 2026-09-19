@@ -8,21 +8,21 @@
 [sub_resource type="Resource" id="Resource_c8ka2"]
 script = ExtResource("1_c8ka2")
 speaker = "OB"
-text = "お金……"
+text = "お金ーーー！　現金！"
 speaking = 2
 right = ExtResource("2_st6c1")
 
 [sub_resource type="Resource" id="Resource_st6c1"]
 script = ExtResource("1_c8ka2")
 speaker = "カニエナガ"
-text = "思い出したか？"
+text = "やっぱり当たっとったか"
 speaking = 1
 left = ExtResource("3_uxxq4")
 
 [sub_resource type="Resource" id="Resource_uxxq4"]
 script = ExtResource("1_c8ka2")
 speaker = "OB"
-text = "うん！"
+text = "思い出した"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_hlwc3"]

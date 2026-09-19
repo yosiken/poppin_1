@@ -28,52 +28,64 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_rr3ph"]
 script = ExtResource("1_r35ad")
 speaker = "カニエナガ"
-text = "最後は……ワイや"
+text = "……今回は、ヒントも一個だけや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_0s1qs"]
 script = ExtResource("1_r35ad")
 speaker = "OB"
-text = "……カニエナガ？"
+text = "えっ"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_r8tqt"]
 script = ExtResource("1_r35ad")
 speaker = "カニエナガ"
-text = "お前が現実で一番そばに置いとったものや"
+text = "お前が現実で、一番そばに置いとったもんや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_72ihu"]
 script = ExtResource("1_r35ad")
 speaker = "OB"
-text = "でも…今ここに…"
+text = "一番そばに……？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_8atj6"]
 script = ExtResource("1_r35ad")
 speaker = "カニエナガ"
-text = "ワイは異世界の偶像や。本物が待っとるで"
+text = "思い出せんか"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_ab7rp"]
 script = ExtResource("1_r35ad")
 speaker = "OB"
-text = "カニエナガ…"
+text = "……わからない"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_ywlps"]
 script = ExtResource("1_r35ad")
 speaker = "カニエナガ"
-text = "さあ、最後のステージや"
+text = "…………"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_33d2c"]
 script = ExtResource("1_r35ad")
 speaker = "OB"
-text = "一緒に行こう！"
+text = "ねえ、なんで今回はそんなに静かなの"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_jmc1e"]
+script = ExtResource("1_r35ad")
+speaker = "カニエナガ"
+text = "さあ、最後のステージや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_nec6o"]
+script = ExtResource("1_r35ad")
+speaker = "OB"
+text = "一緒に行こう！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_776ll"]
 script = ExtResource("1_r35ad")
 speaker = "カニエナガ"
 text = "当たり前や！"
@@ -81,4 +93,4 @@ speaking = 1
 
 [resource]
 script = ExtResource("4_rr3ph")
-lines = Array[ExtResource("1_r35ad")]([SubResource("Resource_r35ad"), SubResource("Resource_q87b5"), SubResource("Resource_82dx4"), SubResource("Resource_rr3ph"), SubResource("Resource_0s1qs"), SubResource("Resource_r8tqt"), SubResource("Resource_72ihu"), SubResource("Resource_8atj6"), SubResource("Resource_ab7rp"), SubResource("Resource_ywlps"), SubResource("Resource_33d2c"), SubResource("Resource_jmc1e")])
+lines = Array[ExtResource("1_r35ad")]([SubResource("Resource_r35ad"), SubResource("Resource_q87b5"), SubResource("Resource_82dx4"), SubResource("Resource_rr3ph"), SubResource("Resource_0s1qs"), SubResource("Resource_r8tqt"), SubResource("Resource_72ihu"), SubResource("Resource_8atj6"), SubResource("Resource_ab7rp"), SubResource("Resource_ywlps"), SubResource("Resource_33d2c"), SubResource("Resource_jmc1e"), SubResource("Resource_nec6o"), SubResource("Resource_776ll")])

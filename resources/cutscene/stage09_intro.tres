@@ -22,76 +22,100 @@ right = ExtResource("3_rldng")
 [sub_resource type="Resource" id="Resource_rldng"]
 script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
-text = "カラオケマイクや"
+text = "ヒントいくで。握るもんや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_blccb"]
 script = ExtResource("1_58fq2")
 speaker = "OB"
-text = "カラオケ？"
+text = "握る……おにぎり？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_74h8k"]
 script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
-text = "お前の十八番を歌って思い出すんや"
+text = "食いもんから離れろ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_3k5n3"]
 script = ExtResource("1_58fq2")
 speaker = "OB"
-text = "何だっけ？"
+text = "じゃあ何"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_aqoq6"]
 script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
-text = "『天城ごえ』"
+text = "それに向かうとお前の十八番歌いたくなるやろな"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_0pyhc"]
 script = ExtResource("1_58fq2")
 speaker = "OB"
-text = "……ああ！"
+text = "歌！"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_gylu7"]
 script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
-text = "思い出した？"
+text = "曲名は言わんぞ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_puagd"]
 script = ExtResource("1_58fq2")
 speaker = "OB"
-text = "それたぶん歌える！"
+text = "えー"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_aa82q"]
 script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
-text = "そこは自信あるんやな"
+text = "ヒントだけや。……山を越える歌や"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_ycbdi"]
 script = ExtResource("1_58fq2")
 speaker = "OB"
-text = "でも……"
+text = "山……"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_mrc50"]
 script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
-text = "なんや？"
+text = "越えられるか？"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_lppni"]
 script = ExtResource("1_58fq2")
 speaker = "OB"
-text = "天城、越えられるかな？ちょっと心配"
+text = "それ、たぶん歌える！"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_sukku"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "そこは自信あるんやな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_54kjk"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "でも……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_oxf0j"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "なんや？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_q2i5y"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "山、越えられるかな？　ちょっと心配"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_gk0m5"]
 script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
 text = "歌の話やろ？"
@@ -99,4 +123,4 @@ speaking = 1
 
 [resource]
 script = ExtResource("4_blccb")
-lines = Array[ExtResource("1_58fq2")]([SubResource("Resource_58fq2"), SubResource("Resource_pgf5g"), SubResource("Resource_rldng"), SubResource("Resource_blccb"), SubResource("Resource_74h8k"), SubResource("Resource_3k5n3"), SubResource("Resource_aqoq6"), SubResource("Resource_0pyhc"), SubResource("Resource_gylu7"), SubResource("Resource_puagd"), SubResource("Resource_aa82q"), SubResource("Resource_ycbdi"), SubResource("Resource_mrc50"), SubResource("Resource_lppni"), SubResource("Resource_sukku")])
+lines = Array[ExtResource("1_58fq2")]([SubResource("Resource_58fq2"), SubResource("Resource_pgf5g"), SubResource("Resource_rldng"), SubResource("Resource_blccb"), SubResource("Resource_74h8k"), SubResource("Resource_3k5n3"), SubResource("Resource_aqoq6"), SubResource("Resource_0pyhc"), SubResource("Resource_gylu7"), SubResource("Resource_puagd"), SubResource("Resource_aa82q"), SubResource("Resource_ycbdi"), SubResource("Resource_mrc50"), SubResource("Resource_lppni"), SubResource("Resource_sukku"), SubResource("Resource_54kjk"), SubResource("Resource_oxf0j"), SubResource("Resource_q2i5y"), SubResource("Resource_gk0m5")])

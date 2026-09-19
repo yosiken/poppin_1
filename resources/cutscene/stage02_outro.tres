@@ -35,34 +35,46 @@ speaking = 1
 [sub_resource type="Resource" id="Resource_xga3v"]
 script = ExtResource("1_bkhll")
 speaker = "OB"
-text = "一番好きなビール……！"
+text = "缶に書いてある……『ハイパードライ』！"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_uoqmy"]
 script = ExtResource("1_bkhll")
 speaker = "カニエナガ"
-text = "二つ目、思い出したな"
+text = "せや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_pdpm5"]
 script = ExtResource("1_bkhll")
 speaker = "OB"
-text = "…………"
+text = "私が一番好きなビール……！"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_o0ook"]
 script = ExtResource("1_bkhll")
 speaker = "カニエナガ"
-text = "なんや？"
+text = "二つ目、思い出したな"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_3lm61"]
 script = ExtResource("1_bkhll")
 speaker = "OB"
-text = "開けたんなら飲むしか無いよね。仕方ないよね！ね！"
+text = "…………"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_x6oyx"]
+script = ExtResource("1_bkhll")
+speaker = "カニエナガ"
+text = "なんや？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_h1vxn"]
+script = ExtResource("1_bkhll")
+speaker = "OB"
+text = "開けたんなら飲むしか無いよね。仕方ないよね！ね！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_p5iar"]
 script = ExtResource("1_bkhll")
 speaker = "カニエナガ"
 text = "それしか考えてへんやろ！"
@@ -70,4 +82,4 @@ speaking = 1
 
 [resource]
 script = ExtResource("4_qxl11")
-lines = Array[ExtResource("1_bkhll")]([SubResource("Resource_bkhll"), SubResource("Resource_d3whh"), SubResource("Resource_uga3f"), SubResource("Resource_qxl11"), SubResource("Resource_xga3v"), SubResource("Resource_uoqmy"), SubResource("Resource_pdpm5"), SubResource("Resource_o0ook"), SubResource("Resource_3lm61"), SubResource("Resource_x6oyx")])
+lines = Array[ExtResource("1_bkhll")]([SubResource("Resource_bkhll"), SubResource("Resource_d3whh"), SubResource("Resource_uga3f"), SubResource("Resource_qxl11"), SubResource("Resource_xga3v"), SubResource("Resource_uoqmy"), SubResource("Resource_pdpm5"), SubResource("Resource_o0ook"), SubResource("Resource_3lm61"), SubResource("Resource_x6oyx"), SubResource("Resource_h1vxn"), SubResource("Resource_p5iar")])
