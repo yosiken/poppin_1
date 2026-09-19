@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_d1rpl"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_ljqqe"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_jrclr"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-11.png" id="90_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-21.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_mh7c8"]
 script = ExtResource("1_mh7c8")
@@ -11,6 +13,7 @@ speaker = "カニエナガ"
 text = "七つ目のヒントや"
 speaking = 1
 left = ExtResource("2_d1rpl")
+background = ExtResource("90_art")
 
 [sub_resource type="Resource" id="Resource_d1rpl"]
 script = ExtResource("1_mh7c8")
@@ -108,6 +111,7 @@ script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
 text = "どうなっても知らんで"
 speaking = 1
+popup = ExtResource("91_art")
 
 [resource]
 script = ExtResource("4_jrclr")

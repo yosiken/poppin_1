@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_50bnv"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_kccec"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_fvknb"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-09.png" id="90_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/MISS-05.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_tuajt"]
 script = ExtResource("1_tuajt")
@@ -11,6 +13,7 @@ speaker = "カニエナガ"
 text = "五つ目のヒントや"
 speaking = 1
 left = ExtResource("2_50bnv")
+background = ExtResource("90_art")
 
 [sub_resource type="Resource" id="Resource_50bnv"]
 script = ExtResource("1_tuajt")
@@ -30,6 +33,8 @@ script = ExtResource("1_tuajt")
 speaker = "OB"
 text = "……教科書？"
 speaking = 2
+popup = ExtResource("91_art")
+popup_kind = 1
 
 [sub_resource type="Resource" id="Resource_0aqf8"]
 script = ExtResource("1_tuajt")

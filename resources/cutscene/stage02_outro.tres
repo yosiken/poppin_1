@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_d3whh"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_uga3f"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_qxl11"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-06.png" id="90_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-09.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_bkhll"]
 script = ExtResource("1_bkhll")
@@ -12,6 +14,8 @@ text = "…………これだ！"
 speaking = 2
 right = ExtResource("2_d3whh")
 note = "演出：ビールを開ける「カシュッ！ショワアアア～」"
+background = ExtResource("90_art")
+popup = ExtResource("91_art")
 
 [sub_resource type="Resource" id="Resource_d3whh"]
 script = ExtResource("1_bkhll")

@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_3jl66"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_k0l5e"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_5a5rl"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-03.png" id="90_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-33.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_3jl66"]
 script = ExtResource("1_3jl66")
@@ -11,6 +13,7 @@ text = "…………ん？"
 speaking = 2
 right = ExtResource("2_k0l5e")
 note = "演出：光に包まれるOB"
+background = ExtResource("90_art")
 
 [sub_resource type="Resource" id="Resource_k0l5e"]
 script = ExtResource("1_3jl66")
@@ -38,6 +41,7 @@ speaking = 2
 note = "演出：OBは少し寂しそうに笑う
 演出：そしてベッドから立ち上がる
 演出：ゴンッ！"
+popup = ExtResource("91_art")
 
 [sub_resource type="Resource" id="Resource_oc4by"]
 script = ExtResource("1_3jl66")

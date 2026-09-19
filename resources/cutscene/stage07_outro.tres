@@ -4,12 +4,17 @@
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_3ffe1"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_br2v1"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_l54um"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-11.png" id="90_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-22.png" id="91_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-23.png" id="92_art"]
 
 [sub_resource type="Resource" id="Resource_0cpef"]
 script = ExtResource("1_0cpef")
 speaker = "ミミック"
 text = "ガブガブ"
 note = "演出：宝箱がミミックだった。OBが噛みつかれる"
+background = ExtResource("90_art")
+popup = ExtResource("91_art")
 
 [sub_resource type="Resource" id="Resource_3ffe1"]
 script = ExtResource("1_0cpef")
@@ -30,6 +35,7 @@ script = ExtResource("1_0cpef")
 speaker = "OB"
 text = "暗いよー！怖いよー！でも…お宝ほしいよー！"
 speaking = 2
+popup = ExtResource("92_art")
 
 [sub_resource type="Resource" id="Resource_shg23"]
 script = ExtResource("1_0cpef")

@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_3yb3t"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_yrt2d"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_pnpx8"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-10.png" id="90_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-18.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_l2nqf"]
 script = ExtResource("1_l2nqf")
@@ -11,6 +13,7 @@ speaker = "カニエナガ"
 text = "六つ目や"
 speaking = 1
 left = ExtResource("2_3yb3t")
+background = ExtResource("90_art")
 
 [sub_resource type="Resource" id="Resource_3yb3t"]
 script = ExtResource("1_l2nqf")
@@ -24,6 +27,7 @@ script = ExtResource("1_l2nqf")
 speaker = "カニエナガ"
 text = "四角い。そんで、ふーふー吹くやつや"
 speaking = 1
+popup = ExtResource("91_art")
 
 [sub_resource type="Resource" id="Resource_pnpx8"]
 script = ExtResource("1_l2nqf")

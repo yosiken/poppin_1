@@ -5,6 +5,10 @@
 [ext_resource type="Texture2D" path="res://resources/texture/BG/bg_a_01.png" id="2_tlocn"]
 [ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="3_tlocn"]
 [ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-01.png" id="91_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-04.png" id="92_art"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-05.png" id="93_art"]
 
 [sub_resource type="Resource" id="Resource_yji8q"]
 script = ExtResource("1_yji8q")
@@ -22,6 +26,7 @@ speaker = "OB"
 text = "……あっ、ビールある"
 speaking = 2
 note = "演出：そう言いながら冷蔵庫を開ける"
+popup = ExtResource("91_art")
 
 [sub_resource type="Resource" id="Resource_tlocn"]
 script = ExtResource("1_yji8q")
@@ -38,6 +43,7 @@ speaking = 2
 note = "演出：結局、もう一杯飲んでしまう
 演出：その後、寝室へ向かおうとしたOBだったが――
 演出：ゴンッ！"
+popup = ExtResource("92_art")
 
 [sub_resource type="Resource" id="Resource_xrrmf"]
 script = ExtResource("1_yji8q")
@@ -50,6 +56,7 @@ note = "演出：タンスの角に小指を直撃
 演出：石畳の広場。見上げるほど高い塔
 演出：空には巨大な月が浮かび、看板には見たことのない文字
 演出：そして何より――"
+background = ExtResource("90_art")
 
 [sub_resource type="Resource" id="Resource_yime8"]
 script = ExtResource("1_yji8q")
@@ -165,6 +172,7 @@ script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
 text = "全部思い出したら、現世へのゲートが開くんや"
 speaking = 1
+popup = ExtResource("93_art")
 
 [sub_resource type="Resource" id="Resource_fx44p"]
 script = ExtResource("1_yji8q")
