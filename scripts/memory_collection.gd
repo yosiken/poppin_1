@@ -38,8 +38,9 @@ signal finished
 @export_range(0.0, 5.0, 0.1) var hold_time := 1.4
 
 @export_group("Look")
-## 未取得の見え方。取得済みとの差が分かる程度に潰す
-@export var silhouette_color := Color(0.05, 0.06, 0.10, 0.92)
+## 未取得の見え方。枠の地色より暗い影として出す。
+## 地色より暗くしないと、シルエットが背景に沈んで何も無いように見える
+@export var silhouette_color := Color(0.0, 0.0, 0.0, 0.72)
 ## 取り戻した瞬間に枠を光らせる色
 @export var flash_color := Color(1.0, 0.95, 0.75)
 
@@ -153,6 +154,8 @@ func _ensure_slots() -> void:
 		pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# 小さいドット絵を枠いっぱいに伸ばすので、地形と同じくニアレストで出す
+		pic.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		pic.modulate = silhouette_color
 		frame.add_child(pic)
 
@@ -251,7 +254,8 @@ func _build_ui() -> void:
 
 func _slot_style() -> StyleBoxFlat:
 	var st := StyleBoxFlat.new()
-	st.bg_color = Color(0.10, 0.12, 0.18, 0.9)
+	# シルエットを影として載せるので、地色は少し明るめにする
+	st.bg_color = Color(0.20, 0.23, 0.32, 0.95)
 	st.border_color = Color(0.45, 0.55, 0.75, 0.8)
 	st.set_border_width_all(3)
 	st.set_corner_radius_all(10)
