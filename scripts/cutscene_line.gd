@@ -11,6 +11,9 @@ extends Resource
 
 enum Side { NONE, LEFT, RIGHT, BOTH }
 
+## ポップアップの種別。見た目と消え方が変わる
+enum PopupKind { TALK, MISS }
+
 # ─────────────────────────────── テキスト
 ## 話者名。空ならネームプレートを出さない
 @export var speaker := ""
@@ -39,6 +42,19 @@ enum Side { NONE, LEFT, RIGHT, BOTH }
 ## 背景を消す（暗転）
 @export var clear_background := false
 
+# ─────────────────────────────── ポップアップ（カットイン）
+@export_group("Popup")
+## このコマで重ねる一枚絵。null なら出さない。
+## 立ち絵の上に出て、hold のあと自分で消えるので、次のコマで消す指定はいらない
+@export var popup: Texture2D
+## 枠の色と消え方。資材リストの取り決めに合わせてある
+##   TALK … 青枠。実況ポップアップ。そのまま消える
+##   MISS … 赤枠。誤答カットイン。ヒビが入って割れる
+@export var popup_kind := PopupKind.TALK
+## 出しておく秒数。0 なら Cutscene 側の既定値を使う。
+## 「気づき」を見せるコマは 1.5 くらいためる
+@export_range(0.0, 5.0, 0.1) var popup_hold := 0.0
+
 # ─────────────────────────────── 進行
 @export_group("Timing")
 ## 0 なら入力待ち。0 より大きいとその秒数で自動的に次へ進む
@@ -52,7 +68,7 @@ enum Side { NONE, LEFT, RIGHT, BOTH }
 ## Cutscene の show_notes を立てたときだけ、確認用に画面へ表示する。
 ##
 ## 台本が正なので、ここに書いても次の再生成で上書きされる。
-## 直すときは台本 (resources/dotonbori-isekai-scenario-v2.md) 側を直すこと
+## 直すときは台本 (resources/scenario-v4.md) 側を直すこと
 @export_multiline var note := ""
 
 # ─────────────────────────────── 台本との突き合わせ用

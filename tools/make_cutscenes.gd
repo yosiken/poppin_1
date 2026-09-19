@@ -6,7 +6,7 @@ extends SceneTree
 ##   godot --headless --path <project> --script res://tools/make_cutscenes.gd
 ##
 ## 台本が正なのは speaker / text / speaking の3つだけで、それ以外（背景・立ち絵・
-## 間・スライドインなど、CutsceneEditor で入れる演出）は既存の .tres から引き継ぐ。
+## 間・スライドイン・ポップアップなど、CutsceneEditor で入れる演出）は既存の .tres から引き継ぐ。
 ## なので台本を直したあとに何度流しても、作りこんだ演出は消えない。
 ##
 ## 引き継ぎはコマの本文を手掛かりに突き合わせる。台本側で本文を書き換えたコマは
@@ -189,6 +189,9 @@ func _copy_fx(src: CutsceneLine, dst: CutsceneLine) -> void:
 	dst.slide_in = src.slide_in
 	dst.auto_advance = src.auto_advance
 	dst.delay = src.delay
+	dst.popup = src.popup
+	dst.popup_kind = src.popup_kind
+	dst.popup_hold = src.popup_hold
 
 
 ## 生成しただけの状態から手を入れてあるか。
@@ -196,7 +199,8 @@ func _copy_fx(src: CutsceneLine, dst: CutsceneLine) -> void:
 func _has_fx(l: CutsceneLine) -> bool:
 	return l.background != null or l.clear_background \
 		or l.clear_left or l.clear_right or not l.slide_in \
-		or l.auto_advance > 0.0 or l.delay > 0.0
+		or l.auto_advance > 0.0 or l.delay > 0.0 \
+		or l.popup != null
 
 
 ## .tres の先頭行から uid="uid://..." を取り出す。無ければ空文字

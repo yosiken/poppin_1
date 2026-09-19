@@ -19,8 +19,11 @@ extends Control
 ##
 
 const CUTSCENE_DIR := "res://resources/cutscene"
-## 背景として並べる画像の置き場
+## 背景として並べる画像の置き場。イベント用は event/ の下にある
 const BG_DIR := "res://resources/texture/BG"
+const EVENT_BG_DIR := "res://resources/texture/BG/event"
+## ポップアップ（カットイン）として並べる画像の置き場
+const POPUP_DIR := "res://resources/texture/event/popup"
 ## 立ち絵として並べる画像の接頭辞。キャラを足したらここに足す
 const PORTRAIT_DIR := "res://resources/texture"
 const PORTRAIT_PREFIXES: Array[String] = ["OB_", "kanie"]
@@ -49,6 +52,9 @@ var _speaking: OptionButton
 var _left: OptionButton
 var _right: OptionButton
 var _background: OptionButton
+var _popup: OptionButton
+var _popup_kind: OptionButton
+var _popup_hold: SpinBox
 var _slide_in: CheckBox
 var _auto_advance: SpinBox
 var _delay: SpinBox
@@ -59,6 +65,7 @@ var _origin: Label
 var _keys: Array[String] = []
 var _portraits: Array[Texture2D] = []
 var _backgrounds: Array[Texture2D] = []
+var _popups: Array[Texture2D] = []
 
 var _data: CutsceneData
 var _path := ""
@@ -107,6 +114,10 @@ func _collect_textures() -> void:
 				break
 	for name in _png_names(BG_DIR):
 		_backgrounds.append(load("%s/%s" % [BG_DIR, name]))
+	for name in _png_names(EVENT_BG_DIR):
+		_backgrounds.append(load("%s/%s" % [EVENT_BG_DIR, name]))
+	for name in _png_names(POPUP_DIR):
+		_popups.append(load("%s/%s" % [POPUP_DIR, name]))
 
 
 func _png_names(dir_path: String) -> PackedStringArray:
@@ -231,7 +242,8 @@ func _mark(line: CutsceneLine) -> String:
 		return "　　　"
 	var fx := line.background != null or line.clear_background \
 		or line.clear_left or line.clear_right or not line.slide_in \
-		or line.auto_advance > 0.0 or line.delay > 0.0
+		or line.auto_advance > 0.0 or line.delay > 0.0 \
+		or line.popup != null
 	return ("＋" if line.inserted else "　") \
 		+ ("※" if line.note != "" else "　") \
 		+ ("●" if fx else "　")
@@ -270,6 +282,9 @@ func _select_line(index: int) -> void:
 	_set_pick(_left, line.left, line.clear_left, _portraits)
 	_set_pick(_right, line.right, line.clear_right, _portraits)
 	_set_pick(_background, line.background, line.clear_background, _backgrounds)
+	_set_simple(_popup, line.popup, _popups)
+	_popup_kind.selected = line.popup_kind
+	_popup_hold.value = line.popup_hold
 	_slide_in.button_pressed = line.slide_in
 	_auto_advance.value = line.auto_advance
 	_delay.value = line.delay
@@ -419,6 +434,30 @@ func _on_background_changed(index: int) -> void:
 	_touch()
 
 
+func _on_popup_changed(index: int) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.popup = _popups[index - 1] if index >= 1 and index <= _popups.size() else null
+	_touch()
+
+
+func _on_popup_kind_changed(index: int) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.popup_kind = index
+	_touch()
+
+
+func _on_popup_hold_changed(value: float) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.popup_hold = value
+	_touch()
+
+
 func _on_slide_changed(pressed: bool) -> void:
 	var line := _line()
 	if _loading or line == null:
@@ -463,6 +502,19 @@ func _set_pick(button: OptionButton, tex: Texture2D, clear: bool,
 	var at := list.find(tex)
 	# 一覧に無い画像が入っている（置き場の外を指している）場合は触らせない
 	button.selected = at + 2 if at >= 0 else 0
+
+
+## 「出さない」か画像かの2択。立ち絵・背景と違って持ち越しの概念が無い
+func _fill_simple(button: OptionButton, list: Array[Texture2D], none_label: String) -> void:
+	button.clear()
+	button.add_item(none_label)
+	for tex in list:
+		button.add_item(tex.resource_path.get_file().get_basename())
+
+
+func _set_simple(button: OptionButton, tex: Texture2D, list: Array[Texture2D]) -> void:
+	var at := list.find(tex) if tex else -1
+	button.selected = at + 1 if at >= 0 else 0
 
 
 func _pick_texture(button: OptionButton, index: int, list: Array[Texture2D]) -> Texture2D:
@@ -665,6 +717,21 @@ func _build_detail() -> Control:
 	_fill_pick(_background, _backgrounds, "（消す＝暗転）")
 	_background.item_selected.connect(_on_background_changed)
 	_detail.add_child(_labeled("背景", _background))
+
+	_popup = OptionButton.new()
+	_fill_simple(_popup, _popups, "（出さない）")
+	_popup.item_selected.connect(_on_popup_changed)
+	_detail.add_child(_labeled("ポップアップ", _popup))
+
+	_popup_kind = OptionButton.new()
+	_popup_kind.add_item("青枠（実況／そのまま消える）")
+	_popup_kind.add_item("赤枠（誤答／割れる）")
+	_popup_kind.item_selected.connect(_on_popup_kind_changed)
+	_detail.add_child(_labeled("ポップアップの種別", _popup_kind))
+
+	_popup_hold = _spin(0.0, 5.0, 0.1)
+	_popup_hold.value_changed.connect(_on_popup_hold_changed)
+	_detail.add_child(_labeled("ポップアップ表示 秒 (0=既定)", _popup_hold))
 
 	_slide_in = CheckBox.new()
 	_slide_in.text = "立ち絵を外側からスライドインさせる"

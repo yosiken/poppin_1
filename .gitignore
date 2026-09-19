@@ -30,3 +30,7 @@ addons/effekseer/bin/macos/
 # Godot がGDExtensionのDLLを差し替える際に残す一時ファイル
 *.TMP
 ~*
+
+# OS がフォルダに勝手に作るファイル。中身は表示位置などで、プロジェクトとは無関係
+.DS_Store
+Thumbs.db
