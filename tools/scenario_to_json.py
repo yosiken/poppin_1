@@ -25,7 +25,8 @@ MAX_CHARS = 105
 
 # 話者名 -> 立ち絵の位置。台本で名前を変えたらここも直すこと。
 # "none" は立ち絵を持たない声（画面に流れるコメントなど）
-SPEAKERS = {"OB": "right", "カニエナガ": "left", "オビラーたち": "none"}
+SPEAKERS = {"OB": "right", "カニエナガ": "left", "オビラーたち": "none",
+            "ミミック": "none"}
 
 # ステージを intro / outro に割る見出し（「### 〜」で書く）
 MARK_INTRO = "スタート前"
