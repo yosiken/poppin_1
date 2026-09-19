@@ -130,12 +130,16 @@ bg_sec = art_txt.split("２．背景素材")[1].split("３．アイテム素材"
 bgs = re.findall(r"^\s+(BG-\d+) (.+?)\s*…(.+)$", bg_sec, re.M)
 
 # カテゴリ: (出力先, 幅, 高さ, 枠色, 地色)
+#
+# 地色は必ず不透明にする。半透明にすると、背後が黒い画面では
+# 敷いても真っ黒にしか見えず、置いたこと自体が分からなくなる。
+# 背景は画面いっぱいに出るので、とくにここを間違えると原因を探しにくい
 CAT = {
- "POP":   ("resources/texture/event/popup",  640,  360, (74,144,226,255), (74,144,226,60)),
- "BG":    ("resources/texture/BG/event",    1920, 1080, (56,160,120,255), (56,160,120,60)),
- "OB":    ("resources/texture/event/char",   848, 1200, (226,126,74,255), (226,126,74,60)),
- "KANIE": ("resources/texture/event/char",   909,  800, (150,100,200,255),(150,100,200,60)),
- "MISS":  ("resources/texture/event/popup",  640,  360, (217,64,64,255),  (217,64,64,60)),
+ "POP":   ("resources/texture/event/popup",  640,  360, (74,144,226,255), (198,219,247,255)),
+ "BG":    ("resources/texture/BG/event",    1920, 1080, (56,160,120,255), (198,231,219,255)),
+ "OB":    ("resources/texture/event/char",   848, 1200, (226,126,74,255), (250,222,205,255)),
+ "KANIE": ("resources/texture/event/char",   909,  800, (150,100,200,255),(226,213,240,255)),
+ "MISS":  ("resources/texture/event/popup",  640,  360, (217,64,64,255),  (247,206,206,255)),
 }
 
 items = ([("POP", i, t) for i, t in pops] + [("BG", i, f"{t}（{w}）") for i, t, w in bgs]
