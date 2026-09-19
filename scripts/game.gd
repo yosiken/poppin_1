@@ -12,6 +12,8 @@ extends Node2D
 ##   F2 … ステージセレクト（デバッグ）の表示切替
 ##   F3 … 現在のステージを即クリア（デバッグ）
 ##   F4 … レベルデザイン用の方眼の表示切替
+##   F6 … イベントセレクト（デバッグ）の表示切替。OP/ED・各面の前後の会話を単体で再生
+##   F9 … 会話中に台本の〔演出：…〕を出す（Cutscene 側）
 ##   R  … 現在のステージをやり直し
 ##   数字 1〜9 / 0 … ステージへ直接ジャンプ
 ##
@@ -70,6 +72,9 @@ signal player_fell(from_position: Vector2)
 ## 受け付けるか。配布版では切る。押されるとランキングに出鱈目な記録が載るため。
 ## skip_cutscenes と同じく "testplay" 付きの書き出しでは自動で false になる
 @export var debug_shortcuts := true
+## 会話デモ中に、台本の〔演出：…〕を画面の上に出す。まだ実装していない演出の
+## 確認用。再生中に F9 でも切り替えられるので、これは最初から出したいときだけ
+@export var show_cutscene_notes := false
 
 @export_group("Stage title")
 ## ステージ開始時に出す見出しの表示秒数。0 で出さない
@@ -106,6 +111,13 @@ var _stage: Stage
 var _clear_overlay: CanvasLayer
 var _pause_overlay: CanvasLayer
 var _select: PanelContainer
+## イベントセレクト（F6）。最初に開いたときに組み立てる
+var _event_panel: PanelContainer
+var _event_progress: Label
+## 確認用に集めたイベント。[{"key": 表示名, "data": CutsceneData}]
+var _events: Array[Dictionary] = []
+## 全イベントの通し再生中。ESC で降ろす
+var _playing_all := false
 var _advancing := false
 var _respawning := false
 ## 読み込みの世代。演出の待機中に別のステージへ切り替えられたら、
@@ -155,6 +167,8 @@ func _ready() -> void:
 		cutscene = Cutscene.new()
 		cutscene.name = "Cutscene"
 		add_child(cutscene)
+	if show_cutscene_notes:
+		cutscene.show_notes = true
 	if time_passage == null:
 		time_passage = get_node_or_null(^"TimePassage") as TimePassage
 	if time_passage == null:
@@ -260,9 +274,14 @@ func _check_fall() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
+		if _playing_all:
+			_playing_all = false      # 通し再生を降りる。今のイベントは最後まで出る
+			return
 		_open_pause_menu()
 		return
 	if event.is_action_pressed(&"pogo_retry"):
+		if _playing_all:
+			return                    # 通し再生中にステージを触らない
 		get_viewport().set_input_as_handled()
 		load_stage(_index)
 		return
@@ -270,7 +289,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		var key := (event as InputEventKey).keycode
-		if key == KEY_F2 and _select:
+		if key == KEY_F6:
+			_toggle_event_ui()
+			get_viewport().set_input_as_handled()
+		elif key == KEY_F2 and _select:
 			_select.visible = not _select.visible
 			get_viewport().set_input_as_handled()
 		elif key == KEY_F3:
@@ -815,7 +837,7 @@ func _build_select_ui() -> void:
 	scroll.add_child(box)
 	_add_label(box, "STAGE SELECT  [F2]", 13, Color(0.55, 0.85, 1.0))
 	_add_hint(box, "[F1] TUNER    [F3] CLEAR THIS STAGE")
-	_add_hint(box, "[F4] GRID (250px)")
+	_add_hint(box, "[F4] GRID (250px)    [F6] EVENT SELECT")
 	_add_hint(box, "[R] RETRY    1-9 / 0 TO JUMP TO STAGE")
 
 	for i in stages.size():
@@ -843,6 +865,119 @@ func _refresh_select_ui() -> void:
 			var packed := stages[i]
 			label += " " + packed.resource_path.get_file().get_basename()
 		buttons[i].text = label
+
+
+# ═══════════════════════════════ イベントセレクト（デバッグ）
+
+## 確認できるイベントを、実際の繋がりから集める。
+##
+## ディレクトリを走査すると「.tres は在るがどのステージからも指されていない」
+## 食い違いを見落とすので、Game の opening/ending と各ステージの intro/outro を
+## そのまま並べる。ステージは読み込みが重いので、F6 を初めて押したときだけ走らせる
+func _collect_events() -> void:
+	_events.clear()
+	if opening:
+		_events.append({"key": "OP", "data": opening})
+	for i in stages.size():
+		var node := stages[i].instantiate()
+		var st := node as Stage
+		if st:
+			if st.intro:
+				_events.append({"key": "%2d intro" % (i + 1), "data": st.intro})
+			if st.outro:
+				_events.append({"key": "%2d outro" % (i + 1), "data": st.outro})
+		node.free()
+	if ending:
+		_events.append({"key": "ED", "data": ending})
+
+
+func _toggle_event_ui() -> void:
+	if _event_panel == null:
+		_collect_events()
+		_build_event_ui()
+		_event_panel.visible = true
+		return
+	_event_panel.visible = not _event_panel.visible
+
+
+func _build_event_ui() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 100                     # チューナー(128)より下
+	add_child(layer)
+
+	_event_panel = PanelContainer.new()
+	# ステージセレクト（左上）とぶつからないよう右上に置く
+	_event_panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_event_panel.position = Vector2(-272, 12)
+	layer.add_child(_event_panel)
+
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(260, minf(620.0, 80.0 + _events.size() * 28.0))
+	_event_panel.add_child(scroll)
+
+	var box := VBoxContainer.new()
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation", 2)
+	scroll.add_child(box)
+	_add_label(box, "EVENT SELECT  [F6]", 13, Color(1.0, 0.85, 0.45))
+	_add_hint(box, "[F9] 演出メモ  [SPACE] 送り  [ENTER] スキップ")
+
+	var all := Button.new()
+	all.text = "▶ ALL (%d)  通し再生" % _events.size()
+	all.pressed.connect(_play_all_events)
+	box.add_child(all)
+
+	# 通し再生中はパネルを隠すので、進み具合は別の帯で出す
+	var progress_box := PanelContainer.new()
+	progress_box.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	progress_box.position = Vector2(-140, 8)
+	progress_box.custom_minimum_size.x = 280
+	progress_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	progress_box.visible = false
+	layer.add_child(progress_box)
+
+	_event_progress = Label.new()
+	_event_progress.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_event_progress.add_theme_font_size_override("font_size", 16)
+	_event_progress.add_theme_color_override("font_color", Color(1.0, 0.85, 0.45))
+	progress_box.add_child(_event_progress)
+
+	for i in _events.size():
+		var b := Button.new()
+		var data: CutsceneData = _events[i]["data"]
+		b.text = "%s  (%d)  %s" % [_events[i]["key"], data.lines.size(),
+			data.resource_path.get_file().get_basename()]
+		b.pressed.connect(_play_event.bind(i))
+		box.add_child(b)
+
+
+func _play_event(index: int) -> void:
+	if index < 0 or index >= _events.size() or cutscene == null:
+		return
+	_event_panel.visible = false
+	print("[Game] イベント確認 %s -> %s" % [_events[index]["key"],
+		(_events[index]["data"] as CutsceneData).resource_path])
+	await cutscene.play(_events[index]["data"])
+	_event_panel.visible = true
+
+
+## OP → 各面の前後 → ED を順に流す。ESC で降りる
+func _play_all_events() -> void:
+	if cutscene == null or _playing_all:
+		return
+	_playing_all = true
+	_event_panel.visible = false
+	var bar := _event_progress.get_parent() as Control
+	# 会話の枠より上に出したいので、Cutscene が pause する前に出しておく
+	bar.visible = true
+	for i in _events.size():
+		if not _playing_all:
+			break
+		_event_progress.text = "%d/%d  %s" % [i + 1, _events.size(), _events[i]["key"]]
+		await cutscene.play(_events[i]["data"])
+	_playing_all = false
+	bar.visible = false
+	_event_panel.visible = true
 
 
 ## セレクトパネルに出す操作の手引き

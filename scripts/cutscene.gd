@@ -50,6 +50,11 @@ signal finished
 ## 口パクの開閉間隔 (秒)
 @export_range(0.02, 0.5, 0.01) var talk_step := 0.09
 
+@export_group("Debug")
+## 台本の〔演出：…〕を画面の上に出す。まだ実装していない演出の確認用で、
+## 製品の見た目ではない。再生中に F9 で切り替えられる
+@export var show_notes := false
+
 @export_group("Test")
 ## 改行とページ送りのたびに、話している側の立ち絵を次のパターンへ送る（動作確認用）。
 ## パターンは "OB_a.png" のような末尾1文字の連番から自動で集める。
@@ -75,9 +80,16 @@ var _part_cache: Dictionary = {}
 var _window: PanelContainer
 var _name_label: Label
 var _text_label: RichTextLabel
+var _note_box: PanelContainer
+var _note_label: Label
+## いま出しているコマ。F9 で表示を切り替えたときに出し直すために覚えておく
+var _current: CutsceneLine
 var _playing := false
 var _advance := false
 var _skip := false
+## エディタからのプレビュー中。まばたき・口パクだけは動かしたいので
+## _playing とは別に持つ（_playing を立てると送りの入力まで拾ってしまう）
+var _previewing := false
 
 
 func _ready() -> void:
@@ -88,6 +100,16 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# F9 は演出メモの表示切替。編集ツールのプレビュー中にも効かせたいので
+	# _playing の判定より先に見る
+	var f9 := event as InputEventKey
+	if f9 and f9.pressed and not f9.echo and f9.keycode == KEY_F9:
+		if _playing or _previewing:
+			show_notes = not show_notes
+			_show_note(_current)
+			get_viewport().set_input_as_handled()
+		return
+
 	if not _playing:
 		return
 
@@ -120,6 +142,7 @@ func play(data: CutsceneData) -> void:
 		return
 
 	_playing = true
+	_previewing = false
 	_skip = false
 	visible = true
 	get_tree().paused = true
@@ -140,7 +163,49 @@ func play(data: CutsceneData) -> void:
 	finished.emit()
 
 
+## イベント編集ツール用。指定したコマの見た目を、入力待ちも文字送りもせずに作る。
+##
+## 立ち絵と背景は「指定したものだけ変わる」方式なので、途中のコマを単独で当てても
+## 正しい絵にならない。必ず先頭から index まで積み直す。
+## play() と違ってツリーは止めないので、編集UIは動いたままになる
+func preview(data: CutsceneData, index: int) -> void:
+	if data == null or data.lines.is_empty():
+		return
+	_previewing = true
+	visible = true
+
+	# 積み直しの途中経過は見せたくないので、フェードを切って一気に当てる
+	var saved := fade_time
+	fade_time = 0.0
+	await _clear_all()
+	var last := clampi(index, 0, data.lines.size() - 1)
+	for i in last + 1:
+		if data.lines[i]:
+			_apply_visuals(data.lines[i])
+	fade_time = saved
+
+	var line := data.lines[last]
+	_show_note(line)
+	if line == null or line.text.strip_edges() == "":
+		_window.visible = false
+		return
+	_window.visible = true
+	_name_label.visible = line.speaker != ""
+	_name_label.text = line.speaker
+	_text_label.text = line.text
+	_text_label.visible_characters = _text_label.get_total_character_count()
+	_set_talking(line.speaking)      # 誰が喋っているか分かるよう口は動かしておく
+
+
+## プレビューを終う
+func end_preview() -> void:
+	_previewing = false
+	_set_talking(CutsceneLine.Side.NONE)
+	visible = false
+
+
 func _play_line(line: CutsceneLine) -> void:
+	_show_note(line)
 	if line.delay > 0.0:
 		await _wait(line.delay)
 	if _skip:
@@ -266,7 +331,7 @@ func _set_talking(speaking: int) -> void:
 
 
 func _process(delta: float) -> void:
-	if not _playing or not animate_portrait:
+	if not (_playing or _previewing) or not animate_portrait:
 		return
 	_talk_timer += delta
 	for rect in [_left, _right]:
@@ -431,6 +496,9 @@ func _tween_value(rect: TextureRect, value: float) -> void:
 
 func _clear_all() -> void:
 	_window.visible = false
+	_current = null
+	if _note_box:
+		_note_box.visible = false
 	for r in [_left, _right, _bg]:
 		_fade_texture(r, null)
 	await _wait_fixed(fade_time)
@@ -490,6 +558,43 @@ func _build_ui() -> void:
 	box.add_child(_text_label)
 
 	_window.visible = false
+	_build_note_box()
+
+
+## 〔演出：…〕を出す枠。本文のウインドウとぶつからないよう画面の上に置く
+func _build_note_box() -> void:
+	_note_box = PanelContainer.new()
+	_note_box.name = "Note"
+	_note_box.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_note_box.offset_left = window_margin
+	_note_box.offset_right = -window_margin
+	_note_box.offset_top = window_margin
+	_note_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_note_box.visible = false
+	add_child(_note_box)
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.10, 0.09, 0.02, 0.85)
+	style.border_color = Color(1.0, 0.82, 0.30, 0.8)
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(6)
+	style.set_content_margin_all(14)
+	_note_box.add_theme_stylebox_override("panel", style)
+
+	_note_label = Label.new()
+	_note_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_note_label.add_theme_font_size_override("font_size", 22)
+	_note_label.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
+	_note_box.add_child(_note_label)
+
+
+func _show_note(line: CutsceneLine) -> void:
+	_current = line
+	if _note_box == null:
+		return
+	var text := line.note if line else ""
+	_note_label.text = text
+	_note_box.visible = show_notes and text != ""
 
 
 func _make_portrait(node_name: String, is_left: bool) -> TextureRect:
