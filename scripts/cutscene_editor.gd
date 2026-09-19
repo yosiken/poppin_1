@@ -439,6 +439,15 @@ func _on_popup_changed(index: int) -> void:
 	if _loading or line == null:
 		return
 	line.popup = _popups[index - 1] if index >= 1 and index <= _popups.size() else null
+	# MISS-XX は誤答カットイン、POP-XX は実況ポップアップ。どちらかは資材リストの
+	# 時点で決まっていて、ファイル名がそのまま表している。選んだ時点で種別も
+	# 合わせておく。取り違えると視聴者が「今のは間違いなの？」と迷うので、
+	# 人が毎回指定する手順にしない。必要なら下の種別欄で手直しできる
+	if line.popup:
+		var base := line.popup.resource_path.get_file().get_basename()
+		line.popup_kind = (CutsceneLine.PopupKind.MISS if base.begins_with("MISS")
+			else CutsceneLine.PopupKind.TALK)
+		_popup_kind.selected = line.popup_kind
 	_touch()
 
 
@@ -727,7 +736,7 @@ func _build_detail() -> Control:
 	_popup_kind.add_item("青枠（実況／そのまま消える）")
 	_popup_kind.add_item("赤枠（誤答／割れる）")
 	_popup_kind.item_selected.connect(_on_popup_kind_changed)
-	_detail.add_child(_labeled("ポップアップの種別", _popup_kind))
+	_detail.add_child(_labeled("ポップアップの種別（画像名から自動）", _popup_kind))
 
 	_popup_hold = _spin(0.0, 5.0, 0.1)
 	_popup_hold.value_changed.connect(_on_popup_hold_changed)

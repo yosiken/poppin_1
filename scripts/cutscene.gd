@@ -67,8 +67,10 @@ const POPUP_SHARD_ROWS := 2
 @export_range(0.1, 3.0, 0.1) var popup_hold_default := 0.8
 ## 「ポンッ」と出るまでの秒数
 @export_range(0.05, 0.6, 0.01) var popup_pop_time := 0.18
-## 消えるまでの秒数。MISS は割れる時間にも使う
+## 青枠が消えるまでの秒数
 @export_range(0.1, 1.0, 0.05) var popup_out_time := 0.35
+## 赤枠が割れて破片が散るまでの秒数。消えるのと同じ尺だと速すぎて読めない
+@export_range(0.2, 1.5, 0.05) var popup_break_time := 0.55
 ## 出たときのSE。資材リストは「無音のポップアップは作らない」としている
 @export var sfx_popup: AudioStream
 ## MISS が割れるときのSE
@@ -827,8 +829,8 @@ func _break_popup() -> void:
 	var base := _popup_root.position
 	var tw := _new_tween()
 	for i in 4:
-		var dx := 12.0 if i % 2 == 0 else -12.0
-		tw.tween_property(_popup_root, "position", base + Vector2(dx, 0.0), 0.04)
+		var dx := 18.0 if i % 2 == 0 else -18.0
+		tw.tween_property(_popup_root, "position", base + Vector2(dx, 0.0), 0.045)
 	tw.tween_property(_popup_root, "position", base, 0.04)
 	tw.tween_callback(func() -> void:
 		_hide_popup()
@@ -863,9 +865,9 @@ func _spawn_shards(tex: Texture2D, rect: Rect2) -> void:
 			var tw := _new_tween()
 			tw.set_parallel(true)
 			tw.tween_property(shard, "position",
-				shard.position + away * 140.0 + Vector2(0.0, 90.0), popup_out_time)
-			tw.tween_property(shard, "rotation_degrees", randf_range(-50.0, 50.0), popup_out_time)
-			tw.tween_property(shard, "modulate:a", 0.0, popup_out_time)
+				shard.position + away * 160.0 + Vector2(0.0, 220.0), popup_break_time)
+			tw.tween_property(shard, "rotation_degrees", randf_range(-60.0, 60.0), popup_break_time)
+			tw.tween_property(shard, "modulate:a", 0.0, popup_break_time)
 			tw.chain().tween_callback(shard.queue_free)
 
 
