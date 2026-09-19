@@ -40,9 +40,6 @@
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="Gradient" id="Gradient_hq6as"]
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.8)
-
 [sub_resource type="Gradient" id="Gradient_g6wdg"]
 colors = PackedColorArray(0.8235294, 0, 0.2627451, 0, 1, 1, 1, 1)
 
@@ -52,6 +49,7 @@ stages = Array[PackedScene]([ExtResource("st01"), ExtResource("st02"), ExtResour
 opening = ExtResource("17_op")
 ending = ExtResource("18_ed")
 stage_bgm = Array[AudioStream]([ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2")])
+show_cutscene_notes = true
 player = NodePath("Player")
 stage_host = NodePath("StageHost")
 sfx_fall = NodePath("SfxFall")
@@ -90,7 +88,7 @@ land_effect_scale = 0.9
 [node name="Trail" type="Line2D" parent="Player" unique_id=721328804]
 show_behind_parent = true
 width_curve = SubResource("Curve_g6wdg")
-gradient = SubResource("Gradient_hq6as")
+gradient = SubResource("Gradient_g6wdg")
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
