@@ -26,6 +26,22 @@ const BOUNDS_SLACK := 64.0
 ## ポーズメニューから戻る先
 const TITLE_SCENE := "res://scenes/Title.tscn"
 
+## memory_items が空のときに読む既定の絵。ステージ1〜10の順で、
+## ゴールに置いてある「10個の大好物」と同じ画像を指す。
+## 絵を差し替えるときはファイル名を変えず、同じパスに置くこと
+const DEFAULT_MEMORY_ITEMS: PackedStringArray = [
+	"res://resources/texture/foods/日本酒.png",
+	"res://resources/texture/foods/ビール.png",
+	"res://resources/texture/foods/かに.png",
+	"res://resources/texture/foods/ウクレレ.png",
+	"res://resources/texture/foods/まんが.png",
+	"res://resources/texture/foods/FF6.png",
+	"res://resources/texture/foods/宝.png",
+	"res://resources/texture/foods/金.png",
+	"res://resources/texture/foods/天城越え.png",
+	"res://resources/texture/foods/カニエナガ .png",
+]
+
 signal stage_loaded(index: int, stage: Stage)
 signal all_cleared()
 ## 場外へ落ちて開始位置へ戻された。引数は落ちた地点
@@ -51,6 +67,10 @@ signal player_fell(from_position: Vector2)
 @export var ending: CutsceneData
 ## ステージセレクトで飛んだときも intro を再生するか
 @export var play_intro_on_select := false
+
+## 記憶コレクションに並べる「10個の大好物」。ステージ1〜10の順。
+## 空のままなら DEFAULT_MEMORY_ITEMS を読む
+@export var memory_items: Array[Texture2D] = []
 
 @export_group("BGM")
 ## ステージBGM。stages と同じ順番・同じ長さで、各ステージに鳴らす曲を直接指定する
@@ -99,6 +119,8 @@ signal player_fell(from_position: Vector2)
 @export var sfx_goal: AudioStreamPlayer
 ## イベント再生用。未設定なら実行時に作る
 @export var cutscene: Cutscene
+## 記憶コレクション画面。未割り当てなら実行時に作る
+@export var memory: MemoryCollection
 ## クリアデモと次のステージの冒頭デモの間に挟む時間経過の演出。
 ## 未設定なら実行時に作る
 @export var time_passage: TimePassage
@@ -169,6 +191,14 @@ func _ready() -> void:
 		add_child(cutscene)
 	if show_cutscene_notes:
 		cutscene.show_notes = true
+	if memory == null:
+		memory = get_node_or_null(^"MemoryCollection") as MemoryCollection
+	if memory == null:
+		memory = MemoryCollection.new()
+		memory.name = "MemoryCollection"
+		add_child(memory)
+	if memory.items.is_empty():
+		memory.items = _resolve_memory_items()
 	if time_passage == null:
 		time_passage = get_node_or_null(^"TimePassage") as TimePassage
 	if time_passage == null:
@@ -657,6 +687,11 @@ func _on_goal_reached(clear_time: float) -> void:
 	if outro and not skip_cutscenes:
 		await cutscene.play(outro)
 
+	# 記憶コレクション。毎ステージ後に必ず挟んで「あと何個で帰れるのか」を見せる。
+	# 最後のステージでは 10/10 が揃ってから ending へ繋ぐ
+	if memory and not skip_cutscenes:
+		await memory.acquire(_index)
+
 	if is_test_end:
 		load_stage(start_index)
 		return
@@ -673,6 +708,20 @@ func _on_goal_reached(clear_time: float) -> void:
 		var caption := _stage.time_passage_text if _stage else ""
 		await time_passage.fade_out(caption)
 	load_stage(_index + 1)
+
+
+## 記憶コレクションに並べる絵を決める。割り当てがあればそれを、
+## 無ければ既定のパスから読む。読めなかったぶんは空の枠になる
+func _resolve_memory_items() -> Array[Texture2D]:
+	if not memory_items.is_empty():
+		return memory_items
+	var out: Array[Texture2D] = []
+	for path in DEFAULT_MEMORY_ITEMS:
+		var tex := load(path) as Texture2D
+		if tex == null:
+			push_warning("Game: 記憶アイテムの絵が読めません: %s" % path)
+		out.append(tex)
+	return out
 
 
 ## ステージ単体のスコアを "stage01"〜"stage10" のリーダーボードへ送る。
