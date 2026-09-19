@@ -26,21 +26,19 @@ const BOUNDS_SLACK := 64.0
 ## ポーズメニューから戻る先
 const TITLE_SCENE := "res://scenes/Title.tscn"
 
-## memory_items が空のときに読む既定の絵。ステージ1〜10の順で、
-## ゴールに置いてある「10個の大好物」と同じ画像を指す。
-## 絵を差し替えるときはファイル名を変えず、同じパスに置くこと
-const DEFAULT_MEMORY_ITEMS: PackedStringArray = [
-	"res://resources/texture/foods/日本酒.png",
-	"res://resources/texture/foods/ビール.png",
-	"res://resources/texture/foods/かに.png",
-	"res://resources/texture/foods/ウクレレ.png",
-	"res://resources/texture/foods/まんが.png",
-	"res://resources/texture/foods/FF6.png",
-	"res://resources/texture/foods/宝.png",
-	"res://resources/texture/foods/金.png",
-	"res://resources/texture/foods/天城越え.png",
-	"res://resources/texture/foods/カニエナガ .png",
-]
+## 記憶コレクションに並べる既定の絵。ゴールに置いてあるものと同じ画像を使う。
+##
+## ステージ1〜9は foods.png の3x3スプライトシートから1コマずつ取る。
+## コマ番号は各ステージの Goal/Sprite の frame と同じ並びなので、
+## ゴールの絵を差し替えたらこちらも一緒に見直すこと。
+## ステージ10だけ別の画像（カニエナガ）。
+##
+## resources/texture/foods/ の個別PNGは .gdignore で除外されていて
+## 読めないので使わない
+const MEMORY_SHEET := "res://resources/texture/foods.png"
+const MEMORY_SHEET_COLS := 3
+const MEMORY_SHEET_ROWS := 3
+const MEMORY_LAST_ITEM := "res://resources/texture/goal.png"
 
 signal stage_loaded(index: int, stage: Stage)
 signal all_cleared()
@@ -69,7 +67,7 @@ signal player_fell(from_position: Vector2)
 @export var play_intro_on_select := false
 
 ## 記憶コレクションに並べる「10個の大好物」。ステージ1〜10の順。
-## 空のままなら DEFAULT_MEMORY_ITEMS を読む
+## 空のままならゴールと同じ絵（foods.png のコマと goal.png）を読む
 @export var memory_items: Array[Texture2D] = []
 
 @export_group("BGM")
@@ -716,11 +714,22 @@ func _resolve_memory_items() -> Array[Texture2D]:
 	if not memory_items.is_empty():
 		return memory_items
 	var out: Array[Texture2D] = []
-	for path in DEFAULT_MEMORY_ITEMS:
-		var tex := load(path) as Texture2D
-		if tex == null:
-			push_warning("Game: 記憶アイテムの絵が読めません: %s" % path)
-		out.append(tex)
+	var sheet := load(MEMORY_SHEET) as Texture2D
+	if sheet == null:
+		push_warning("Game: 記憶アイテムのシートが読めません: %s" % MEMORY_SHEET)
+	else:
+		var cell := sheet.get_size() / Vector2(MEMORY_SHEET_COLS, MEMORY_SHEET_ROWS)
+		for i in MEMORY_SHEET_COLS * MEMORY_SHEET_ROWS:
+			var col := i % MEMORY_SHEET_COLS
+			var row := floori(i / float(MEMORY_SHEET_COLS))
+			var at := AtlasTexture.new()
+			at.atlas = sheet
+			at.region = Rect2(Vector2(col, row) * cell, cell)
+			out.append(at)
+	var last := load(MEMORY_LAST_ITEM) as Texture2D
+	if last == null:
+		push_warning("Game: 最後の記憶アイテムの絵が読めません: %s" % MEMORY_LAST_ITEM)
+	out.append(last)
 	return out
 
 
