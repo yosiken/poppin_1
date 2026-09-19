@@ -5,25 +5,69 @@
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_uga3f"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_qxl11"]
 
-[sub_resource type="Resource" id="Resource_xga3v"]
+[sub_resource type="Resource" id="Resource_bkhll"]
 script = ExtResource("1_bkhll")
 speaker = "OB"
-text = "丸い球体って言い方やめてよ！ でも、ソースとマヨネーズの香ばしい匂いが鼻をくすぐる……。あ！ たこ焼きだ！ 外はカリッと、中はトロ〜ッとしてて、大ぶりのタコが入ってて……あそこのたこ焼きが一番美味しいんだよね！"
+text = "…………これだ！"
 speaking = 2
 right = ExtResource("2_d3whh")
+note = "演出：ビールを開ける「カシュッ！ショワアアア～」"
 
-[sub_resource type="Resource" id="Resource_uoqmy"]
-script = ExtResource("1_bkhll")
-text = "えーっと、店名は……『わなか』！"
-speaking = 2
-
-[sub_resource type="Resource" id="Resource_pdpm5"]
+[sub_resource type="Resource" id="Resource_d3whh"]
 script = ExtResource("1_bkhll")
 speaker = "カニエナガ"
-text = "正解だ。たこ焼道楽『わなか』。やはりビールに合わせるならこれに限る。お前の味覚の記憶だけは、脳味噌のキャパシティの割にしっかりしているな。次だ、3枚目のカードをめくれ"
+text = "思い出したか？"
 speaking = 1
 left = ExtResource("3_uga3f")
 
+[sub_resource type="Resource" id="Resource_uga3f"]
+script = ExtResource("1_bkhll")
+speaker = "OB"
+text = "よ、よだれがとまらへん！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_qxl11"]
+script = ExtResource("1_bkhll")
+speaker = "カニエナガ"
+text = "また本能か"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_xga3v"]
+script = ExtResource("1_bkhll")
+speaker = "OB"
+text = "一番好きなビール……！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_uoqmy"]
+script = ExtResource("1_bkhll")
+speaker = "カニエナガ"
+text = "二つ目、思い出したな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_pdpm5"]
+script = ExtResource("1_bkhll")
+speaker = "OB"
+text = "…………"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_o0ook"]
+script = ExtResource("1_bkhll")
+speaker = "カニエナガ"
+text = "なんや？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_3lm61"]
+script = ExtResource("1_bkhll")
+speaker = "OB"
+text = "開けたんなら飲むしか無いよね。仕方ないよね！ね！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_x6oyx"]
+script = ExtResource("1_bkhll")
+speaker = "カニエナガ"
+text = "それしか考えてへんやろ！"
+speaking = 1
+
 [resource]
 script = ExtResource("4_qxl11")
-lines = Array[ExtResource("1_bkhll")]([SubResource("Resource_xga3v"), SubResource("Resource_uoqmy"), SubResource("Resource_pdpm5")])
+lines = Array[ExtResource("1_bkhll")]([SubResource("Resource_bkhll"), SubResource("Resource_d3whh"), SubResource("Resource_uga3f"), SubResource("Resource_qxl11"), SubResource("Resource_xga3v"), SubResource("Resource_uoqmy"), SubResource("Resource_pdpm5"), SubResource("Resource_o0ook"), SubResource("Resource_3lm61"), SubResource("Resource_x6oyx")])

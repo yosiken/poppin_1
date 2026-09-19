@@ -5,66 +5,213 @@
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_tlocn"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
 
+[sub_resource type="Resource" id="Resource_yji8q"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "いやぁ……今日もいい配信だった……。もうお酒は控えよう……明日から……"
+speaking = 2
+right = ExtResource("2_2ssu3")
+note = "演出：深夜
+演出：ゲーム配信を終え、すっかり泥酔したOBは、ふらふらしながら自宅へ帰ってきた"
+
+[sub_resource type="Resource" id="Resource_2ssu3"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "……あっ、ビールある"
+speaking = 2
+note = "演出：そう言いながら冷蔵庫を開ける"
+
+[sub_resource type="Resource" id="Resource_tlocn"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "……おいしい"
+speaking = 2
+note = "演出：プシュッ"
+
+[sub_resource type="Resource" id="Resource_crtyr"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "いったぁぁぁぁぁぁぁ！！"
+speaking = 2
+note = "演出：結局、もう一杯飲んでしまう
+演出：その後、寝室へ向かおうとしたOBだったが――
+演出：ゴンッ！"
+
 [sub_resource type="Resource" id="Resource_xrrmf"]
 script = ExtResource("1_yji8q")
 speaker = "OB"
-text = "おつるい〜！ 今日の配信も楽しかったねぇ……うぷっ、ちょっと飲みすぎたかもぉ。でも！ 配信の後のビールってなんでこんなに美味しいの……？ あ、ひっかけ橋（戎橋）だ。風が気持ちいいなぁ〜。"
+text = "……ん……？　ここ……どこ？"
 speaking = 2
-right = ExtResource("2_2ssu3")
+note = "演出：タンスの角に小指を直撃
+演出：その瞬間、視界が真っ白になる
+演出：気がつくと、OBは見知らぬ世界に立っていた
+演出：道頓堀のような巨大な街
+演出：しかし、空には巨大な月が浮かび、看板には見たことのない文字
+演出：そして何より――"
 
 [sub_resource type="Resource" id="Resource_yime8"]
 script = ExtResource("1_yji8q")
-text = "……おっとっと、足元が、あ、あれ、滑っ——"
-speaking = 2
+speaker = "カニエナガ"
+text = "やっと起きたか。何時間寝とんねん"
+speaking = 1
+left = ExtResource("3_tlocn")
 
 [sub_resource type="Resource" id="Resource_v46gj"]
 script = ExtResource("1_yji8q")
 speaker = "OB"
-text = "……ん……。ここは……？ 綺麗な星空……じゃなくて、なんか青く光るエフェクトが浮いてる？ 私、ひょっとして……ゲームの世界にバグで入り込んじゃった？"
+text = "……え？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_nviov"]
 script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
-text = "おい、起きろ。いつまで床（と言ってもただの光の床だが）でよだれを垂らしているんだ、このポンコツ配信者"
+text = "ワイや、ワイ。いつも肩に乗っとるやろ"
 speaking = 1
-left = ExtResource("3_tlocn")
 
 [sub_resource type="Resource" id="Resource_mgmiw"]
 script = ExtResource("1_yji8q")
 speaker = "OB"
-text = "うわっ！？ 何この丸くて白い、もちもちした可愛い生き物！？ 宙に浮いてる……あっ、私の大好きなカニエナガのぬいぐるみ！？"
+text = "……カニエナガ？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_yd60s"]
 script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
-text = "そうだ。だが今の私はただの綿の塊ではない。お前のふざけた魂を現実世界へ送り返すために遣わされた、異世界のナビゲーターだ。お前は深夜の道頓堀川に転落し、この『忘却の異世界』へ転生したんだよ"
+text = "そうや"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_xkdfa"]
 script = ExtResource("1_yji8q")
 speaker = "OB"
-text = "ええええええ！？ 嘘、異世界転生！？ 私が！？ これって超バズるやつじゃん！ カメラどこ！？ 配信枠取らなきゃ！"
+text = "……しゃべった？"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_1jbvs"]
 script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
-text = "落ち着け、現実のスマホは今頃川の底だ。元の世界に戻りたければ、お前が川に落ちる直前、道頓堀で『何をどれだけ暴飲暴食していたか』をすべて思い出すんだ。"
+text = "そらしゃべるわ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_n1ewt"]
 script = ExtResource("1_yji8q")
-text = "お前の濁りきった記憶を復元することだけが、現実へのゲートを開く鍵となる"
-speaking = 1
+speaker = "OB"
+text = "いや、現実ではしゃべってなかったよね？"
+speaking = 2
 
 [sub_resource type="Resource" id="Resource_jiib1"]
 script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "今は異世界やからな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_oowkn"]
+script = ExtResource("1_yji8q")
 speaker = "OB"
-text = "暴飲暴食って失礼な！ ちょっと嗜んだだけだよ！……えーっと、何から食べたっけな……？"
+text = "異世界……？"
 speaking = 2
+
+[sub_resource type="Resource" id="Resource_hm1xt"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "昨日、泥酔して帰ってきて、タンスの角に小指ぶつけたやろ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_212ne"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "…………"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_rci5l"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "そのショックでここに転生したんや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_4asgv"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "そんなことある？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_fwxhe"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "あるんやから仕方ないやろ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_juxf4"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "じゃあ、どうすれば帰れるの？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_63rlw"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "お前が現実で食ったり飲んだり、愛用したりしてた『大事なもの』を10個集めるんや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_1lrai"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "10個……？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ikt8q"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "全部思い出せば、現世へのゲートが開く"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_fx44p"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "……でも私、何を食べたか全然覚えてないんだけど"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_105or"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "そら泥酔しとったからな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_jf354"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "じゃあ、どうやって探すの？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_8r17r"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "心配せんでも、見ればお前の本能が思い出す"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_fdyrt"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "本能？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_vfmkv"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "酒とカニと金に関してだけは、記憶力ええからな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_1h462"]
+script = ExtResource("1_yji8q")
+speaker = "OB"
+text = "……なんか失礼じゃない？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_uwg6m"]
+script = ExtResource("1_yji8q")
+speaker = "カニエナガ"
+text = "ほな行くで"
+speaking = 1
 
 [resource]
 script = ExtResource("4_crtyr")
-lines = Array[ExtResource("1_yji8q")]([SubResource("Resource_xrrmf"), SubResource("Resource_yime8"), SubResource("Resource_v46gj"), SubResource("Resource_nviov"), SubResource("Resource_mgmiw"), SubResource("Resource_yd60s"), SubResource("Resource_xkdfa"), SubResource("Resource_1jbvs"), SubResource("Resource_n1ewt"), SubResource("Resource_jiib1")])
+lines = Array[ExtResource("1_yji8q")]([SubResource("Resource_yji8q"), SubResource("Resource_2ssu3"), SubResource("Resource_tlocn"), SubResource("Resource_crtyr"), SubResource("Resource_xrrmf"), SubResource("Resource_yime8"), SubResource("Resource_v46gj"), SubResource("Resource_nviov"), SubResource("Resource_mgmiw"), SubResource("Resource_yd60s"), SubResource("Resource_xkdfa"), SubResource("Resource_1jbvs"), SubResource("Resource_n1ewt"), SubResource("Resource_jiib1"), SubResource("Resource_oowkn"), SubResource("Resource_hm1xt"), SubResource("Resource_212ne"), SubResource("Resource_rci5l"), SubResource("Resource_4asgv"), SubResource("Resource_fwxhe"), SubResource("Resource_juxf4"), SubResource("Resource_63rlw"), SubResource("Resource_1lrai"), SubResource("Resource_ikt8q"), SubResource("Resource_fx44p"), SubResource("Resource_105or"), SubResource("Resource_jf354"), SubResource("Resource_8r17r"), SubResource("Resource_fdyrt"), SubResource("Resource_vfmkv"), SubResource("Resource_1h462"), SubResource("Resource_uwg6m")])

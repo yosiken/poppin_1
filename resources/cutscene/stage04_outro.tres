@@ -5,26 +5,56 @@
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_gujyp"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_br8eg"]
 
+[sub_resource type="Resource" id="Resource_x8fab"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "これ……弾ける！"
+speaking = 2
+right = ExtResource("2_p2xug")
+
+[sub_resource type="Resource" id="Resource_p2xug"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "おお！"
+speaking = 1
+left = ExtResource("3_gujyp")
+
+[sub_resource type="Resource" id="Resource_gujyp"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "私、これ使ってた！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_br8eg"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "やっとちゃんとした記憶が戻ったな"
+speaking = 1
+
 [sub_resource type="Resource" id="Resource_8p4s8"]
 script = ExtResource("1_x8fab")
 speaker = "OB"
-text = "うぐっ……ここら辺から記憶の霧が濃くなってきた……。でも、なんかすごくお洒落な一合瓶が見える……。あ、このラベル、何て読むんだっけ、クジラ……そう！ 奈良の御所にある千代酒造の『櫛羅（くじら）』！"
+text = "赤いから……レッドアイ……なのかな"
 speaking = 2
-right = ExtResource("2_p2xug")
 
 [sub_resource type="Resource" id="Resource_qbr27"]
 script = ExtResource("1_x8fab")
 speaker = "カニエナガ"
-text = "よく思い出したな。奈良・御所の地で、山田錦を自社栽培して醸されるこだわりの銘柄『櫛羅』だ。お前のような呑兵衛にはもったいないほどの美酒だな"
+text = "うん"
 speaking = 1
-left = ExtResource("3_gujyp")
 
 [sub_resource type="Resource" id="Resource_l5hxo"]
 script = ExtResource("1_x8fab")
 speaker = "OB"
-text = "もったいなくないもん！ あのキリッとした旨味が、お肉にも魚にも合うんだから……あぁ、思い出しただけで喉が鳴るぅ……"
+text = "田中は誰やねん"
 speaking = 2
+
+[sub_resource type="Resource" id="Resource_bpheo"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "ホンマに誰やねん！"
+speaking = 1
 
 [resource]
 script = ExtResource("4_br8eg")
-lines = Array[ExtResource("1_x8fab")]([SubResource("Resource_8p4s8"), SubResource("Resource_qbr27"), SubResource("Resource_l5hxo")])
+lines = Array[ExtResource("1_x8fab")]([SubResource("Resource_x8fab"), SubResource("Resource_p2xug"), SubResource("Resource_gujyp"), SubResource("Resource_br8eg"), SubResource("Resource_8p4s8"), SubResource("Resource_qbr27"), SubResource("Resource_l5hxo"), SubResource("Resource_bpheo")])

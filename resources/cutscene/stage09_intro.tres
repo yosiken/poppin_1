@@ -1,16 +1,102 @@
-[gd_resource type="Resource" script_class="CutsceneData" format=3]
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://clbequ4bft763"]
 
-[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_y6iju"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_58fq2"]
-[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="3_pgf5g"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_58fq2"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_pgf5g"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_rldng"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_blccb"]
+
+[sub_resource type="Resource" id="Resource_58fq2"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "だいぶ来たな"
+speaking = 1
+left = ExtResource("2_pgf5g")
+
+[sub_resource type="Resource" id="Resource_pgf5g"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "次は？"
+speaking = 2
+right = ExtResource("3_rldng")
 
 [sub_resource type="Resource" id="Resource_rldng"]
-script = ExtResource("1_y6iju")
+script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
-text = "これが最後の記憶のピースだ。お前が川に滑り落ちる文字通りの直前。お前は泥酔の限界にありながら、トドメとばかりに甘美な『別腹』をスプーンですくっていた"
+text = "カラオケマイクや"
 speaking = 1
-left = ExtResource("2_58fq2")
+
+[sub_resource type="Resource" id="Resource_blccb"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "カラオケ？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_74h8k"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "お前の十八番を歌って思い出すんや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_3k5n3"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "何だっけ？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_aqoq6"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "『天城ごえ』"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_0pyhc"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "……ああ！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_gylu7"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "思い出した？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_puagd"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "それたぶん歌える！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_aa82q"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "そこは自信あるんやな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_ycbdi"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "でも……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_mrc50"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "なんや？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_lppni"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "天城、越えられるかな？ちょっと心配"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_sukku"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "歌の話やろ？"
+speaking = 1
 
 [resource]
-script = ExtResource("3_pgf5g")
-lines = Array[ExtResource("1_y6iju")]([SubResource("Resource_rldng")])
+script = ExtResource("4_blccb")
+lines = Array[ExtResource("1_58fq2")]([SubResource("Resource_58fq2"), SubResource("Resource_pgf5g"), SubResource("Resource_rldng"), SubResource("Resource_blccb"), SubResource("Resource_74h8k"), SubResource("Resource_3k5n3"), SubResource("Resource_aqoq6"), SubResource("Resource_0pyhc"), SubResource("Resource_gylu7"), SubResource("Resource_puagd"), SubResource("Resource_aa82q"), SubResource("Resource_ycbdi"), SubResource("Resource_mrc50"), SubResource("Resource_lppni"), SubResource("Resource_sukku")])

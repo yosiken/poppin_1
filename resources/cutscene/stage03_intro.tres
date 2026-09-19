@@ -1,16 +1,78 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://cl1lu8kh6q4ft"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_7ayey"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_x8uju"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_hgvhn"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_x8uju"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_hgvhn"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_5qr67"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_5o0ow"]
+
+[sub_resource type="Resource" id="Resource_x8uju"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "三つ目は……カニや"
+speaking = 1
+left = ExtResource("2_hgvhn")
+
+[sub_resource type="Resource" id="Resource_hgvhn"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "カニ？"
+speaking = 2
+right = ExtResource("3_5qr67")
 
 [sub_resource type="Resource" id="Resource_5qr67"]
-script = ExtResource("1_7ayey")
+script = ExtResource("1_x8uju")
 speaker = "カニエナガ"
-text = "ビールにたこ焼き。早くも炭水化物の波が押し寄せている。ここで、お前の脳裏にわずかな『良心』と『焦り』が過った。そしてお前が注文した、ビールよりは少しだけヘルシーなつもりの飲み物は何だ？"
+text = "高級ゆでガニ"
 speaking = 1
-left = ExtResource("2_x8uju")
+
+[sub_resource type="Resource" id="Resource_5o0ow"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "カニ！カニーーーー！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_2cma1"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "おい、暴走か？！"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_kebiv"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "なんか……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_2gm1v"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "なんや？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_xvrql"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "すごくほじりたい"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_s816i"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "もう記憶戻っとるやん"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_cetr6"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "早く行こう！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_3citv"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "急に元気になったな……"
+speaking = 1
 
 [resource]
-script = ExtResource("3_hgvhn")
-lines = Array[ExtResource("1_7ayey")]([SubResource("Resource_5qr67")])
+script = ExtResource("4_5o0ow")
+lines = Array[ExtResource("1_x8uju")]([SubResource("Resource_x8uju"), SubResource("Resource_hgvhn"), SubResource("Resource_5qr67"), SubResource("Resource_5o0ow"), SubResource("Resource_2cma1"), SubResource("Resource_kebiv"), SubResource("Resource_2gm1v"), SubResource("Resource_xvrql"), SubResource("Resource_s816i"), SubResource("Resource_cetr6"), SubResource("Resource_3citv")])

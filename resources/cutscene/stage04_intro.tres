@@ -1,16 +1,54 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://ckw78u2y3twd3"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_ta4ma"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_j43ma"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_ias4w"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_j43ma"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_ias4w"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_g6d3g"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_ff3xa"]
+
+[sub_resource type="Resource" id="Resource_j43ma"]
+script = ExtResource("1_j43ma")
+speaker = "カニエナガ"
+text = "四つ目はこれや"
+speaking = 1
+left = ExtResource("2_ias4w")
+
+[sub_resource type="Resource" id="Resource_ias4w"]
+script = ExtResource("1_j43ma")
+speaker = "OB"
+text = "赤いウクレレ？"
+speaking = 2
+right = ExtResource("3_g6d3g")
 
 [sub_resource type="Resource" id="Resource_g6d3g"]
-script = ExtResource("1_ta4ma")
+script = ExtResource("1_j43ma")
 speaker = "カニエナガ"
-text = "言い訳は見苦しいぞ。ハイボールで勢いがついたお前は、いよいよ本格的なアルコールの深淵へと足を踏み入れる。3杯目は、お前の大好きな和のテイスト、少し辛口で旨味の強い液体だ"
+text = "ウクレレや。名前は『レッドアイ田中』"
 speaking = 1
-left = ExtResource("2_j43ma")
+
+[sub_resource type="Resource" id="Resource_ff3xa"]
+script = ExtResource("1_j43ma")
+speaker = "OB"
+text = "……田中？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_nte6m"]
+script = ExtResource("1_j43ma")
+speaker = "カニエナガ"
+text = "お前が付けた名前やで"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_bvgev"]
+script = ExtResource("1_j43ma")
+speaker = "OB"
+text = "私、なんで田中にしたんだろう"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_8utly"]
+script = ExtResource("1_j43ma")
+speaker = "カニエナガ"
+text = "ワイに聞くな。お前の考えることはわからん"
+speaking = 1
 
 [resource]
-script = ExtResource("3_ias4w")
-lines = Array[ExtResource("1_ta4ma")]([SubResource("Resource_g6d3g")])
+script = ExtResource("4_ff3xa")
+lines = Array[ExtResource("1_j43ma")]([SubResource("Resource_j43ma"), SubResource("Resource_ias4w"), SubResource("Resource_g6d3g"), SubResource("Resource_ff3xa"), SubResource("Resource_nte6m"), SubResource("Resource_bvgev"), SubResource("Resource_8utly")])

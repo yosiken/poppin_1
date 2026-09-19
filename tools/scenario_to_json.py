@@ -1,16 +1,17 @@
 """シナリオ台本 (Markdown) をイベントデータ用の JSON へ変換する。
 
-    python tools/scenario_to_json.py resources/dotonbori-isekai-scenario.md
+    python tools/scenario_to_json.py resources/dotonbori-isekai-scenario-v2.md
 
 出力: resources/cutscene/scenario.json
 そのあと Godot 側で tools/make_cutscenes.gd を実行すると .tres が生成される。
 
 変換ルール:
-  - 「## 【...】」で場面を区切る
+  - 「## 【...】」で場面を区切る。「STAGE 1」「ステージ1」どちらの書き方でも拾う
   - 「**話者**」の次の行以降を、その話者のセリフとして拾う
   - 〔演出：...〕はゲーム中のテキストにはせず、note として JSON に残す
-  - 各ステージは「冒頭のナビゲーター（左側）の問いかけ」を intro、
-    「主人公（右側）が答える以降」を outro に割る
+  - 各ステージは「### スタート前」を intro（面に入る前）、
+    「### ゴール・…取得後」を outro（クリア後）に割る。
+    見出しが無い台本では「記憶が戻る〔演出〕」を境にする（旧版向けの保険）
   - 長すぎるセリフはテキストウインドウに収まる長さで複数コマに分割する
 """
 
@@ -22,11 +23,17 @@ from pathlib import Path
 # テキストウインドウ1コマに入れる全角換算の目安
 MAX_CHARS = 105
 
-# 話者名 -> 立ち絵の位置。台本で名前を変えたらここも直すこと
-SPEAKERS = {"OB": "right", "カニエナガ": "left"}
+# 話者名 -> 立ち絵の位置。台本で名前を変えたらここも直すこと。
+# "none" は立ち絵を持たない声（画面に流れるコメントなど）
+SPEAKERS = {"OB": "right", "カニエナガ": "left", "オビラーたち": "none"}
+
+# ステージを intro / outro に割る見出し（「### 〜」で書く）
+MARK_INTRO = "スタート前"
+MARK_OUTRO_PREFIX = "ゴール・"
 
 
 unknown_speakers = set()
+unmatched_titles = []
 
 
 def parse(md_path):
@@ -34,6 +41,9 @@ def parse(md_path):
     scenes = []
     current = None
     speaker = None
+    # セリフが「」で閉じずに次の行へ続いているか。続きだけを1コマにまとめたい。
+    # 話者名を書き直した別のセリフは、同じ話者でも別のコマとして残す
+    continuing = False
 
     for raw in text.splitlines():
         line = raw.strip()
@@ -42,8 +52,16 @@ def parse(md_path):
             current = {"title": title, "beats": []}
             scenes.append(current)
             speaker = None
+            continuing = False
             continue
         if current is None or not line or line.startswith("---"):
+            continue
+
+        # 「### スタート前」「### ゴール・アイテム取得後」。intro / outro の境目
+        if line.startswith("###"):
+            current["beats"].append({"kind": "mark", "text": line.lstrip("#").strip()})
+            speaker = None
+            continuing = False
             continue
 
         # 〔演出：...〕
@@ -51,6 +69,7 @@ def parse(md_path):
             note = line.strip("*").strip("〔〕")
             current["beats"].append({"kind": "note", "text": note})
             speaker = None
+            continuing = False
             continue
 
         # **話者**
@@ -59,6 +78,7 @@ def parse(md_path):
             name = m.group(1)
             if name in SPEAKERS:
                 speaker = name
+                continuing = False      # 名前を書き直したら、そこから別のコマ
                 continue
             # 台本側で名前が変わると黙って0件になるので拾っておく
             if len(name) <= 12 and "〔" not in name:
@@ -67,10 +87,13 @@ def parse(md_path):
 
         if speaker:
             current["beats"].append({"kind": "line", "speaker": speaker,
-                                     "text": _clean(line)})
+                                     "text": _clean(line), "cont": continuing})
             # 同じ話者の複数行はそのまま続ける（閉じ括弧まで）
             if line.endswith("」"):
                 speaker = None
+                continuing = False
+            else:
+                continuing = True
     return scenes
 
 
@@ -115,15 +138,64 @@ def split_long(s):
 
 
 def merge_multiline(beats):
-    """同じ話者の連続行を1つにまとめる"""
+    """「」で閉じずに折り返した続きの行を、元のセリフにつなぎ直す。
+
+    話者名を書き直してある連続セリフは、同じ話者でも別のコマとして残す。
+    台本では一呼吸ごとに名前を書き直しており、その区切りがそのまま
+    テキストウインドウの送りになるため
+    """
     out = []
     for b in beats:
-        if (b["kind"] == "line" and out and out[-1]["kind"] == "line"
-                and out[-1]["speaker"] == b["speaker"]):
+        if b["kind"] == "line" and b.get("cont") and out and out[-1]["kind"] == "line":
             out[-1]["text"] = out[-1]["text"] + b["text"]
         else:
             out.append(dict(b))
     return out
+
+
+def _pack(title, beats):
+    return {"title": title,
+            # セリフと〔演出〕を台本の順のまま持つ。expand が〔演出〕を
+            # 直後のコマへ結び付けるのに使う
+            "beats": [b for b in beats if b["kind"] in ("line", "note")],
+            "lines": [b for b in beats if b["kind"] == "line"],
+            "notes": [b["text"] for b in beats if b["kind"] == "note"]}
+
+
+def split_index(beats):
+    """intro と outro の境目になる beats のインデックスを返す。
+
+    台本に「### ゴール・アイテム取得後」の見出しがあればそこで割る。
+    面に入る前の会話が intro、クリアしてアイテムを取ったあとが outro。
+    """
+    for i, b in enumerate(beats):
+        if b["kind"] == "mark" and b["text"].startswith(MARK_OUTRO_PREFIX):
+            return i
+    return _split_index_legacy(beats)
+
+
+def _split_index_legacy(beats):
+    """見出しが無い台本向けの保険。
+
+    旧版の台本では、ステージを攻略して記憶が戻る瞬間が〔演出：…〕で書かれていた。
+    そこを境にして、〔演出〕自体は「思い出した」側の出来事なので outro に含める。
+    場面の頭に置かれた雰囲気メモ（まだセリフが1つも無いうちの〔演出〕）は
+    境目にしない。演出から始まる場面で intro が空になるため
+    """
+    seen_line = False
+    for i, b in enumerate(beats):
+        if b["kind"] == "line":
+            seen_line = True
+        elif b["kind"] == "note" and seen_line:
+            return i
+
+    # 〔演出〕でも割れない場合は、冒頭に続くナビゲーター（左側）の問いかけまでを intro に。
+    # 名前で判定すると台本の改名で壊れるので、立ち絵の位置で見る
+    i = 0
+    while i < len(beats) and (beats[i]["kind"] != "line"
+                              or SPEAKERS[beats[i]["speaker"]] == "left"):
+        i += 1
+    return i
 
 
 def to_events(scenes):
@@ -132,49 +204,52 @@ def to_events(scenes):
     for scene in scenes:
         title = scene["title"]
         beats = merge_multiline(scene["beats"])
-        lines = [b for b in beats if b["kind"] == "line"]
-        notes = [b["text"] for b in beats if b["kind"] == "note"]
-        if not lines:
+        if not any(b["kind"] == "line" for b in beats):
             continue
 
         if "プロローグ" in title or title.startswith("OP"):
-            events["opening"] = {"title": title, "lines": lines, "notes": notes}
+            events["opening"] = _pack(title, beats)
             continue
         if "エピローグ" in title or title.startswith("ED"):
-            events["ending"] = {"title": title, "lines": lines, "notes": notes}
+            events["ending"] = _pack(title, beats)
             continue
 
-        m = re.match(r"ステージ(\d+)", title)
+        m = re.match(r"(?:ステージ|STAGE)\s*(\d+)", title, re.IGNORECASE)
         if not m:
+            # 見出しの書き方が変わると黙って丸ごと落ちるので拾っておく
+            unmatched_titles.append(title)
             continue
         num = int(m.group(1))
 
-        # 冒頭に続くナビゲーター（左側）の問いかけを intro、そこから先を outro にする。
-        # 主人公から始まる場面（ステージ10）は intro 無しで全部 outro に回す。
-        # 名前で判定すると台本の改名で壊れるので、立ち絵の位置で見る
-        split_at = 0
-        while split_at < len(lines) and SPEAKERS[lines[split_at]["speaker"]] == "left":
-            split_at += 1
-        intro = lines[:split_at]
-        outro = lines[split_at:]
-        if intro:
-            events["stage%02d_intro" % num] = {"title": title, "lines": intro, "notes": notes}
-        if outro:
-            events["stage%02d_outro" % num] = {"title": title, "lines": outro, "notes": notes}
+        at = split_index(beats)
+        intro = _pack(title, beats[:at])
+        outro = _pack(title, beats[at:])
+        if intro["lines"]:
+            events["stage%02d_intro" % num] = intro
+        if outro["lines"]:
+            events["stage%02d_outro" % num] = outro
     return events
 
 
 def expand(events):
-    """長いセリフを分割し、立ち絵の指定を付ける"""
+    """長いセリフを分割し、立ち絵と〔演出〕の指定を付ける。
+
+    〔演出：…〕は「その直後のコマで起きること」として、次のコマに結び付ける。
+    場面の最後に置かれていて続くコマが無いものは、最後のコマにまとめる
+    """
     out = {}
     for key, ev in events.items():
         seen_left = False
         seen_right = False
         rows = []
-        for line in ev["lines"]:
-            side = SPEAKERS[line["speaker"]]
-            for i, chunk in enumerate(split_long(line["text"])):
-                row = {"speaker": line["speaker"], "text": chunk, "side": side}
+        pending = []
+        for beat in ev["beats"]:
+            if beat["kind"] == "note":
+                pending.append(beat["text"])
+                continue
+            side = SPEAKERS[beat["speaker"]]
+            for i, chunk in enumerate(split_long(beat["text"])):
+                row = {"speaker": beat["speaker"], "text": chunk, "side": side}
                 # その場面で初めて出る話者の立ち絵を出す
                 if side == "left" and not seen_left:
                     row["show_left"] = True
@@ -185,7 +260,14 @@ def expand(events):
                 # 分割した2コマ目以降は話者名を出さない
                 if i > 0:
                     row["speaker"] = ""
+                # 〔演出〕は分割した1コマ目にだけ付ける
+                if i == 0 and pending:
+                    row["note"] = "\n".join(pending)
+                    pending = []
                 rows.append(row)
+        if pending and rows:
+            tail = [rows[-1]["note"]] if rows[-1].get("note") else []
+            rows[-1]["note"] = "\n".join(tail + pending)
         out[key] = {"title": ev["title"], "notes": ev["notes"], "rows": rows}
     return out
 
@@ -200,6 +282,8 @@ def main(argv):
 
     if unknown_speakers:
         print("警告: SPEAKERS に無い話者名: %s" % "、".join(sorted(unknown_speakers)))
+    if unmatched_titles:
+        print("警告: ステージ番号を読めなかった見出し: %s" % "、".join(unmatched_titles))
     if not events:
         print("エラー: イベントを1件も抽出できませんでした。")
         print("  台本の話者名が SPEAKERS (%s) と一致しているか確認してください。"

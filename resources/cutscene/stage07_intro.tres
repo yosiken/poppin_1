@@ -1,16 +1,96 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://d30im7umexnhl"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_6j2yb"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_mh7c8"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_d1rpl"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_mh7c8"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_d1rpl"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_ljqqe"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_jrclr"]
+
+[sub_resource type="Resource" id="Resource_mh7c8"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "七つ目は宝箱や"
+speaking = 1
+left = ExtResource("2_d1rpl")
+
+[sub_resource type="Resource" id="Resource_d1rpl"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "宝箱！"
+speaking = 2
+right = ExtResource("3_ljqqe")
 
 [sub_resource type="Resource" id="Resource_ljqqe"]
-script = ExtResource("1_6j2yb")
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "宝ほしい！宝！たから！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_jrclr"]
+script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
-text = "泥酔の一途をたどるお前だが、お前の胃袋はまだ満足していなかった。店を移動したのか、あるいは締めの段階に入ったのか……お前の目の前に、湯気の立つ器が現れたはずだ。その特徴的な具材を思い出せ"
+text = "1回おちつけ！"
 speaking = 1
-left = ExtResource("2_mh7c8")
+
+[sub_resource type="Resource" id="Resource_qeown"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "むふー！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_woajy"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "ただし、この世界の宝箱にはミミックもおる"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_npvkm"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "ミミック？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_831vb"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "噛みついてくるから気ぃつけや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_g8f0t"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "…………"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_pr3q1"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "なんや？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_f6m3d"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "でも宝箱なんだよね？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_kbpjl"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "そうやけど"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_gvlfi"]
+script = ExtResource("1_mh7c8")
+speaker = "OB"
+text = "じゃあ問答無用で開ける！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_umlfc"]
+script = ExtResource("1_mh7c8")
+speaker = "カニエナガ"
+text = "どうなっても知らんで"
+speaking = 1
 
 [resource]
-script = ExtResource("3_d1rpl")
-lines = Array[ExtResource("1_6j2yb")]([SubResource("Resource_ljqqe")])
+script = ExtResource("4_jrclr")
+lines = Array[ExtResource("1_mh7c8")]([SubResource("Resource_mh7c8"), SubResource("Resource_d1rpl"), SubResource("Resource_ljqqe"), SubResource("Resource_jrclr"), SubResource("Resource_qeown"), SubResource("Resource_woajy"), SubResource("Resource_npvkm"), SubResource("Resource_831vb"), SubResource("Resource_g8f0t"), SubResource("Resource_pr3q1"), SubResource("Resource_f6m3d"), SubResource("Resource_kbpjl"), SubResource("Resource_gvlfi"), SubResource("Resource_umlfc")])

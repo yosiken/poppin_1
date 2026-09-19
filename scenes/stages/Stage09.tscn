@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://1iu2pnnffu6i" path="res://scripts/stage.gd" id="1_thbjj"]
 [ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_4rvt0"]
-[ext_resource type="Resource" uid="uid://b4uxbkvyq781p" path="res://resources/cutscene/stage01_intro.tres" id="2_u52tn"]
+[ext_resource type="Resource" uid="uid://clbequ4bft763" path="res://resources/cutscene/stage09_intro.tres" id="2_u52tn"]
 [ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_bfomk"]
-[ext_resource type="Resource" uid="uid://bsh8ibbmcgf6o" path="res://resources/cutscene/stage01_outro.tres" id="3_k0dtr"]
+[ext_resource type="Resource" uid="uid://ddj8fm104p6qq" path="res://resources/cutscene/stage09_outro.tres" id="3_k0dtr"]
 [ext_resource type="Script" uid="uid://dgqq7nscbsglg" path="res://scripts/hazard.gd" id="7_k0dtr"]
 [ext_resource type="Shader" uid="uid://cwsj8xaf2qwel" path="res://resources/shader/terrain_fill.gdshader" id="8_l0qfx"]
 [ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="9_bx06a"]

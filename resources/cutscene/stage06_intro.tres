@@ -1,16 +1,66 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://dhgg5ito0qmbd"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_04fdb"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_l2nqf"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_3yb3t"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_l2nqf"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_3yb3t"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_yrt2d"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_pnpx8"]
+
+[sub_resource type="Resource" id="Resource_l2nqf"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "六つ目はゲームや"
+speaking = 1
+left = ExtResource("2_3yb3t")
+
+[sub_resource type="Resource" id="Resource_3yb3t"]
+script = ExtResource("1_l2nqf")
+speaker = "OB"
+text = "ゲーム？"
+speaking = 2
+right = ExtResource("3_yrt2d")
 
 [sub_resource type="Resource" id="Resource_yrt2d"]
-script = ExtResource("1_04fdb")
+script = ExtResource("1_l2nqf")
 speaker = "カニエナガ"
-text = "お前の脳内法律はさておき、ソースの濃い味でお前の喉はさらに乾く。4杯目。お前はまたしても日本酒を注文した。それも、微炭酸でフルーティーな、飲む者を虜にするあの悪魔的銘柄だ"
+text = "スーパーハミコンの『ファイナルファンタジア6』や"
 speaking = 1
-left = ExtResource("2_l2nqf")
+
+[sub_resource type="Resource" id="Resource_pnpx8"]
+script = ExtResource("1_l2nqf")
+speaker = "OB"
+text = "……！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_4h2om"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "どうした？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_r1v8d"]
+script = ExtResource("1_l2nqf")
+speaker = "OB"
+text = "なんか……このゲーム、すごく楽しかった記憶がある"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_1yon7"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "お前の配信の出世作やったからな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_w672w"]
+script = ExtResource("1_l2nqf")
+speaker = "OB"
+text = "私の……？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_7t5hw"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "行けば思い出す"
+speaking = 1
 
 [resource]
-script = ExtResource("3_3yb3t")
-lines = Array[ExtResource("1_04fdb")]([SubResource("Resource_yrt2d")])
+script = ExtResource("4_pnpx8")
+lines = Array[ExtResource("1_l2nqf")]([SubResource("Resource_l2nqf"), SubResource("Resource_3yb3t"), SubResource("Resource_yrt2d"), SubResource("Resource_pnpx8"), SubResource("Resource_4h2om"), SubResource("Resource_r1v8d"), SubResource("Resource_1yon7"), SubResource("Resource_w672w"), SubResource("Resource_7t5hw")])

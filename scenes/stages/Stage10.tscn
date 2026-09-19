@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="8_lt4wn"]
 [ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="9_soyj0"]
 [ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="10_fiqt3"]
+[ext_resource type="Resource" uid="uid://d3b814sxk5w43" path="res://resources/cutscene/stage10_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://behsayoxv2drc" path="res://resources/cutscene/stage10_outro.tres" id="cut_outro"]
 [ext_resource type="Texture2D" uid="uid://bnq1smnkjlq34" path="res://resources/texture/goal.png" id="tex_goal"]
 
@@ -289,6 +290,7 @@ shader_parameter/bottom_y = 950.0
 [node name="Stage10" type="Node2D" unique_id=1735810266]
 script = ExtResource("1_thbjj")
 display_name = "Shaft (WIP 10)"
+intro = ExtResource("cut_intro")
 outro = ExtResource("cut_outro")
 
 [node name="CameraBounds" type="Polygon2D" parent="." unique_id=759172035]

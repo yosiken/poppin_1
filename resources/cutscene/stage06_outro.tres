@@ -5,32 +5,80 @@
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_1k4lx"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_iuxvc"]
 
+[sub_resource type="Resource" id="Resource_1bfqb"]
+script = ExtResource("1_1bfqb")
+speaker = "OB"
+text = "…………そうだ"
+speaking = 2
+right = ExtResource("2_fixnd")
+
+[sub_resource type="Resource" id="Resource_fixnd"]
+script = ExtResource("1_1bfqb")
+speaker = "カニエナガ"
+text = "思い出したか"
+speaking = 1
+left = ExtResource("3_1k4lx")
+
+[sub_resource type="Resource" id="Resource_1k4lx"]
+script = ExtResource("1_1bfqb")
+speaker = "OB"
+text = "私、ゲーム配信してた"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_iuxvc"]
+script = ExtResource("1_1bfqb")
+speaker = "カニエナガ"
+text = "そうや"
+speaking = 1
+
 [sub_resource type="Resource" id="Resource_a8qcy"]
 script = ExtResource("1_1bfqb")
 speaker = "OB"
-text = "あ, それ知ってる！ 口に含んだ瞬間にシュワッと弾けて、リンゴみたいな甘酸っぱい香りが広がるやつ！『風の森（かぜのもり）』！"
+text = "ゲームしてみんなに見てもらって"
 speaking = 2
-right = ExtResource("2_fixnd")
 
 [sub_resource type="Resource" id="Resource_1lnn4"]
 script = ExtResource("1_1bfqb")
 speaker = "カニエナガ"
-text = "その通り。これも奈良県御所の油長酒造が醸す『風の森』だ。グラスに注がれた瞬間からピチピチと跳ねるようなガス感、そしてお前の理性を完全に粉砕する圧倒的な旨さ。これを飲んだ時、お前は何と言っていた？"
+text = "うん"
 speaking = 1
-left = ExtResource("3_1k4lx")
 
 [sub_resource type="Resource" id="Resource_lq4m1"]
 script = ExtResource("1_1bfqb")
 speaker = "OB"
-text = "『旨い、うますぎる。これ、無限に飲める水じゃん……』って言ってた。あはは、完全に出来上がってるね、私"
+text = "コメントでめっちゃ求婚されたんだよ"
 speaking = 2
 
 [sub_resource type="Resource" id="Resource_aem33"]
 script = ExtResource("1_1bfqb")
 speaker = "カニエナガ"
-text = "笑いごとではない。その『無限に飲める水』がお前をここへ引きずり下ろした元凶の一つだぞ"
+text = "うん"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_vfats"]
+script = ExtResource("1_1bfqb")
+speaker = "OB"
+text = "……帰りたい"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ll8sr"]
+script = ExtResource("1_1bfqb")
+speaker = "カニエナガ"
+text = "…………"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_1hmn5"]
+script = ExtResource("1_1bfqb")
+speaker = "OB"
+text = "現実でまた求婚されたい"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_nn2xj"]
+script = ExtResource("1_1bfqb")
+speaker = "カニエナガ"
+text = "もう後半や。必ず帰れる"
 speaking = 1
 
 [resource]
 script = ExtResource("4_iuxvc")
-lines = Array[ExtResource("1_1bfqb")]([SubResource("Resource_a8qcy"), SubResource("Resource_1lnn4"), SubResource("Resource_lq4m1"), SubResource("Resource_aem33")])
+lines = Array[ExtResource("1_1bfqb")]([SubResource("Resource_1bfqb"), SubResource("Resource_fixnd"), SubResource("Resource_1k4lx"), SubResource("Resource_iuxvc"), SubResource("Resource_a8qcy"), SubResource("Resource_1lnn4"), SubResource("Resource_lq4m1"), SubResource("Resource_aem33"), SubResource("Resource_vfats"), SubResource("Resource_ll8sr"), SubResource("Resource_1hmn5"), SubResource("Resource_nn2xj")])

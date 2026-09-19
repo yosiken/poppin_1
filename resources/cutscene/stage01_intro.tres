@@ -1,16 +1,72 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://b4uxbkvyq781p"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_hxmir"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_ycfur"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_le35o"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_ycfur"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_le35o"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_4xutf"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_n6p1y"]
+
+[sub_resource type="Resource" id="Resource_ycfur"]
+script = ExtResource("1_ycfur")
+speaker = "カニエナガ"
+text = "まずは一つ目。奈良の日本酒、『風の林』や"
+speaking = 1
+left = ExtResource("2_le35o")
+
+[sub_resource type="Resource" id="Resource_le35o"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "風の林……？"
+speaking = 2
+right = ExtResource("3_4xutf")
 
 [sub_resource type="Resource" id="Resource_4xutf"]
-script = ExtResource("1_hxmir")
+script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
-text = "さあ、記念すべき最初のステージだ。まずは乾杯の瞬間を思い出せ。お前のようなアルコール中毒者が、店に入って開口一番に叫ぶ言葉は決まっているはずだ"
+text = "お前が一番好きな日本酒や"
 speaking = 1
-left = ExtResource("2_ycfur")
+
+[sub_resource type="Resource" id="Resource_n6p1y"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "私が？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ussie"]
+script = ExtResource("1_ycfur")
+speaker = "カニエナガ"
+text = "せや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_6kvyc"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "全然思い出せない……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ckeky"]
+script = ExtResource("1_ycfur")
+speaker = "カニエナガ"
+text = "まあ、現物を見れば思い出すやろ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_fwekl"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "日本酒かぁ……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ouica"]
+script = ExtResource("1_ycfur")
+speaker = "カニエナガ"
+text = "なんや、飲みたそうな顔しとるぞ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_gq6qb"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "してないよ"
+speaking = 2
 
 [resource]
-script = ExtResource("3_le35o")
-lines = Array[ExtResource("1_hxmir")]([SubResource("Resource_4xutf")])
+script = ExtResource("4_n6p1y")
+lines = Array[ExtResource("1_ycfur")]([SubResource("Resource_ycfur"), SubResource("Resource_le35o"), SubResource("Resource_4xutf"), SubResource("Resource_n6p1y"), SubResource("Resource_ussie"), SubResource("Resource_6kvyc"), SubResource("Resource_ckeky"), SubResource("Resource_fwekl"), SubResource("Resource_ouica"), SubResource("Resource_gq6qb")])

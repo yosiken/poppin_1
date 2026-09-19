@@ -1,16 +1,66 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://dq5uf2tf26oud"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_ogf1j"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_tuajt"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_50bnv"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_tuajt"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_50bnv"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_kccec"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_fvknb"]
+
+[sub_resource type="Resource" id="Resource_tuajt"]
+script = ExtResource("1_tuajt")
+speaker = "カニエナガ"
+text = "五つ目は漫画や"
+speaking = 1
+left = ExtResource("2_50bnv")
+
+[sub_resource type="Resource" id="Resource_50bnv"]
+script = ExtResource("1_tuajt")
+speaker = "OB"
+text = "漫画？"
+speaking = 2
+right = ExtResource("3_kccec")
 
 [sub_resource type="Resource" id="Resource_kccec"]
-script = ExtResource("1_ogf1j")
+script = ExtResource("1_tuajt")
 speaker = "カニエナガ"
-text = "上質な日本酒で舌が肥えたお前だが、野生の胃袋はさらに暴走する。ここで、お前はまたしても『禁断の粉もん』を追加注文した。さすがのお前も、自分の頼み方にセルフツッコミを入れていたぞ"
+text = "『葬送のオバーレン』"
 speaking = 1
-left = ExtResource("2_tuajt")
+
+[sub_resource type="Resource" id="Resource_fvknb"]
+script = ExtResource("1_tuajt")
+speaker = "OB"
+text = "……オバーレン？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_0aqf8"]
+script = ExtResource("1_tuajt")
+speaker = "カニエナガ"
+text = "似た名前の有名な漫画があるけど、こっちはオバーレンや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_57cw5"]
+script = ExtResource("1_tuajt")
+speaker = "OB"
+text = "なんか聞いたことあるなぁ"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_g0rfd"]
+script = ExtResource("1_tuajt")
+speaker = "カニエナガ"
+text = "お前、好きやったやろ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_a56xp"]
+script = ExtResource("1_tuajt")
+speaker = "OB"
+text = "うーん……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_dw85g"]
+script = ExtResource("1_tuajt")
+speaker = "カニエナガ"
+text = "まあ、見つければ思い出すやろ"
+speaking = 1
 
 [resource]
-script = ExtResource("3_50bnv")
-lines = Array[ExtResource("1_ogf1j")]([SubResource("Resource_kccec")])
+script = ExtResource("4_fvknb")
+lines = Array[ExtResource("1_tuajt")]([SubResource("Resource_tuajt"), SubResource("Resource_50bnv"), SubResource("Resource_kccec"), SubResource("Resource_fvknb"), SubResource("Resource_0aqf8"), SubResource("Resource_57cw5"), SubResource("Resource_g0rfd"), SubResource("Resource_a56xp"), SubResource("Resource_dw85g")])
