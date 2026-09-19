@@ -2,6 +2,11 @@
 差し替えるときは、同じパス・同じファイル名で本番の絵を置くこと。
 寸法は既存の実物に合わせてある（BG=BG-01.png / OB=OB_a.png / KANIE=kanie_a.png）。
 
+【名前の系統が2つあること】
+  KANIE-01〜06 と、resources/texture/ にある kanie_a〜kanie_f は別物として扱う。
+  KANIE-XX は資材リストの表情差分、kanie_X は既存の立ち絵。統合しないこと。
+  OB-01〜12 と OB_a〜OB_e も同様に別系統。
+
 ダミー    POP-01     冷蔵庫の中身
     resources/texture/event/popup/POP-01.png
 ダミー    POP-03     タンスの角と小指（接近）
