@@ -32,6 +32,7 @@ speaker = "OB"
 text = "……水？"
 speaking = 2
 popup = ExtResource("4_le35o")
+popup_kind = 1
 
 [sub_resource type="Resource" id="Resource_ussie"]
 script = ExtResource("1_ycfur")
