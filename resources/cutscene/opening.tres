@@ -1,9 +1,10 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://csjq6yaucuosl"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_yji8q"]
-[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_2ssu3"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_tlocn"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_yji8q"]
+[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="2_2ssu3"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/bg_a_01.png" id="2_tlocn"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="3_tlocn"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
 
 [sub_resource type="Resource" id="Resource_yji8q"]
 script = ExtResource("1_yji8q")
@@ -11,6 +12,7 @@ speaker = "OB"
 text = "いやぁ……今日もいい配信だった……。もうお酒は控えよう……明日から……"
 speaking = 2
 right = ExtResource("2_2ssu3")
+background = ExtResource("2_tlocn")
 note = "演出：深夜
 演出：ゲーム配信を終え、すっかり泥酔したOBは、ふらふらしながら自宅へ帰ってきた"
 

@@ -1,9 +1,10 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://b4uxbkvyq781p"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_ycfur"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_le35o"]
-[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_4xutf"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_n6p1y"]
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_ycfur"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="2_le35o"]
+[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="3_4xutf"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/MISS-01.png" id="4_le35o"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_n6p1y"]
 
 [sub_resource type="Resource" id="Resource_ycfur"]
 script = ExtResource("1_ycfur")
@@ -30,6 +31,7 @@ script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "……水？"
 speaking = 2
+popup = ExtResource("4_le35o")
 
 [sub_resource type="Resource" id="Resource_ussie"]
 script = ExtResource("1_ycfur")
