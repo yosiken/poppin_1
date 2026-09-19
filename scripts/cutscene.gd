@@ -16,6 +16,12 @@ extends CanvasLayer
 
 signal finished
 
+## ポップアップの枠の太さ (px)。枠と画像の隙間も同じ値にする
+const POPUP_PAD := 6
+## 誤答カットインを割るときの破片の数
+const POPUP_SHARD_COLS := 3
+const POPUP_SHARD_ROWS := 2
+
 @export_group("Layout")
 ## テキストウインドウの高さ (px)
 @export_range(80, 600, 10) var window_height := 220
@@ -50,6 +56,24 @@ signal finished
 ## 口パクの開閉間隔 (秒)
 @export_range(0.02, 0.5, 0.01) var talk_step := 0.09
 
+@export_group("Popup")
+## ポップアップの横幅。画面幅に対する比率。資材リストの「画面の約1/3」に合わせてある
+@export_range(0.15, 0.7, 0.01) var popup_width_ratio := 0.33
+## ポップアップの中心位置。画面に対する比率。既定はテキストウインドウより上
+@export var popup_center := Vector2(0.5, 0.38)
+## 傾き (度)。まっすぐだと勢いが出ないので少し倒す
+@export_range(-15.0, 15.0, 0.5) var popup_tilt_degrees := -4.0
+## popup_hold が 0 のコマで使う表示秒数
+@export_range(0.1, 3.0, 0.1) var popup_hold_default := 0.8
+## 「ポンッ」と出るまでの秒数
+@export_range(0.05, 0.6, 0.01) var popup_pop_time := 0.18
+## 消えるまでの秒数。MISS は割れる時間にも使う
+@export_range(0.1, 1.0, 0.05) var popup_out_time := 0.35
+## 出たときのSE。資材リストは「無音のポップアップは作らない」としている
+@export var sfx_popup: AudioStream
+## MISS が割れるときのSE
+@export var sfx_popup_miss: AudioStream
+
 @export_group("Debug")
 ## 台本の〔演出：…〕を画面の上に出す。まだ実装していない演出の確認用で、
 ## 製品の見た目ではない。再生中に F9 で切り替えられる
@@ -77,6 +101,12 @@ var _blink_close: Dictionary[TextureRect, float] = {}
 var _talking: Dictionary[TextureRect, bool] = {}
 var _talk_timer := 0.0
 var _part_cache: Dictionary = {}
+## ポップアップ。表示のたびに作って捨てる方式ではなく、1つを使い回す
+var _popup_root: Control
+var _popup_panel: Panel
+var _popup_img: TextureRect
+var _popup_tween: Tween
+var _popup_sfx: AudioStreamPlayer
 var _window: PanelContainer
 var _name_label: Label
 var _text_label: RichTextLabel
@@ -291,6 +321,7 @@ func _apply_visuals(line: CutsceneLine) -> void:
 	elif line.background:
 		_fade_texture(_bg, line.background)
 
+	_show_popup(line)
 	_update_portrait(_left, line.left, line.clear_left, line.slide_in, true)
 	_update_portrait(_right, line.right, line.clear_right, line.slide_in, false)
 	if line.clear_left:
@@ -496,6 +527,7 @@ func _tween_value(rect: TextureRect, value: float) -> void:
 
 func _clear_all() -> void:
 	_window.visible = false
+	_hide_popup()
 	_current = null
 	if _note_box:
 		_note_box.visible = false
@@ -522,6 +554,8 @@ func _build_ui() -> void:
 
 	_left = _make_portrait("PortraitLeft", true)
 	_right = _make_portrait("PortraitRight", false)
+
+	_build_popup()
 
 	_window = PanelContainer.new()
 	_window.name = "Window"
@@ -685,3 +719,176 @@ func _used_rect(tex: Texture2D) -> Rect2:
 			result = Rect2(used)
 	_used_rects[tex] = result
 	return result
+
+
+# ─────────────────────────────────────── ポップアップ（カットイン）
+##
+## 立ち絵と背景だけでは伝わらない「動作・音・気づき」を一枚絵で補う。
+## 資材リストの取り決めに合わせてあり、枠の色で2種類を区別する。
+##   青枠 (TALK) … 実況ポップアップ。そのまま消える
+##   赤枠 (MISS) … 誤答カットイン。ヒビの代わりに破片へ割れる
+## 同じ見た目だと「今のは間違いなの？」と迷わせるので、色は必ず分ける。
+
+
+func _build_popup() -> void:
+	_popup_root = Control.new()
+	_popup_root.name = "Popup"
+	_popup_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_popup_root.visible = false
+	add_child(_popup_root)
+
+	_popup_panel = Panel.new()
+	_popup_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_popup_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_popup_root.add_child(_popup_panel)
+
+	_popup_img = TextureRect.new()
+	_popup_img.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_popup_img.offset_left = POPUP_PAD
+	_popup_img.offset_top = POPUP_PAD
+	_popup_img.offset_right = -POPUP_PAD
+	_popup_img.offset_bottom = -POPUP_PAD
+	_popup_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_popup_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_popup_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_popup_root.add_child(_popup_img)
+
+	_popup_sfx = AudioStreamPlayer.new()
+	_popup_sfx.name = "PopupSfx"
+	_popup_sfx.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_popup_sfx)
+
+
+## 白フチ＋影の枠。色で種別を分ける
+func _popup_style(kind: int) -> StyleBoxFlat:
+	var st := StyleBoxFlat.new()
+	st.bg_color = Color(1.0, 1.0, 1.0, 0.96)
+	st.border_color = (Color(0.29, 0.56, 0.89) if kind == CutsceneLine.PopupKind.TALK
+		else Color(0.85, 0.25, 0.25))
+	st.set_border_width_all(POPUP_PAD)
+	st.set_corner_radius_all(6)
+	st.shadow_color = Color(0.0, 0.0, 0.0, 0.45)
+	st.shadow_size = 10
+	st.shadow_offset = Vector2(4, 6)
+	return st
+
+
+## そのコマのポップアップを出す。出しっぱなしにはせず、hold のあと自分で消える。
+## 文字送りは止めないので、会話と並行して見せられる
+func _show_popup(line: CutsceneLine) -> void:
+	if line.popup == null:
+		return
+	_hide_popup()
+
+	var screen := _screen()
+	var tex_size := line.popup.get_size()
+	var w: float = screen.x * popup_width_ratio
+	var h: float = w * (tex_size.y / maxf(tex_size.x, 1.0))
+
+	_popup_panel.add_theme_stylebox_override("panel", _popup_style(line.popup_kind))
+	_popup_img.texture = line.popup
+	_popup_root.size = Vector2(w, h)
+	_popup_root.pivot_offset = _popup_root.size * 0.5
+	_popup_root.position = screen * popup_center - _popup_root.pivot_offset
+	_popup_root.rotation_degrees = popup_tilt_degrees
+	_popup_root.modulate.a = 1.0
+	_popup_root.scale = Vector2(0.6, 0.6)
+	_popup_root.visible = true
+
+	_play_popup_sfx(sfx_popup)
+
+	var hold: float = line.popup_hold if line.popup_hold > 0.0 else popup_hold_default
+	var kind := line.popup_kind
+	_popup_tween = _new_tween()
+	# 「ポンッ」と弾む。行き過ぎてから戻す
+	_popup_tween.tween_property(_popup_root, "scale", Vector2(1.08, 1.08), popup_pop_time)
+	_popup_tween.tween_property(_popup_root, "scale", Vector2.ONE, popup_pop_time * 0.5)
+	_popup_tween.tween_interval(hold)
+	_popup_tween.tween_callback(func() -> void: _dismiss_popup(kind))
+
+
+func _dismiss_popup(kind: int) -> void:
+	if not _popup_root or not _popup_root.visible:
+		return
+	if kind == CutsceneLine.PopupKind.MISS:
+		_break_popup()
+		return
+	var tw := _new_tween()
+	tw.set_parallel(true)
+	tw.tween_property(_popup_root, "modulate:a", 0.0, popup_out_time)
+	tw.tween_property(_popup_root, "scale", Vector2(0.92, 0.92), popup_out_time)
+	tw.chain().tween_callback(_hide_popup)
+
+
+## 誤答カットインの割れ。小さく揺すってから破片にする
+func _break_popup() -> void:
+	var tex := _popup_img.texture
+	var rect := Rect2(_popup_root.position, _popup_root.size)
+	var base := _popup_root.position
+	var tw := _new_tween()
+	for i in 4:
+		var dx := 12.0 if i % 2 == 0 else -12.0
+		tw.tween_property(_popup_root, "position", base + Vector2(dx, 0.0), 0.04)
+	tw.tween_property(_popup_root, "position", base, 0.04)
+	tw.tween_callback(func() -> void:
+		_hide_popup()
+		_play_popup_sfx(sfx_popup_miss)
+		_spawn_shards(tex, rect))
+
+
+## 破片。3x2 に切って外へ散らしながら落とす
+func _spawn_shards(tex: Texture2D, rect: Rect2) -> void:
+	if tex == null:
+		return
+	var src := tex.get_size()
+	var piece := Vector2(rect.size.x / POPUP_SHARD_COLS, rect.size.y / POPUP_SHARD_ROWS)
+	var src_piece := Vector2(src.x / POPUP_SHARD_COLS, src.y / POPUP_SHARD_ROWS)
+	for r in POPUP_SHARD_ROWS:
+		for c in POPUP_SHARD_COLS:
+			var at := AtlasTexture.new()
+			at.atlas = tex
+			at.region = Rect2(Vector2(src_piece.x * c, src_piece.y * r), src_piece)
+
+			var shard := TextureRect.new()
+			shard.texture = at
+			shard.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			shard.stretch_mode = TextureRect.STRETCH_SCALE
+			shard.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			shard.size = piece
+			shard.position = rect.position + Vector2(piece.x * c, piece.y * r)
+			shard.pivot_offset = piece * 0.5
+			add_child(shard)
+
+			var away := (shard.position + shard.pivot_offset - rect.get_center()).normalized()
+			var tw := _new_tween()
+			tw.set_parallel(true)
+			tw.tween_property(shard, "position",
+				shard.position + away * 140.0 + Vector2(0.0, 90.0), popup_out_time)
+			tw.tween_property(shard, "rotation_degrees", randf_range(-50.0, 50.0), popup_out_time)
+			tw.tween_property(shard, "modulate:a", 0.0, popup_out_time)
+			tw.chain().tween_callback(shard.queue_free)
+
+
+func _play_popup_sfx(stream: AudioStream) -> void:
+	if stream == null or _popup_sfx == null:
+		return
+	_popup_sfx.stream = stream
+	_popup_sfx.play()
+
+
+## 出ているポップアップを即座に片付ける。スキップや幕切れで呼ぶ
+func _hide_popup() -> void:
+	if _popup_tween and _popup_tween.is_valid():
+		_popup_tween.kill()
+	_popup_tween = null
+	if _popup_root:
+		_popup_root.visible = false
+		_popup_img.texture = null
+
+
+## pause 中でも進む Tween。_tween() と違い、繋いで組み立てられるよう空で返す
+func _new_tween() -> Tween:
+	var tw := create_tween()
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tw.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+	return tw

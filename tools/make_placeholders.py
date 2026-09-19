@@ -120,6 +120,12 @@ ka_sec = art_txt.split("表情差分（6点）")[1].split("■ シマエナガ")
 kas = [(f"KANIE-{m[0]}", m[1].strip()) for m in
        re.findall(r"^\s+(\d{2}) (.+?)(?:…|$)", ka_sec, re.M)][:6]
 
+miss_sec = art_txt.split("４．誤答イメージ")[1].split("５．UI・演出素材")[0]
+# 「※…を流用」と書かれているものは新規に描かないので、ダミーも作らない
+misses = [(m[0], m[1].strip()) for m in
+          re.findall(r"^\s+(MISS-\d+) (.+?)\s*…(.+)$", miss_sec, re.M)
+          if not m[1].strip().startswith("※")]
+
 bg_sec = art_txt.split("２．背景素材")[1].split("３．アイテム素材")[0]
 bgs = re.findall(r"^\s+(BG-\d+) (.+?)\s*…(.+)$", bg_sec, re.M)
 
@@ -129,10 +135,12 @@ CAT = {
  "BG":    ("resources/texture/BG/event",    1920, 1080, (56,160,120,255), (56,160,120,60)),
  "OB":    ("resources/texture/event/char",   848, 1200, (226,126,74,255), (226,126,74,60)),
  "KANIE": ("resources/texture/event/char",   909,  800, (150,100,200,255),(150,100,200,60)),
+ "MISS":  ("resources/texture/event/popup",  640,  360, (217,64,64,255),  (217,64,64,60)),
 }
 
 items = ([("POP", i, t) for i, t in pops] + [("BG", i, f"{t}（{w}）") for i, t, w in bgs]
-         + [("OB", i, t) for i, t in obs] + [("KANIE", i, t) for i, t in kas])
+         + [("OB", i, t) for i, t in obs] + [("KANIE", i, t) for i, t in kas]
+         + [("MISS", i, t) for i, t in misses])
 
 made, skipped, manifest = [], [], []
 for cat, ident, desc in items:
@@ -169,4 +177,5 @@ with open("resources/texture/event/README.txt", "w", encoding="utf-8") as f:
 print(f"生成 {len(made)} 件 / 既にあるため据え置き {len(skipped)} 件")
 for p in skipped[:3]: print("  据え置き:", p)
 if len(skipped) > 3: print(f"  ほか {len(skipped) - 3} 件")
-print(f"内訳: POP {len(pops)} / BG {len(bgs)} / OB {len(obs)} / KANIE {len(kas)}")
+print(f"内訳: POP {len(pops)} / MISS {len(misses)} / BG {len(bgs)}"
+      f" / OB {len(obs)} / KANIE {len(kas)}")

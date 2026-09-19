@@ -109,3 +109,13 @@
     resources/texture/event/char/KANIE-05.png
 ダミー    KANIE-06   光るアイテム状態
     resources/texture/event/char/KANIE-06.png
+ダミー    MISS-01    水の入ったコップ
+    resources/texture/event/popup/MISS-01.png
+ダミー    MISS-02    ジュース（子供向けパック）
+    resources/texture/event/popup/MISS-02.png
+ダミー    MISS-04    ギター
+    resources/texture/event/popup/MISS-04.png
+ダミー    MISS-05    教科書
+    resources/texture/event/popup/MISS-05.png
+ダミー    MISS-07    おにぎり
+    resources/texture/event/popup/MISS-07.png
