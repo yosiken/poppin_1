@@ -1,0 +1,75 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://b4uxbkvyq781p"]
+
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_ycfur"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="2_le35o"]
+[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="3_4xutf"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/MISS-01.png" id="4_le35o"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_n6p1y"]
+
+[sub_resource type="Resource" id="Resource_ycfur"]
+script = ExtResource("1_ycfur")
+speaker = "カニエナガ"
+text = "まずは一つ目。ヒント出すで"
+speaking = 1
+left = ExtResource("2_le35o")
+
+[sub_resource type="Resource" id="Resource_le35o"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "ヒント？"
+speaking = 2
+right = ExtResource("3_4xutf")
+
+[sub_resource type="Resource" id="Resource_4xutf"]
+script = ExtResource("1_ycfur")
+speaker = "カニエナガ"
+text = "奈良生まれ。透きとおった液体や"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_n6p1y"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "……水？"
+speaking = 2
+popup = ExtResource("4_le35o")
+popup_kind = 1
+
+[sub_resource type="Resource" id="Resource_ussie"]
+script = ExtResource("1_ycfur")
+speaker = "カニエナガ"
+text = "水であそこまで喜ぶやつおらんわ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_6kvyc"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "じゃあ何なの"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ckeky"]
+script = ExtResource("1_ycfur")
+speaker = "カニエナガ"
+text = "言わん。見たら分かる"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_fwekl"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "もったいぶるなぁ"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ouica"]
+script = ExtResource("1_ycfur")
+speaker = "カニエナガ"
+text = "なんや、ちょっと飲みたそうな顔しとるぞ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_gq6qb"]
+script = ExtResource("1_ycfur")
+speaker = "OB"
+text = "してないよ"
+speaking = 2
+
+[resource]
+script = ExtResource("4_n6p1y")
+lines = Array[ExtResource("1_ycfur")]([SubResource("Resource_ycfur"), SubResource("Resource_le35o"), SubResource("Resource_4xutf"), SubResource("Resource_n6p1y"), SubResource("Resource_ussie"), SubResource("Resource_6kvyc"), SubResource("Resource_ckeky"), SubResource("Resource_fwekl"), SubResource("Resource_ouica"), SubResource("Resource_gq6qb")])

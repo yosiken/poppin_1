@@ -1,0 +1,92 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://cojeb4xlhwjcx"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_6fv87"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_giu38"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_m8t05"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_4l7bd"]
+
+[sub_resource type="Resource" id="Resource_6fv87"]
+script = ExtResource("1_6fv87")
+speaker = "OB"
+text = "カニ！カニーーーー！"
+speaking = 2
+right = ExtResource("2_giu38")
+
+[sub_resource type="Resource" id="Resource_giu38"]
+script = ExtResource("1_6fv87")
+speaker = "カニエナガ"
+text = "やっぱりそうなるか"
+speaking = 1
+left = ExtResource("3_m8t05")
+
+[sub_resource type="Resource" id="Resource_m8t05"]
+script = ExtResource("1_6fv87")
+speaker = "OB"
+text = "しかもタラバ！ゆでたて！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_4l7bd"]
+script = ExtResource("1_6fv87")
+speaker = "カニエナガ"
+text = "高級品やぞ。味わって食えよ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_nw7jn"]
+script = ExtResource("1_6fv87")
+speaker = "OB"
+text = "…………"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_3pw8k"]
+script = ExtResource("1_6fv87")
+speaker = "カニエナガ"
+text = "…………"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_5m2qt"]
+script = ExtResource("1_6fv87")
+speaker = "カニエナガ"
+text = "…………なあ"
+speaking = 1
+note = "演出：OBは無言でタラバガニを食べ続ける"
+
+[sub_resource type="Resource" id="Resource_cn4js"]
+script = ExtResource("1_6fv87")
+speaker = "OB"
+text = "…………"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_2ms3e"]
+script = ExtResource("1_6fv87")
+speaker = "カニエナガ"
+text = "喋らんの？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_hb4dt"]
+script = ExtResource("1_6fv87")
+speaker = "OB"
+text = "…………"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_rac1r"]
+script = ExtResource("1_6fv87")
+speaker = "カニエナガ"
+text = "カニ食う時だけ無口になるんかい"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_s0eja"]
+script = ExtResource("1_6fv87")
+speaker = "OB"
+text = "……おいしかった"
+speaking = 2
+note = "演出：食べ終わる"
+
+[sub_resource type="Resource" id="Resource_q81yb"]
+script = ExtResource("1_6fv87")
+speaker = "カニエナガ"
+text = "そこだけ喋るんかい！"
+speaking = 1
+
+[resource]
+script = ExtResource("4_4l7bd")
+lines = Array[ExtResource("1_6fv87")]([SubResource("Resource_6fv87"), SubResource("Resource_giu38"), SubResource("Resource_m8t05"), SubResource("Resource_4l7bd"), SubResource("Resource_nw7jn"), SubResource("Resource_3pw8k"), SubResource("Resource_5m2qt"), SubResource("Resource_cn4js"), SubResource("Resource_2ms3e"), SubResource("Resource_hb4dt"), SubResource("Resource_rac1r"), SubResource("Resource_s0eja"), SubResource("Resource_q81yb")])

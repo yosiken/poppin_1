@@ -1,0 +1,90 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://b1k32u7b4ykbk"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_fhe7r"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_x30e5"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_gwmgv"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_x30e5"]
+
+[sub_resource type="Resource" id="Resource_x30e5"]
+script = ExtResource("1_fhe7r")
+speaker = "カニエナガ"
+text = "八つ目や"
+speaking = 1
+left = ExtResource("2_x30e5")
+
+[sub_resource type="Resource" id="Resource_gwmgv"]
+script = ExtResource("1_fhe7r")
+speaker = "OB"
+text = "何？"
+speaking = 2
+right = ExtResource("3_x30e5")
+
+[sub_resource type="Resource" id="Resource_88ss5"]
+script = ExtResource("1_fhe7r")
+speaker = "カニエナガ"
+text = "紙や"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_x22lb"]
+script = ExtResource("1_fhe7r")
+speaker = "OB"
+text = "また漫画？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_3tgp8"]
+script = ExtResource("1_fhe7r")
+speaker = "カニエナガ"
+text = "ちゃう。一枚あったら、酒もカニも買える紙や"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_7ifoj"]
+script = ExtResource("1_fhe7r")
+speaker = "OB"
+text = "！！！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_8m0od"]
+script = ExtResource("1_fhe7r")
+speaker = "カニエナガ"
+text = "おい"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_y7078"]
+script = ExtResource("1_fhe7r")
+speaker = "OB"
+text = "わかった！　わかっちゃった！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_pcmwx"]
+script = ExtResource("1_fhe7r")
+speaker = "カニエナガ"
+text = "言うな。ゴールまで言うな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_xibnu"]
+script = ExtResource("1_fhe7r")
+speaker = "OB"
+text = "かねやかねやー！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_tuila"]
+script = ExtResource("1_fhe7r")
+speaker = "カニエナガ"
+text = "もう言うとるやん！"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_iyrgd"]
+script = ExtResource("1_fhe7r")
+speaker = "OB"
+text = "早く行こう！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_wk6qd"]
+script = ExtResource("1_fhe7r")
+speaker = "カニエナガ"
+text = "その顔やめろ！　目が＄になっとるぞ"
+speaking = 1
+
+[resource]
+script = ExtResource("3_gwmgv")
+lines = Array[ExtResource("1_fhe7r")]([SubResource("Resource_x30e5"), SubResource("Resource_gwmgv"), SubResource("Resource_88ss5"), SubResource("Resource_x22lb"), SubResource("Resource_3tgp8"), SubResource("Resource_7ifoj"), SubResource("Resource_8m0od"), SubResource("Resource_y7078"), SubResource("Resource_pcmwx"), SubResource("Resource_xibnu"), SubResource("Resource_tuila"), SubResource("Resource_iyrgd"), SubResource("Resource_wk6qd")])

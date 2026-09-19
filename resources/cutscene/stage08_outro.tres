@@ -1,0 +1,72 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://c4804ap2kwilh"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_c8ka2"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_st6c1"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_uxxq4"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_hlwc3"]
+
+[sub_resource type="Resource" id="Resource_c8ka2"]
+script = ExtResource("1_c8ka2")
+speaker = "OB"
+text = "お金ーーー！　現金！"
+speaking = 2
+right = ExtResource("2_st6c1")
+
+[sub_resource type="Resource" id="Resource_st6c1"]
+script = ExtResource("1_c8ka2")
+speaker = "カニエナガ"
+text = "やっぱり当たっとったか"
+speaking = 1
+left = ExtResource("3_uxxq4")
+
+[sub_resource type="Resource" id="Resource_uxxq4"]
+script = ExtResource("1_c8ka2")
+speaker = "OB"
+text = "思い出した"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_hlwc3"]
+script = ExtResource("1_c8ka2")
+speaker = "カニエナガ"
+text = "何を？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_lci6h"]
+script = ExtResource("1_c8ka2")
+speaker = "OB"
+text = "お金のためならどんな回り道でもするわ"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_1gdar"]
+script = ExtResource("1_c8ka2")
+speaker = "カニエナガ"
+text = "そのバイタリティーがあれば大丈夫やな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_5gnj2"]
+script = ExtResource("1_c8ka2")
+speaker = "OB"
+text = "現実に戻って金集めるんだ！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_rhu0i"]
+script = ExtResource("1_c8ka2")
+speaker = "カニエナガ"
+text = "まあ……"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_tt106"]
+script = ExtResource("1_c8ka2")
+speaker = "OB"
+text = "なに？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_5knkk"]
+script = ExtResource("1_c8ka2")
+speaker = "カニエナガ"
+text = "まあ…モチベは大事やしな"
+speaking = 1
+
+[resource]
+script = ExtResource("4_hlwc3")
+lines = Array[ExtResource("1_c8ka2")]([SubResource("Resource_c8ka2"), SubResource("Resource_st6c1"), SubResource("Resource_uxxq4"), SubResource("Resource_hlwc3"), SubResource("Resource_lci6h"), SubResource("Resource_1gdar"), SubResource("Resource_5gnj2"), SubResource("Resource_rhu0i"), SubResource("Resource_tt106"), SubResource("Resource_5knkk")])

@@ -1,0 +1,88 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/terrain_sprite.gd" id="1_ts"]
+[ext_resource type="Texture2D" path="res://resources/texture/Parts/tiles/tile_03.png" id="2_grass"]
+[ext_resource type="Texture2D" path="res://resources/texture/Parts/tiles/tile_07.png" id="3_dirt"]
+[ext_resource type="Texture2D" path="res://resources/texture/Parts/tiles/tile_04.png" id="4_stone"]
+[ext_resource type="Texture2D" path="res://resources/texture/Parts/tiles/tile_06.png" id="5_brick"]
+
+[node name="TerrainSpriteSample" type="Node2D"]
+
+[node name="Ground" type="Polygon2D" parent="."]
+position = Vector2(0, 700)
+polygon = PackedVector2Array(0, 0, 1000, 0, 1000, 260, 0, 260)
+script = ExtResource("1_ts")
+texture = ExtResource("2_grass")
+tile_size = Vector2(220, 0)
+
+[node name="GroundMirror" type="Polygon2D" parent="."]
+position = Vector2(1000, 700)
+polygon = PackedVector2Array(0, 0, 1000, 0, 1000, 260, 0, 260)
+script = ExtResource("1_ts")
+texture = ExtResource("2_grass")
+tile_size = Vector2(220, 0)
+mirror_tiling = true
+
+[node name="Slope" type="Polygon2D" parent="."]
+position = Vector2(320, 380)
+polygon = PackedVector2Array(0, 320, 520, 0, 700, 60, 700, 320)
+script = ExtResource("1_ts")
+texture = ExtResource("3_dirt")
+tile_size = Vector2(180, 0)
+
+[node name="Scale100" type="Polygon2D" parent="."]
+position = Vector2(1150, 380)
+polygon = PackedVector2Array(0, 0, 240, 0, 240, 320, 0, 320)
+script = ExtResource("1_ts")
+texture = ExtResource("4_stone")
+tile_size = Vector2(100, 0)
+
+[node name="Scale200" type="Polygon2D" parent="."]
+position = Vector2(1430, 380)
+polygon = PackedVector2Array(0, 0, 240, 0, 240, 320, 0, 320)
+script = ExtResource("1_ts")
+texture = ExtResource("4_stone")
+tile_size = Vector2(200, 0)
+
+[node name="Scale400" type="Polygon2D" parent="."]
+position = Vector2(1710, 380)
+polygon = PackedVector2Array(0, 0, 240, 0, 240, 320, 0, 320)
+script = ExtResource("1_ts")
+texture = ExtResource("4_stone")
+tile_size = Vector2(400, 0)
+
+[node name="CopyDemo" type="Node2D" parent="."]
+
+[node name="Collision" type="StaticBody2D" parent="CopyDemo"]
+position = Vector2(200, 60)
+
+[node name="Shape" type="CollisionPolygon2D" parent="CopyDemo/Collision"]
+polygon = PackedVector2Array(0, 0, 380, 0, 460, 120, 380, 240, 0, 240)
+
+[node name="Painted" type="Polygon2D" parent="CopyDemo"]
+position = Vector2(200, 60)
+polygon = PackedVector2Array(0, 0, 380, 0, 460, 120, 380, 240, 0, 240)
+script = ExtResource("1_ts")
+texture = ExtResource("5_brick")
+tile_size = Vector2(160, 0)
+copy_from = NodePath("../Collision/Shape")
+
+[node name="Note0" type="Label" parent="."]
+offset_left = 200.0
+offset_top = -60.0
+text = "copy_from に左のコリジョンを指してある。copy_shape_now にチェックを入れると形と位置を取り込み直す"
+
+[node name="Note1" type="Label" parent="."]
+offset_left = 320.0
+offset_top = 340.0
+text = "斜面。頂点を動かしても目地は世界座標のままずれない"
+
+[node name="Note2" type="Label" parent="."]
+offset_left = 1150.0
+offset_top = 340.0
+text = "tile_size = 100 / 200 / 400 px"
+
+[node name="Note3" type="Label" parent="."]
+offset_left = 0.0
+offset_top = 660.0
+text = "左: そのまま貼る（継ぎ目の線が出る）      右: mirror_tiling（線は消えるが対称の帯が出る）"
