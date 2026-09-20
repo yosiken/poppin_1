@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_hgvhn"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_5qr67"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_5o0ow"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-07.png" id="90_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-11.png" id="91_art"]
+[ext_resource type="Texture2D" uid="uid://15w8jl1sk543" path="res://resources/texture/BG/event/BG-07.png" id="90_art"]
+[ext_resource type="Texture2D" uid="uid://cb3krt826ks2q" path="res://resources/texture/event/popup/POP-11.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_x8uju"]
 script = ExtResource("1_x8uju")

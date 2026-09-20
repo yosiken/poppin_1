@@ -4,9 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_pkok5"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_shl02"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_3lb5k"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-14.png" id="91_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-29.png" id="92_art"]
+[ext_resource type="Texture2D" uid="uid://dy88pvspe24sj" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
+[ext_resource type="Texture2D" uid="uid://t0jtuqc77k00" path="res://resources/texture/BG/event/BG-14.png" id="91_art"]
+[ext_resource type="Texture2D" uid="uid://3j2jif8kqlib" path="res://resources/texture/event/popup/POP-29.png" id="92_art"]
 
 [sub_resource type="Resource" id="Resource_pkok5"]
 script = ExtResource("1_pkok5")
@@ -14,9 +14,9 @@ speaker = "OB"
 text = "…………え"
 speaking = 2
 right = ExtResource("2_pkok5")
-note = "演出：最後のアイテムが、光の中に浮かび上がる"
 background = ExtResource("90_art")
 popup = ExtResource("92_art")
+note = "演出：最後のアイテムが、光の中に浮かび上がる"
 
 [sub_resource type="Resource" id="Resource_shl02"]
 script = ExtResource("1_pkok5")
@@ -206,8 +206,8 @@ script = ExtResource("1_pkok5")
 speaker = "OB"
 text = "こっちのカニエナガも一緒に行けない？"
 speaking = 2
-note = "演出：目の前に光のゲートが開く"
 background = ExtResource("91_art")
+note = "演出：目の前に光のゲートが開く"
 
 [sub_resource type="Resource" id="Resource_cogvr"]
 script = ExtResource("1_pkok5")

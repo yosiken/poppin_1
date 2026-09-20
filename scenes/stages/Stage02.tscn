@@ -9,13 +9,15 @@
 [ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="10_hut53"]
 [ext_resource type="Texture2D" uid="uid://ef420ly1sjgx" path="res://resources/texture/osake.png" id="11_oladb"]
 [ext_resource type="Texture2D" uid="uid://dx8hab0e1snrf" path="res://resources/texture/Parts/tiles/tile_09.png" id="11_sqfmg"]
+[ext_resource type="Texture2D" uid="uid://bkbc2nui8dxyt" path="res://resources/texture/Tutorial1.jpg" id="14_av5gy"]
+[ext_resource type="Texture2D" uid="uid://d2k6nrxjycqo5" path="res://resources/texture/Tutorial2.jpg" id="15_87tee"]
 [ext_resource type="Resource" uid="uid://cnckr5ah08f7a" path="res://resources/cutscene/stage02_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://i0n523lr7x8g" path="res://resources/cutscene/stage02_outro.tres" id="cut_outro"]
 [ext_resource type="Script" uid="uid://dgqq7nscbsglg" path="res://scripts/hazard.gd" id="hz_script"]
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0iyhi"]
-size = Vector2(117.567024, 175.08183)
+size = Vector2(101.49671, 101.49671)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0pjx1"]
 shader = ExtResource("8_av5gy")
@@ -104,6 +106,7 @@ intro = ExtResource("cut_intro")
 outro = ExtResource("cut_outro")
 
 [node name="CameraBounds" type="Polygon2D" parent="." unique_id=324340871]
+visible = false
 position = Vector2(7.65152, -18.3125)
 scale = Vector2(1.030606, 0.816875)
 color = Color(1, 0.85, 0.3, 0.15)
@@ -332,3 +335,17 @@ polygon = PackedVector2Array(-30, -600, 467, -606, 503, 718, -27, 723)
 script = ExtResource("9_47jn6")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Block06")
+
+[node name="BackGraphics" type="Node2D" parent="." unique_id=565224974]
+z_index = -200
+position = Vector2(1414, 439)
+
+[node name="Tutorial1" type="Sprite2D" parent="BackGraphics" unique_id=1348167884]
+position = Vector2(-998, 146)
+scale = Vector2(0.38010207, 0.38010204)
+texture = ExtResource("14_av5gy")
+
+[node name="Tutorial2" type="Sprite2D" parent="BackGraphics" unique_id=619017391]
+position = Vector2(333, 148)
+scale = Vector2(0.39030614, 0.39030612)
+texture = ExtResource("15_87tee")

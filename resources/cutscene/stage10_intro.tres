@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_q87b5"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_82dx4"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_rr3ph"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
+[ext_resource type="Texture2D" uid="uid://dy88pvspe24sj" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
 
 [sub_resource type="Resource" id="Resource_r35ad"]
 script = ExtResource("1_r35ad")

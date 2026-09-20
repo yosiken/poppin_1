@@ -8,13 +8,13 @@
 [ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="8_gb36o"]
 [ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="9_qmr62"]
 [ext_resource type="Texture2D" uid="uid://dx8hab0e1snrf" path="res://resources/texture/Parts/tiles/tile_09.png" id="10_mx7fg"]
-[ext_resource type="Texture2D" uid="uid://0yf1nbteyhcq" path="res://resources/texture/Tutorial.jpg" id="12_mx7fg"]
+[ext_resource type="Texture2D" uid="uid://bkbc2nui8dxyt" path="res://resources/texture/Tutorial1.jpg" id="12_mx7fg"]
 [ext_resource type="Resource" uid="uid://b4uxbkvyq781p" path="res://resources/cutscene/stage01_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://bsh8ibbmcgf6o" path="res://resources/cutscene/stage01_outro.tres" id="cut_outro"]
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qmy6f"]
-size = Vector2(111.41978, 165.92729)
+size = Vector2(96.189735, 96.189735)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hwgo4"]
 shader = ExtResource("7_qmr62")
@@ -414,7 +414,11 @@ script = ExtResource("8_gb36o")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Ceiling")
 
-[node name="Tutorial" type="Sprite2D" parent="." unique_id=1496568407]
-position = Vector2(421.99997, 691)
-scale = Vector2(0.33673474, 0.33673474)
+[node name="BackGraphics" type="Node2D" parent="." unique_id=1838781821]
+z_index = -200
+position = Vector2(1414, 439)
+
+[node name="Tutorial1" type="Sprite2D" parent="BackGraphics" unique_id=1541485738]
+position = Vector2(-543.00006, 236)
+scale = Vector2(0.39795917, 0.39795917)
 texture = ExtResource("12_mx7fg")
