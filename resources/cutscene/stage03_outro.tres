@@ -1,11 +1,12 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://cojeb4xlhwjcx"]
 
 [ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_6fv87"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_4l7bd"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_giu38"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_m8t05"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_4l7bd"]
-[ext_resource type="Texture2D" uid="uid://15w8jl1sk543" path="res://resources/texture/BG/event/BG-07.png" id="90_art"]
-[ext_resource type="Texture2D" uid="uid://bpamsvuvmb4l5" path="res://resources/texture/event/popup/POP-12.png" id="91_art"]
+[ext_resource type="Texture2D" uid="uid://yb7jpspa1jf0" path="res://resources/texture/BG/event/BG-05.png" id="4_nw7jn"]
+[ext_resource type="Texture2D" uid="uid://bky2aplthe140" path="res://resources/texture/event/popup/POP-06.png" id="6_3pw8k"]
 
 [sub_resource type="Resource" id="Resource_6fv87"]
 script = ExtResource("1_6fv87")
@@ -13,7 +14,7 @@ speaker = "OB"
 text = "カニ！カニーーーー！"
 speaking = 2
 right = ExtResource("2_giu38")
-background = ExtResource("90_art")
+background = ExtResource("2_4l7bd")
 
 [sub_resource type="Resource" id="Resource_giu38"]
 script = ExtResource("1_6fv87")
@@ -21,13 +22,14 @@ speaker = "カニエナガ"
 text = "やっぱりそうなるか"
 speaking = 1
 left = ExtResource("3_m8t05")
+background = ExtResource("4_nw7jn")
 
 [sub_resource type="Resource" id="Resource_m8t05"]
 script = ExtResource("1_6fv87")
 speaker = "OB"
 text = "しかもタラバ！ゆでたて！"
 speaking = 2
-popup = ExtResource("91_art")
+popup = ExtResource("6_3pw8k")
 
 [sub_resource type="Resource" id="Resource_4l7bd"]
 script = ExtResource("1_6fv87")
@@ -90,6 +92,7 @@ script = ExtResource("1_6fv87")
 speaker = "カニエナガ"
 text = "そこだけ喋るんかい！"
 speaking = 1
+background = ExtResource("2_4l7bd")
 
 [resource]
 script = ExtResource("4_4l7bd")

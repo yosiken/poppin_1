@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://c2ydg4sm58vpg"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_1bfqb"]
-[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_fixnd"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_1k4lx"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_iuxvc"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-10.png" id="90_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-19.png" id="91_art"]
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_1bfqb"]
+[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="2_fixnd"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="2_iuxvc"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="3_1k4lx"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_iuxvc"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-08.png" id="5_a8qcy"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-19.png" id="6_a8qcy"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-23.png" id="7_1lnn4"]
 
 [sub_resource type="Resource" id="Resource_1bfqb"]
 script = ExtResource("1_1bfqb")
@@ -13,7 +15,7 @@ speaker = "OB"
 text = "…………そうだ"
 speaking = 2
 right = ExtResource("2_fixnd")
-background = ExtResource("90_art")
+background = ExtResource("2_iuxvc")
 
 [sub_resource type="Resource" id="Resource_fixnd"]
 script = ExtResource("1_1bfqb")
@@ -27,6 +29,7 @@ script = ExtResource("1_1bfqb")
 speaker = "OB"
 text = "スーパーハミコンの……『ファイナルファンタジア6』"
 speaking = 2
+background = ExtResource("5_a8qcy")
 
 [sub_resource type="Resource" id="Resource_iuxvc"]
 script = ExtResource("1_1bfqb")
@@ -63,7 +66,8 @@ script = ExtResource("1_1bfqb")
 speaker = "OB"
 text = "コメントでめっちゃ求婚されたんだよ"
 speaking = 2
-popup = ExtResource("91_art")
+background = ExtResource("6_a8qcy")
+popup = ExtResource("7_1lnn4")
 
 [sub_resource type="Resource" id="Resource_ll8sr"]
 script = ExtResource("1_1bfqb")
@@ -88,6 +92,7 @@ script = ExtResource("1_1bfqb")
 speaker = "OB"
 text = "現実でまた求婚されたい"
 speaking = 2
+background = ExtResource("2_iuxvc")
 
 [sub_resource type="Resource" id="Resource_8w3sa"]
 script = ExtResource("1_1bfqb")

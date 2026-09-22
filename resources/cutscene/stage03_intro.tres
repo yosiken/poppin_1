@@ -1,11 +1,12 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://cl1lu8kh6q4ft"]
 
 [ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_x8uju"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_5o0ow"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_hgvhn"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_5qr67"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_5o0ow"]
-[ext_resource type="Texture2D" uid="uid://15w8jl1sk543" path="res://resources/texture/BG/event/BG-07.png" id="90_art"]
-[ext_resource type="Texture2D" uid="uid://cb3krt826ks2q" path="res://resources/texture/event/popup/POP-11.png" id="91_art"]
+[ext_resource type="Texture2D" uid="uid://yb7jpspa1jf0" path="res://resources/texture/BG/event/BG-05.png" id="5_2cma1"]
+[ext_resource type="Texture2D" uid="uid://bh57y503sxtsj" path="res://resources/texture/event/popup/MISS-04.png" id="6_kebiv"]
 
 [sub_resource type="Resource" id="Resource_x8uju"]
 script = ExtResource("1_x8uju")
@@ -13,7 +14,7 @@ speaker = "カニエナガ"
 text = "三つ目のヒントいくで"
 speaking = 1
 left = ExtResource("2_hgvhn")
-background = ExtResource("90_art")
+background = ExtResource("2_5o0ow")
 
 [sub_resource type="Resource" id="Resource_hgvhn"]
 script = ExtResource("1_x8uju")
@@ -27,13 +28,15 @@ script = ExtResource("1_x8uju")
 speaker = "カニエナガ"
 text = "赤い。足が多い。殻がある"
 speaking = 1
-popup = ExtResource("91_art")
+background = ExtResource("5_2cma1")
 
 [sub_resource type="Resource" id="Resource_5o0ow"]
 script = ExtResource("1_x8uju")
 speaker = "OB"
 text = "……カニエナガ？"
 speaking = 2
+popup = ExtResource("6_kebiv")
+popup_kind = 1
 
 [sub_resource type="Resource" id="Resource_2cma1"]
 script = ExtResource("1_x8uju")
@@ -100,6 +103,7 @@ script = ExtResource("1_x8uju")
 speaker = "カニエナガ"
 text = "急に元気になったな……"
 speaking = 1
+background = ExtResource("2_5o0ow")
 
 [resource]
 script = ExtResource("4_5o0ow")

@@ -1,10 +1,11 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://cnckr5ah08f7a"]
 
 [ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_23evt"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_3ft0g"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_otxka"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_x6aby"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_3ft0g"]
-[ext_resource type="Texture2D" uid="uid://d1f6nrewu4dhj" path="res://resources/texture/BG/event/BG-06.png" id="90_art"]
+[ext_resource type="Texture2D" uid="uid://2syy320eep00" path="res://resources/texture/BG/event/BG-03.png" id="5_8aqdv"]
 [ext_resource type="Texture2D" uid="uid://gi2qcvrxgabj" path="res://resources/texture/event/popup/MISS-02.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_23evt"]
@@ -13,7 +14,7 @@ speaker = "カニエナガ"
 text = "次のヒントや"
 speaking = 1
 left = ExtResource("2_otxka")
-background = ExtResource("90_art")
+background = ExtResource("2_3ft0g")
 
 [sub_resource type="Resource" id="Resource_otxka"]
 script = ExtResource("1_23evt")
@@ -27,6 +28,7 @@ script = ExtResource("1_23evt")
 speaker = "カニエナガ"
 text = "キンキンに冷えとる。金色で、泡が出る"
 speaking = 1
+background = ExtResource("5_8aqdv")
 
 [sub_resource type="Resource" id="Resource_3ft0g"]
 script = ExtResource("1_23evt")
@@ -65,6 +67,7 @@ script = ExtResource("1_23evt")
 speaker = "カニエナガ"
 text = "ゴールであの缶を開ける音を聞いたら、イヤでも思い出すわ"
 speaking = 1
+background = ExtResource("2_3ft0g")
 
 [resource]
 script = ExtResource("4_3ft0g")

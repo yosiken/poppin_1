@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://biaua5542h66b"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_cgvsy"]
-[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_mr3mf"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_q6lt2"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_fhkv8"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-09.png" id="90_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-16.png" id="91_art"]
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_cgvsy"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="2_fhkv8"]
+[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="2_mr3mf"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="3_q6lt2"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-15.png" id="3_u8a0j"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_fhkv8"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-07.png" id="6_2vnfm"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-17.png" id="7_u8a0j"]
 
 [sub_resource type="Resource" id="Resource_cgvsy"]
 script = ExtResource("1_cgvsy")
@@ -13,8 +15,8 @@ speaker = "OB"
 text = "あっ、これ！　『葬送のオバーレン』！"
 speaking = 2
 right = ExtResource("2_mr3mf")
-background = ExtResource("90_art")
-popup = ExtResource("91_art")
+background = ExtResource("2_fhkv8")
+popup = ExtResource("3_u8a0j")
 
 [sub_resource type="Resource" id="Resource_mr3mf"]
 script = ExtResource("1_cgvsy")
@@ -28,6 +30,7 @@ script = ExtResource("1_cgvsy")
 speaker = "OB"
 text = "これ読んでた！"
 speaking = 2
+background = ExtResource("6_2vnfm")
 
 [sub_resource type="Resource" id="Resource_fhkv8"]
 script = ExtResource("1_cgvsy")
@@ -119,6 +122,7 @@ script = ExtResource("1_cgvsy")
 speaker = "OB"
 text = "私、本当にゲームの世界に転生したんだ……"
 speaking = 2
+background = ExtResource("7_u8a0j")
 
 [sub_resource type="Resource" id="Resource_safx4"]
 script = ExtResource("1_cgvsy")

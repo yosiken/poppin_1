@@ -1,11 +1,12 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://ckw78u2y3twd3"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_j43ma"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_ias4w"]
-[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_g6d3g"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_ff3xa"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-08.png" id="90_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/MISS-04.png" id="91_art"]
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_j43ma"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="2_ff3xa"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="2_ias4w"]
+[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="3_g6d3g"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_ff3xa"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-06.png" id="5_nte6m"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-09.png" id="6_bvgev"]
 
 [sub_resource type="Resource" id="Resource_j43ma"]
 script = ExtResource("1_j43ma")
@@ -13,7 +14,7 @@ speaker = "カニエナガ"
 text = "四つ目や"
 speaking = 1
 left = ExtResource("2_ias4w")
-background = ExtResource("90_art")
+background = ExtResource("2_ff3xa")
 
 [sub_resource type="Resource" id="Resource_ias4w"]
 script = ExtResource("1_j43ma")
@@ -27,6 +28,7 @@ script = ExtResource("1_j43ma")
 speaker = "カニエナガ"
 text = "赤い。小さい。弦が四本"
 speaking = 1
+background = ExtResource("5_nte6m")
 
 [sub_resource type="Resource" id="Resource_ff3xa"]
 script = ExtResource("1_j43ma")
@@ -45,8 +47,7 @@ script = ExtResource("1_j43ma")
 speaker = "OB"
 text = "ギター？"
 speaking = 2
-popup = ExtResource("91_art")
-popup_kind = 1
+popup = ExtResource("6_bvgev")
 
 [sub_resource type="Resource" id="Resource_8utly"]
 script = ExtResource("1_j43ma")
@@ -77,6 +78,7 @@ script = ExtResource("1_j43ma")
 speaker = "カニエナガ"
 text = "お前が付けたんやけどな"
 speaking = 1
+background = ExtResource("2_ff3xa")
 
 [sub_resource type="Resource" id="Resource_rns6p"]
 script = ExtResource("1_j43ma")

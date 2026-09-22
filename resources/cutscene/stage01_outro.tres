@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://bsh8ibbmcgf6o"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_ygqeh"]
-[ext_resource type="Texture2D" uid="uid://dy88pvspe24sj" path="res://resources/texture/BG/event/BG-04.png" id="2_1ilod"]
-[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_5wwyp"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_1ilod"]
-[ext_resource type="Texture2D" uid="uid://dgknbyhposhgh" path="res://resources/texture/event/popup/POP-07.png" id="4_5wwyp"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_h1pga"]
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_ygqeh"]
+[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="2_5wwyp"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="2_h1pga"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="3_1ilod"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-07.png" id="4_5wwyp"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_h1pga"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-02.png" id="5_hbbsx"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-16.png" id="7_hbbsx"]
 
 [sub_resource type="Resource" id="Resource_ygqeh"]
 script = ExtResource("1_ygqeh")
@@ -13,7 +15,7 @@ speaker = "OB"
 text = "…………！"
 speaking = 2
 right = ExtResource("2_5wwyp")
-background = ExtResource("2_1ilod")
+background = ExtResource("2_h1pga")
 
 [sub_resource type="Resource" id="Resource_5wwyp"]
 script = ExtResource("1_ygqeh")
@@ -27,6 +29,7 @@ script = ExtResource("1_ygqeh")
 speaker = "OB"
 text = "これ……お酒だ。日本酒の瓶……"
 speaking = 2
+background = ExtResource("5_hbbsx")
 
 [sub_resource type="Resource" id="Resource_h1pga"]
 script = ExtResource("1_ygqeh")
@@ -77,6 +80,7 @@ script = ExtResource("1_ygqeh")
 speaker = "OB"
 text = "奈良の……一番好きな日本酒だった気がする"
 speaking = 2
+background = ExtResource("7_hbbsx")
 
 [sub_resource type="Resource" id="Resource_g1inb"]
 script = ExtResource("1_ygqeh")

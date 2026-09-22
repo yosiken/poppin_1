@@ -1,10 +1,12 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://clbequ4bft763"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_58fq2"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_pgf5g"]
-[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_rldng"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_blccb"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-13.png" id="90_art"]
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_58fq2"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="2_pgf5g"]
+[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="3_rldng"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_blccb"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="5_74h8k"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-11.png" id="7_3k5n3"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-20.png" id="7_74h8k"]
 [ext_resource type="Texture2D" path="res://resources/texture/event/popup/MISS-07.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_58fq2"]
@@ -13,7 +15,7 @@ speaker = "カニエナガ"
 text = "だいぶ来たな"
 speaking = 1
 left = ExtResource("2_pgf5g")
-background = ExtResource("90_art")
+background = ExtResource("5_74h8k")
 
 [sub_resource type="Resource" id="Resource_pgf5g"]
 script = ExtResource("1_58fq2")
@@ -27,6 +29,7 @@ script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
 text = "ヒントいくで。握るもんや"
 speaking = 1
+background = ExtResource("7_3k5n3")
 
 [sub_resource type="Resource" id="Resource_blccb"]
 script = ExtResource("1_58fq2")
@@ -53,12 +56,14 @@ script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
 text = "それに向かうとお前の十八番歌いたくなるやろな"
 speaking = 1
+background = ExtResource("7_3k5n3")
 
 [sub_resource type="Resource" id="Resource_0pyhc"]
 script = ExtResource("1_58fq2")
 speaker = "OB"
 text = "歌！"
 speaking = 2
+background = ExtResource("7_74h8k")
 
 [sub_resource type="Resource" id="Resource_gylu7"]
 script = ExtResource("1_58fq2")
@@ -77,6 +82,7 @@ script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
 text = "ヒントだけや。……山を越える歌や"
 speaking = 1
+background = ExtResource("7_3k5n3")
 
 [sub_resource type="Resource" id="Resource_ycbdi"]
 script = ExtResource("1_58fq2")
@@ -95,6 +101,7 @@ script = ExtResource("1_58fq2")
 speaker = "OB"
 text = "それ、たぶん歌える！"
 speaking = 2
+background = ExtResource("5_74h8k")
 
 [sub_resource type="Resource" id="Resource_sukku"]
 script = ExtResource("1_58fq2")
