@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
 [ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-03.png" id="4_v46gj"]
 [ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="6_v46gj"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-23.png" id="10_nviov"]
 [ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
 [ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-04.png" id="92_art"]
 [ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-05.png" id="93_art"]
@@ -200,6 +201,7 @@ script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
 text = "ワイがヒントを出したる。ただし、中身は言わん"
 speaking = 1
+background = ExtResource("10_nviov")
 
 [sub_resource type="Resource" id="Resource_fdyrt"]
 script = ExtResource("1_yji8q")
@@ -218,6 +220,7 @@ script = ExtResource("1_yji8q")
 speaker = "OB"
 text = "…………正論"
 speaking = 2
+background = ExtResource("90_art")
 
 [sub_resource type="Resource" id="Resource_uwg6m"]
 script = ExtResource("1_yji8q")
