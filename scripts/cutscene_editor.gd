@@ -24,6 +24,9 @@ const BG_DIR := "res://resources/texture/BG"
 const EVENT_BG_DIR := "res://resources/texture/BG/event"
 ## ポップアップ（カットイン）として並べる画像の置き場
 const POPUP_DIR := "res://resources/texture/event/popup"
+## BGM と効果音の置き場
+const BGM_DIR := "res://resources/sound/bgm"
+const SFX_DIR := "res://resources/sound"
 ## 立ち絵として並べる画像の接頭辞。キャラを足したらここに足す
 const PORTRAIT_DIR := "res://resources/texture"
 const PORTRAIT_PREFIXES: Array[String] = ["OB_", "kanie"]
@@ -55,6 +58,10 @@ var _background: OptionButton
 var _popup: OptionButton
 var _popup_kind: OptionButton
 var _popup_hold: SpinBox
+var _bgm: OptionButton
+var _bgm_stop: CheckBox
+var _bgm_fade: SpinBox
+var _sfx: OptionButton
 var _slide_in: CheckBox
 var _auto_advance: SpinBox
 var _delay: SpinBox
@@ -66,6 +73,8 @@ var _keys: Array[String] = []
 var _portraits: Array[Texture2D] = []
 var _backgrounds: Array[Texture2D] = []
 var _popups: Array[Texture2D] = []
+var _bgms: Array[AudioStream] = []
+var _sfxs: Array[AudioStream] = []
 
 var _data: CutsceneData
 var _path := ""
@@ -118,6 +127,10 @@ func _collect_textures() -> void:
 		_backgrounds.append(load("%s/%s" % [EVENT_BG_DIR, name]))
 	for name in _png_names(POPUP_DIR):
 		_popups.append(load("%s/%s" % [POPUP_DIR, name]))
+	for name in _audio_names(BGM_DIR):
+		_bgms.append(load("%s/%s" % [BGM_DIR, name]))
+	for name in _audio_names(SFX_DIR):
+		_sfxs.append(load("%s/%s" % [SFX_DIR, name]))
 
 
 func _png_names(dir_path: String) -> PackedStringArray:
@@ -130,6 +143,22 @@ func _png_names(dir_path: String) -> PackedStringArray:
 		# 書き出し済みのプロジェクトでは .import が付く。元の名前に戻して拾う
 		var clean := name.trim_suffix(".import")
 		if clean.get_extension().to_lower() in ["png", "jpg", "jpeg", "webp"]:
+			if not out.has(clean):
+				out.append(clean)
+	out.sort()
+	return out
+
+
+## 置き場にある音源。BGM と効果音で同じ書き方をする
+func _audio_names(dir_path: String) -> PackedStringArray:
+	var out: PackedStringArray = []
+	var dir := DirAccess.open(dir_path)
+	if dir == null:
+		push_warning("CutsceneEditor: %s を開けません" % dir_path)
+		return out
+	for name in dir.get_files():
+		var clean := name.trim_suffix(".import")
+		if clean.get_extension().to_lower() in ["ogg", "mp3", "wav"]:
 			if not out.has(clean):
 				out.append(clean)
 	out.sort()
@@ -243,7 +272,8 @@ func _mark(line: CutsceneLine) -> String:
 	var fx := line.background != null or line.clear_background \
 		or line.clear_left or line.clear_right or not line.slide_in \
 		or line.auto_advance > 0.0 or line.delay > 0.0 \
-		or line.popup != null
+		or line.popup != null \
+		or line.bgm != null or line.bgm_stop or line.sfx != null
 	return ("＋" if line.inserted else "　") \
 		+ ("※" if line.note != "" else "　") \
 		+ ("●" if fx else "　")
@@ -285,6 +315,10 @@ func _select_line(index: int) -> void:
 	_set_simple(_popup, line.popup, _popups)
 	_popup_kind.selected = line.popup_kind
 	_popup_hold.value = line.popup_hold
+	_set_simple(_bgm, line.bgm, _bgms)
+	_bgm_stop.button_pressed = line.bgm_stop
+	_bgm_fade.value = line.bgm_fade
+	_set_simple(_sfx, line.sfx, _sfxs)
 	_slide_in.button_pressed = line.slide_in
 	_auto_advance.value = line.auto_advance
 	_delay.value = line.delay
@@ -467,6 +501,38 @@ func _on_popup_hold_changed(value: float) -> void:
 	_touch()
 
 
+func _on_bgm_changed(index: int) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.bgm = _bgms[index - 1] if index >= 1 and index <= _bgms.size() else null
+	_touch()
+
+
+func _on_bgm_stop_changed(pressed: bool) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.bgm_stop = pressed
+	_touch()
+
+
+func _on_bgm_fade_changed(value: float) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.bgm_fade = value
+	_touch()
+
+
+func _on_sfx_changed(index: int) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.sfx = _sfxs[index - 1] if index >= 1 and index <= _sfxs.size() else null
+	_touch()
+
+
 func _on_slide_changed(pressed: bool) -> void:
 	var line := _line()
 	if _loading or line == null:
@@ -514,15 +580,15 @@ func _set_pick(button: OptionButton, tex: Texture2D, clear: bool,
 
 
 ## 「出さない」か画像かの2択。立ち絵・背景と違って持ち越しの概念が無い
-func _fill_simple(button: OptionButton, list: Array[Texture2D], none_label: String) -> void:
+func _fill_simple(button: OptionButton, list: Array, none_label: String) -> void:
 	button.clear()
 	button.add_item(none_label)
-	for tex in list:
-		button.add_item(tex.resource_path.get_file().get_basename())
+	for res in list:
+		button.add_item(res.resource_path.get_file().get_basename())
 
 
-func _set_simple(button: OptionButton, tex: Texture2D, list: Array[Texture2D]) -> void:
-	var at := list.find(tex) if tex else -1
+func _set_simple(button: OptionButton, res: Resource, list: Array) -> void:
+	var at := list.find(res) if res else -1
 	button.selected = at + 1 if at >= 0 else 0
 
 
@@ -741,6 +807,25 @@ func _build_detail() -> Control:
 	_popup_hold = _spin(0.0, 5.0, 0.1)
 	_popup_hold.value_changed.connect(_on_popup_hold_changed)
 	_detail.add_child(_labeled("ポップアップ表示 秒 (0=既定)", _popup_hold))
+
+	_bgm = OptionButton.new()
+	_fill_simple(_bgm, _bgms, "（変えない）")
+	_bgm.item_selected.connect(_on_bgm_changed)
+	_detail.add_child(_labeled("BGM", _bgm))
+
+	_bgm_stop = CheckBox.new()
+	_bgm_stop.text = "ここでBGMを止める"
+	_bgm_stop.toggled.connect(_on_bgm_stop_changed)
+	_detail.add_child(_bgm_stop)
+
+	_bgm_fade = _spin(0.0, 5.0, 0.1)
+	_bgm_fade.value_changed.connect(_on_bgm_fade_changed)
+	_detail.add_child(_labeled("BGMのフェード 秒 (0=既定)", _bgm_fade))
+
+	_sfx = OptionButton.new()
+	_fill_simple(_sfx, _sfxs, "（鳴らさない）")
+	_sfx.item_selected.connect(_on_sfx_changed)
+	_detail.add_child(_labeled("効果音", _sfx))
 
 	_slide_in = CheckBox.new()
 	_slide_in.text = "立ち絵を外側からスライドインさせる"

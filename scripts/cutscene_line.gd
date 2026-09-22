@@ -55,6 +55,18 @@ enum PopupKind { TALK, MISS }
 ## 「気づき」を見せるコマは 1.5 くらいためる
 @export_range(0.0, 5.0, 0.1) var popup_hold := 0.0
 
+# ─────────────────────────────── 音
+@export_group("Audio")
+## そのコマから流すBGM。null なら変えない（前の曲がそのまま続く）。
+## 鳴っている曲と同じものを指定した場合は鳴らし直さない
+@export var bgm: AudioStream
+## そこでBGMを止める。台本の「ここで初めてBGMを止め」に当たる指定
+@export var bgm_stop := false
+## BGMの切り替え・停止にかける秒数。0 なら Cutscene 側の既定値を使う
+@export_range(0.0, 5.0, 0.1) var bgm_fade := 0.0
+## そのコマで一度だけ鳴らす効果音。缶を開ける音のような、絵と対になるもの
+@export var sfx: AudioStream
+
 # ─────────────────────────────── 進行
 @export_group("Timing")
 ## 0 なら入力待ち。0 より大きいとその秒数で自動的に次へ進む

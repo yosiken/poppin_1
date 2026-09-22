@@ -56,6 +56,12 @@ const POPUP_SHARD_ROWS := 2
 ## 口パクの開閉間隔 (秒)
 @export_range(0.02, 0.5, 0.01) var talk_step := 0.09
 
+@export_group("Audio")
+## BGMの切り替え・停止にかける既定の秒数。コマ側の bgm_fade が 0 のとき使う
+@export_range(0.0, 5.0, 0.1) var bgm_fade_time := 1.0
+## フェードで落としきる音量 (dB)。ここまで下げてから止める
+@export_range(-80.0, -20.0, 1.0) var bgm_min_db := -40.0
+
 @export_group("Backdrop")
 ## イベント中、後ろのゲーム画面を隠す暗幕を出す。
 ## 背景を指定していないコマでもステージが透けないようにするためのもの
@@ -94,6 +100,12 @@ const POPUP_SHARD_ROWS := 2
 ## まばたき・口パクを入れたので既定では止めてある
 @export var rotate_speaker_portrait := false
 
+## BGM を鳴らすプレイヤー。Game と共用する（Game が自分のものを渡してくる）。
+## 渡されなければ自前で用意する。編集ツールから単体で動かしたときのため
+var bgm_player: AudioStreamPlayer
+var _bgm_tween: Tween
+## コマ単位の効果音。ポップアップのSEと食い合わないよう別に持つ
+var _line_sfx: AudioStreamPlayer
 ## 後ろのゲーム画面を隠す暗幕。_bg より奥に置く
 var _backdrop: ColorRect
 var _bg: TextureRect
@@ -259,6 +271,7 @@ func _play_line(line: CutsceneLine) -> void:
 		return
 
 	_apply_visuals(line)
+	_apply_audio(line)
 
 	if line.text.strip_edges() == "":
 		_window.visible = false
@@ -788,8 +801,15 @@ func _build_popup() -> void:
 
 	_popup_sfx = AudioStreamPlayer.new()
 	_popup_sfx.name = "PopupSfx"
+	_popup_sfx.bus = "SE"
 	_popup_sfx.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_popup_sfx)
+
+	_line_sfx = AudioStreamPlayer.new()
+	_line_sfx.name = "LineSfx"
+	_line_sfx.bus = "SE"
+	_line_sfx.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_line_sfx)
 
 
 ## 白フチ＋影の枠。色で種別を分ける
@@ -925,3 +945,79 @@ func _new_tween() -> Tween:
 	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tw.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	return tw
+
+
+# ─────────────────────────────────────────────── 音
+##
+## BGM は Game と同じプレイヤーで鳴らす。イベントで流した曲がそのまま
+## ステージへ続いたり、逆にイベントで止めたまま次へ渡したりできる。
+## 共用しているので、音量を下げて止めたあとは必ず 0dB に戻すこと。
+## 戻し忘れると、次にステージBGMが鳴るとき無音になる。
+
+
+func _apply_audio(line: CutsceneLine) -> void:
+	if line.sfx and _line_sfx:
+		_line_sfx.stream = line.sfx
+		_line_sfx.play()
+	var fade: float = line.bgm_fade if line.bgm_fade > 0.0 else bgm_fade_time
+	if line.bgm_stop:
+		_stop_bgm(fade)
+	elif line.bgm:
+		_start_bgm(line.bgm, fade)
+
+
+## Game から渡されていなければ自前で用意する
+func _ensure_bgm_player() -> AudioStreamPlayer:
+	if bgm_player == null:
+		bgm_player = AudioStreamPlayer.new()
+		bgm_player.name = "CutsceneBgm"
+		bgm_player.bus = "BGM"
+		bgm_player.process_mode = Node.PROCESS_MODE_ALWAYS
+		add_child(bgm_player)
+	return bgm_player
+
+
+## BGM を流す。同じ曲が既に鳴っていれば鳴らし直さない
+func _start_bgm(stream: AudioStream, fade: float) -> void:
+	var p := _ensure_bgm_player()
+	if p.stream == stream and p.playing:
+		return
+	_kill_bgm_tween()
+	if not p.playing or fade <= 0.0:
+		p.stream = stream
+		p.volume_db = bgm_min_db if fade > 0.0 else 0.0
+		p.play()
+		if fade > 0.0:
+			_bgm_tween = _new_tween()
+			_bgm_tween.tween_property(p, "volume_db", 0.0, fade)
+		return
+	# 別の曲が鳴っている。一度落としてから差し替える
+	_bgm_tween = _new_tween()
+	_bgm_tween.tween_property(p, "volume_db", bgm_min_db, fade * 0.5)
+	_bgm_tween.tween_callback(func() -> void:
+		p.stream = stream
+		p.play())
+	_bgm_tween.tween_property(p, "volume_db", 0.0, fade * 0.5)
+
+
+## BGM を止める。音量は 0dB に戻してから抜ける
+func _stop_bgm(fade: float) -> void:
+	var p := _ensure_bgm_player()
+	if not p.playing:
+		return
+	_kill_bgm_tween()
+	if fade <= 0.0:
+		p.stop()
+		p.volume_db = 0.0
+		return
+	_bgm_tween = _new_tween()
+	_bgm_tween.tween_property(p, "volume_db", bgm_min_db, fade)
+	_bgm_tween.tween_callback(func() -> void:
+		p.stop()
+		p.volume_db = 0.0)
+
+
+func _kill_bgm_tween() -> void:
+	if _bgm_tween and _bgm_tween.is_valid():
+		_bgm_tween.kill()
+	_bgm_tween = null

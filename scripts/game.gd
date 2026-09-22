@@ -213,6 +213,9 @@ func _ready() -> void:
 	# 落下復帰中は get_tree().paused = true になるが、BGMは止めたくないので
 	# ポーズの影響を受けないようにする
 	bgm_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	# イベント中のBGMも同じプレイヤーで鳴らす。イベントで流した曲を
+	# そのままステージへ続けたり、止めたまま次へ渡したりするため
+	cutscene.bgm_player = bgm_player
 	if stages.is_empty():
 		push_warning("Game: stages が空です")
 		return
