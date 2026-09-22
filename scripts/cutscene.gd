@@ -56,6 +56,13 @@ const POPUP_SHARD_ROWS := 2
 ## 口パクの開閉間隔 (秒)
 @export_range(0.02, 0.5, 0.01) var talk_step := 0.09
 
+@export_group("Backdrop")
+## イベント中、後ろのゲーム画面を隠す暗幕を出す。
+## 背景を指定していないコマでもステージが透けないようにするためのもの
+@export var cover_game := true
+## 暗幕の色。既定は不透明の黒
+@export var backdrop_color := Color(0.0, 0.0, 0.0, 1.0)
+
 @export_group("Popup")
 ## ポップアップの横幅。画面幅に対する比率。資材リストの「画面の約1/3」に合わせてある
 @export_range(0.15, 0.7, 0.01) var popup_width_ratio := 0.33
@@ -87,6 +94,8 @@ const POPUP_SHARD_ROWS := 2
 ## まばたき・口パクを入れたので既定では止めてある
 @export var rotate_speaker_portrait := false
 
+## 後ろのゲーム画面を隠す暗幕。_bg より奥に置く
+var _backdrop: ColorRect
 var _bg: TextureRect
 var _left: TextureRect
 var _right: TextureRect
@@ -178,6 +187,7 @@ func play(data: CutsceneData) -> void:
 	_skip = false
 	visible = true
 	get_tree().paused = true
+	_fade_backdrop(1.0 if cover_game else 0.0)
 
 	for line in data.lines:
 		if _skip:
@@ -188,6 +198,8 @@ func play(data: CutsceneData) -> void:
 	_skip = false                    # 以降の待ちは飛ばさない
 	if data.clear_on_finish:
 		await _clear_all()
+	else:
+		_backdrop.color.a = 0.0      # 絵は残すが、暗幕だけは外す
 
 	get_tree().paused = false
 	visible = false
@@ -205,6 +217,8 @@ func preview(data: CutsceneData, index: int) -> void:
 		return
 	_previewing = true
 	visible = true
+	if cover_game:
+		_backdrop.color.a = backdrop_color.a
 
 	# 積み直しの途中経過は見せたくないので、フェードを切って一気に当てる
 	var saved := fade_time
@@ -232,6 +246,7 @@ func preview(data: CutsceneData, index: int) -> void:
 ## プレビューを終う
 func end_preview() -> void:
 	_previewing = false
+	_backdrop.color.a = 0.0
 	_set_talking(CutsceneLine.Side.NONE)
 	visible = false
 
@@ -527,6 +542,14 @@ func _tween_value(rect: TextureRect, value: float) -> void:
 	_tween(rect, "modulate:v", value, fade_time)
 
 
+## 暗幕の濃さを変える。0 でゲーム画面が見える
+func _fade_backdrop(to: float) -> void:
+	if _backdrop == null:
+		return
+	_backdrop.color = Color(backdrop_color, _backdrop.color.a)
+	_tween(_backdrop, "color:a", to * backdrop_color.a, fade_time)
+
+
 func _clear_all() -> void:
 	_window.visible = false
 	_hide_popup()
@@ -535,6 +558,7 @@ func _clear_all() -> void:
 		_note_box.visible = false
 	for r in [_left, _right, _bg]:
 		_fade_texture(r, null)
+	_fade_backdrop(0.0)
 	await _wait_fixed(fade_time)
 
 
@@ -545,6 +569,13 @@ func _screen() -> Vector2:
 
 
 func _build_ui() -> void:
+	_backdrop = ColorRect.new()
+	_backdrop.name = "Backdrop"
+	_backdrop.color = Color(backdrop_color, 0.0)
+	_backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_backdrop)
+
 	_bg = TextureRect.new()
 	_bg.name = "Bg"
 	_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
