@@ -63,7 +63,13 @@ const BG_HIDE_SHADER := "res://resources/shader/event_bg_hide.gdshader"
 ## 背景を隠すシェーダー。未指定なら BG_HIDE_SHADER を読む
 @export var bg_hide_shader: Shader
 ## hide=1 のときのモザイクの粗さ（画像の分割数）。小さいほど粗い
-@export_range(8.0, 240.0, 1.0) var bg_mosaic_cells := 40.0
+@export_range(4.0, 240.0, 1.0) var bg_mosaic_cells := 28.0
+## 隠すための覆いの色
+@export var bg_veil_color := Color(0.06, 0.07, 0.12, 1.0)
+## hide=1 のときに覆いへ寄せる割合。実際の隠れ具合はここで決まる
+@export_range(0.0, 1.0, 0.05) var bg_veil_amount := 0.75
+## hide=1 のときに色を抜く割合
+@export_range(0.0, 1.0, 0.05) var bg_desaturate := 0.65
 ## hide=1 のときのボケの広がり (px)
 @export_range(0.0, 16.0, 0.5) var bg_blur_px := 4.0
 ## 隠している間の揺らぎの速さ
@@ -1063,6 +1069,9 @@ func _setup_bg_material() -> void:
 	_bg_mat.set_shader_parameter("blur_px", bg_blur_px)
 	_bg_mat.set_shader_parameter("drift_speed", bg_drift_speed)
 	_bg_mat.set_shader_parameter("drift_amount", bg_drift_amount)
+	_bg_mat.set_shader_parameter("veil_color", bg_veil_color)
+	_bg_mat.set_shader_parameter("veil_amount", bg_veil_amount)
+	_bg_mat.set_shader_parameter("desaturate", bg_desaturate)
 	_bg.material = _bg_mat
 
 
