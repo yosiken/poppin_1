@@ -21,8 +21,12 @@ shader_type canvas_item;
 //
 // 出力に COLOR を掛けてはいけない（末尾の注記を参照）。
 //
-
-const float TAU = 6.2831853;
+// 名前について: Godot の canvas_item シェーダーには組み込みの識別子があり、
+// 同じ名前を宣言するとその場で parse error になって、シェーダーごと死ぬ。
+// 絵は「効果なし」で普通に出るので、見ただけでは気づけない。
+// 組み込みは全て大文字（TIME / UV / COLOR / TEXTURE / PI / TAU / E など）なので、
+// ここで宣言するものは全て小文字にしてある。TAU は組み込みをそのまま使う
+//
 
 // 隠す強さ。0 で素通し、1 で mosaic_cells の粗さ
 uniform float hide : hint_range(0.0, 1.0) = 0.0;
