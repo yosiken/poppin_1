@@ -151,3 +151,4 @@ script = ExtResource("20_pass")
 
 [node name="Cutscene" type="CanvasLayer" parent="." unique_id=923868755]
 script = ExtResource("36_hq6as")
+portrait_offset_right = Vector2(0, 80)

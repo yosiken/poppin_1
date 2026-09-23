@@ -1,20 +1,22 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://csjq6yaucuosl"]
 
-[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_yji8q"]
-[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="2_2ssu3"]
-[ext_resource type="AudioStream" path="res://resources/sound/bgm/event01.ogg" id="3_mgmiw"]
-[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="3_tlocn"]
-[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-03.png" id="4_v46gj"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="6_v46gj"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-24.png" id="8_yd60s"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-23.png" id="10_nviov"]
-[ext_resource type="AudioStream" path="res://resources/sound/bgm/bgm01.mp3" id="11_1jbvs"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-22.png" id="11_xkdfa"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-04.png" id="92_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-05.png" id="93_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-01.png" id="94_art"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_yji8q"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_2ssu3"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="3_mgmiw"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_tlocn"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
+[ext_resource type="Texture2D" uid="uid://cysx0gjnd74j8" path="res://resources/texture/event/popup/POP-03.png" id="4_v46gj"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="6_v46gj"]
+[ext_resource type="Texture2D" uid="uid://cuog5g4r6fng2" path="res://resources/texture/OB_c.png" id="8_jiib1"]
+[ext_resource type="Texture2D" uid="uid://boqemklr5rl5r" path="res://resources/texture/BG/event/BG-24.png" id="8_yd60s"]
+[ext_resource type="Texture2D" uid="uid://7bbe0r1i2qw" path="res://resources/texture/BG/event/BG-23.png" id="10_nviov"]
+[ext_resource type="AudioStream" uid="uid://byl18mhr17j0o" path="res://resources/sound/bgm/bgm01.mp3" id="11_1jbvs"]
+[ext_resource type="Texture2D" uid="uid://b7pm408d0qwiv" path="res://resources/texture/BG/event/BG-22.png" id="11_xkdfa"]
+[ext_resource type="Texture2D" uid="uid://38jk5kyyvpaj" path="res://resources/texture/OB_d.png" id="13_oowkn"]
+[ext_resource type="Texture2D" uid="uid://dy88pvspe24sj" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
+[ext_resource type="Texture2D" uid="uid://dkqugc8vwcy2m" path="res://resources/texture/event/popup/POP-04.png" id="92_art"]
+[ext_resource type="Texture2D" uid="uid://dyc04lo7p7sx8" path="res://resources/texture/event/popup/POP-05.png" id="93_art"]
+[ext_resource type="Texture2D" uid="uid://drbxy3etw8peb" path="res://resources/texture/BG/event/BG-01.png" id="94_art"]
 
 [sub_resource type="Resource" id="Resource_yji8q"]
 script = ExtResource("1_yji8q")
@@ -52,6 +54,9 @@ script = ExtResource("1_yji8q")
 speaker = "OB"
 text = "いったぁぁぁぁぁぁぁ！！"
 speaking = 2
+right = ExtResource("8_jiib1")
+shake = 48.0
+shake_time = 1.0
 popup = ExtResource("92_art")
 note = "演出：結局、もう一杯飲んでしまう
 演出：その後、寝室へ向かおうとしたOBだったが――
@@ -59,9 +64,12 @@ note = "演出：結局、もう一杯飲んでしまう
 
 [sub_resource type="Resource" id="Resource_r5xqf"]
 script = ExtResource("1_yji8q")
+text = "ぎゃぁ～～～～～～～～～～"
 background = ExtResource("8_yd60s")
 fade = 3
 fade_sec = 3.0
+shake = 48.0
+shake_time = 2.0
 bgm_stop = true
 bgm_fade = 2.0
 inserted = true
@@ -85,6 +93,7 @@ speaker = "カニエナガ"
 text = "やっと起きたか。何時間寝とんねん"
 speaking = 1
 left = ExtResource("3_tlocn")
+right = ExtResource("8_jiib1")
 fade = 4
 
 [sub_resource type="Resource" id="Resource_v46gj"]
@@ -92,6 +101,7 @@ script = ExtResource("1_yji8q")
 speaker = "OB"
 text = "……え？"
 speaking = 2
+right = ExtResource("13_oowkn")
 background = ExtResource("90_art")
 bgm = ExtResource("11_1jbvs")
 
@@ -106,6 +116,7 @@ script = ExtResource("1_yji8q")
 speaker = "OB"
 text = "……カニエナガ？"
 speaking = 2
+right = ExtResource("2_2ssu3")
 
 [sub_resource type="Resource" id="Resource_yd60s"]
 script = ExtResource("1_yji8q")
@@ -152,6 +163,9 @@ script = ExtResource("1_yji8q")
 speaker = "カニエナガ"
 text = "昨日、泥酔して帰ってきて、タンスの角に小指ぶつけたやろ"
 speaking = 1
+fade = 5
+shake = 48.0
+shake_time = 1.0
 popup = ExtResource("92_art")
 
 [sub_resource type="Resource" id="Resource_212ne"]
