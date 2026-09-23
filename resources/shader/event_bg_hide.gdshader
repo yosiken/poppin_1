@@ -28,10 +28,10 @@ uniform float drift_speed = 0.4;
 uniform float drift_amount = 0.005;
 // 隠すための覆いの色
 uniform vec4 veil_color : source_color = vec4(0.06, 0.07, 0.12, 1.0);
-// 覆いへ寄せる割合。1 で完全な単色になる
-uniform float veil_amount : hint_range(0.0, 1.0) = 0.8;
+// 覆いへ寄せる割合。1 にすると元の絵は一切残らない
+uniform float veil_amount : hint_range(0.0, 1.0) = 0.92;
 // 色を抜く割合。色は絵柄を思い出す手がかりになるので落とす
-uniform float desaturate : hint_range(0.0, 1.0) = 0.8;
+uniform float desaturate : hint_range(0.0, 1.0) = 1.0;
 
 void fragment() {
 	vec4 src = texture(TEXTURE, UV);
@@ -68,9 +68,13 @@ void fragment() {
 		float gray = dot(hid.rgb, vec3(0.299, 0.587, 0.114));
 		hid.rgb = mix(hid.rgb, vec3(gray), desaturate);
 
-		// 覆いへ寄せる。濃さ自体もゆっくり流して、面で動いて見えるようにする
+		// 覆いへ寄せる。
+		// 揺らぎは覆いの「色の明るさ」に掛ける。混ぜる割合に掛けると、
+		// veil_amount を 1.0 にしても揺らぎのぶんだけ元の絵が透け、
+		// しかも透ける量が周期的に変わるので、元の絵とモザイクが混ざったまま
+		// 明滅しているように見えてしまう
 		float wave = 0.85 + 0.15 * sin(t * 1.9 + UV.x * 4.0 + UV.y * 3.0);
-		hid.rgb = mix(hid.rgb, veil_color.rgb, clamp(veil_amount * wave, 0.0, 1.0));
+		hid.rgb = mix(hid.rgb, veil_color.rgb * wave, veil_amount);
 
 		// 元の絵と隠した版を混ぜる。ここだけが hide の仕事
 		col.rgb = mix(src.rgb, hid.rgb, hide);
