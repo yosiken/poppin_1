@@ -31,19 +31,19 @@ shader_type canvas_item;
 // 隠す強さ。0 で素通し、1 で mosaic_cells の粗さ
 uniform float hide : hint_range(0.0, 1.0) = 0.0;
 // hide=1 のときの目の粗さ。画面を何分割するか。小さいほど粗い
-uniform float mosaic_cells = 14.0;
+uniform float mosaic_cells = 48.0;
 // hide=0 のときの分割数。ここまで細かいと元の絵と区別がつかない
 uniform float fine_cells = 4096.0;
 // 動きの速さ。どの pattern でも共通で効く
-uniform float drift_speed = 0.4;
+uniform float drift_speed = 1.0;
 // 動かし方。0=流れる 1=拡縮 2=放射。数値の意味は上の表を参照
-uniform int pattern = 0;
+uniform int pattern = 1;
 
 // ─── pattern 0（流れる）用
 // 目の位置がずれる量。セル何個ぶんか。0.5 で隣の目まで滑る
 uniform float grid_drift : hint_range(0.0, 1.0) = 0.5;
 // 目の大きさが伸び縮みする割合
-uniform float cell_pulse : hint_range(0.0, 0.5) = 0.08;
+uniform float cell_pulse : hint_range(0.0, 0.5) = 0.01;
 
 // ─── pattern 1（拡縮）用
 // 目の大きさが伸び縮みする割合。0.45 で 0.55 倍〜1.45 倍を往復する
