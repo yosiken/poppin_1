@@ -137,6 +137,9 @@ var _backdrop_tween: Tween
 var _bg_hide_tween: Tween
 ## 絵ごとに動いている出し入れの Tween。_fade_alpha() 参照
 var _fade_tweens: Dictionary[TextureRect, Tween] = {}
+## 絵ごとに動いている暗転の Tween。_tween_value() 参照。
+## 出し入れ（modulate:a）とは別の値を触るので、辞書も分けて持つ
+var _dim_tweens: Dictionary[TextureRect, Tween] = {}
 ## そのコマで指定された立ち絵。ローテーションで差し替えても、
 ## 次の切り替え先を決める基準はこちらを見る
 var _base_left: Texture2D
@@ -588,10 +591,16 @@ func _tween(node: Object, prop: String, to: Variant, time: float) -> Tween:
 	return tw
 
 
+## 喋っていない側を暗くする（modulate:v）。出し入れと同じく、
+## 同じ絵に対しては常に最新の1本だけを生かす。前の暗転を残すと、
+## コマが速く切り替わったときに古い濃さが後から効いてちらつく
 func _tween_value(rect: TextureRect, value: float) -> void:
 	if rect == null or rect.texture == null:
 		return
-	_tween(rect, "modulate:v", value, fade_time)
+	var old: Tween = _dim_tweens.get(rect)
+	if old and old.is_valid():
+		old.kill()
+	_dim_tweens[rect] = _tween(rect, "modulate:v", value, fade_time)
 
 
 ## 暗幕の濃さを変える。0 でゲーム画面が見える
