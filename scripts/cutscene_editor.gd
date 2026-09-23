@@ -60,6 +60,8 @@ var _popup_kind: OptionButton
 var _popup_hold: SpinBox
 var _bg_hide: SpinBox
 var _bg_pattern: OptionButton
+var _fade: OptionButton
+var _fade_sec: SpinBox
 var _shake: SpinBox
 var _shake_time: SpinBox
 var _bgm: OptionButton
@@ -279,7 +281,7 @@ func _mark(line: CutsceneLine) -> String:
 		or line.popup != null \
 		or line.bgm != null or line.bgm_stop or line.sfx != null \
 		or line.bg_hide >= 0.0 or line.bg_pattern >= 0 \
-		or line.shake > 0.0
+		or line.shake > 0.0 or line.fade != CutsceneLine.Fade.NONE
 	return ("＋" if line.inserted else "　") \
 		+ ("※" if line.note != "" else "　") \
 		+ ("●" if fx else "　")
@@ -323,6 +325,8 @@ func _select_line(index: int) -> void:
 	_popup_hold.value = line.popup_hold
 	_bg_hide.value = line.bg_hide
 	_bg_pattern.selected = line.bg_pattern + 1
+	_fade.selected = line.fade
+	_fade_sec.value = line.fade_sec
 	_shake.value = line.shake
 	_shake_time.value = line.shake_time
 	_set_simple(_bgm, line.bgm, _bgms)
@@ -524,6 +528,22 @@ func _on_bg_pattern_changed(index: int) -> void:
 	if _loading or line == null:
 		return
 	line.bg_pattern = index - 1   # 先頭が「変えない」(-1)
+	_touch()
+
+
+func _on_fade_changed(index: int) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.fade = index
+	_touch()
+
+
+func _on_fade_sec_changed(value: float) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.fade_sec = value
 	_touch()
 
 
@@ -861,6 +881,18 @@ func _build_detail() -> Control:
 	_bg_pattern.add_item("中心から放射")
 	_bg_pattern.item_selected.connect(_on_bg_pattern_changed)
 	_detail.add_child(_labeled("モザイクの動かし方", _bg_pattern))
+
+	_fade = OptionButton.new()
+	for label in [
+			"（なし）", "黒へ（暗転）", "黒から（明転）",
+			"白へ（ホワイトアウト）", "白から", "白フラッシュ", "黒フラッシュ"]:
+		_fade.add_item(label)
+	_fade.item_selected.connect(_on_fade_changed)
+	_detail.add_child(_labeled("画面をおおう幕", _fade))
+
+	_fade_sec = _spin(0.0, 3.0, 0.05)
+	_fade_sec.value_changed.connect(_on_fade_sec_changed)
+	_detail.add_child(_labeled("幕の動き 秒 (0=既定)", _fade_sec))
 
 	_shake = _spin(0.0, 48.0, 1.0)
 	_shake.value_changed.connect(_on_shake_changed)

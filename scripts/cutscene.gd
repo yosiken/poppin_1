@@ -82,6 +82,11 @@ const SHAKE_MARGIN := 56
 ## 「中心から放射」で輪が外へ流れる速さ
 @export_range(0.0, 2.0, 0.05) var bg_radial_flow := 0.35
 
+@export_group("Veil")
+## 暗転・明転にかける既定の秒数。コマ側の fade_sec が 0 のとき使う。
+## 絵の差し替えに使う fade_time とは別物
+@export_range(0.05, 3.0, 0.05) var veil_time := 0.5
+
 @export_group("Camera Shake")
 ## 揺れが収まるまでの既定の秒数。コマ側の shake_time が 0 のとき使う
 @export_range(0.05, 2.0, 0.05) var shake_time := 0.35
@@ -153,6 +158,9 @@ var _backdrop_tween: Tween
 var _bg_hide_tween: Tween
 ## 絵ごとに動いている出し入れの Tween。_fade_alpha() 参照
 var _fade_tweens: Dictionary[TextureRect, Tween] = {}
+## 画面全体をおおう幕と、その Tween。_run_fade() 参照
+var _veil: ColorRect
+var _veil_tween: Tween
 ## 揺れの Tween と、その位相。_shake() 参照
 var _shake_tween: Tween
 var _shake_phase := 0.0
@@ -263,7 +271,8 @@ func play(data: CutsceneData) -> void:
 	else:
 		_backdrop.color.a = 0.0      # 絵は残すが、暗幕だけは外す
 
-	_stop_shake()                    # 揺れをイベントの外へ持ち越さない
+	_stop_shake()                    # 揺れと幕をイベントの外へ持ち越さない
+	_clear_veil()
 	get_tree().paused = false
 	visible = false
 	_playing = false
@@ -286,19 +295,21 @@ func preview(data: CutsceneData, index: int) -> void:
 	# 積み直しの途中経過は見せたくないので、フェードを切って一気に当てる
 	var saved := fade_time
 	fade_time = 0.0
-	_stacking = true
 	await _clear_all()
 	var last := clampi(index, 0, data.lines.size() - 1)
 	for i in last + 1:
+		# 揺れと幕は選んだコマのぶんだけ見せたいので、
+		# そこへ至るまでのコマは「積み直し中」として動かさずに当てる
+		_stacking = i < last
 		if data.lines[i]:
 			_apply_visuals(data.lines[i])
 	_stacking = false
 	fade_time = saved
 
 	var line := data.lines[last]
-	# 揺れは選んだコマのぶんだけ見せる。積み直しの途中のぶんは出さない
-	if line and line.shake > 0.0:
-		_shake(line.shake, line.shake_time)
+	# 幕は待たずに動かす。待つと編集UIが固まる
+	if line:
+		_run_fade(line)
 	_show_note(line)
 	if line == null or line.text.strip_edges() == "":
 		_window.visible = false
@@ -315,6 +326,7 @@ func preview(data: CutsceneData, index: int) -> void:
 func end_preview() -> void:
 	_previewing = false
 	_stop_shake()
+	_clear_veil()
 	_backdrop.color.a = 0.0
 	_set_talking(CutsceneLine.Side.NONE)
 	visible = false
@@ -329,6 +341,11 @@ func _play_line(line: CutsceneLine) -> void:
 
 	_apply_visuals(line)
 	_apply_audio(line)
+	# 幕の上げ下げは本文より先に済ませる。暗転の途中で喋り出すと読みにくい。
+	# フラッシュだけは待たないので、本文と同時に光る
+	await _run_fade(line)
+	if _skip:
+		return
 
 	if line.text.strip_edges() == "":
 		_window.visible = false
@@ -426,6 +443,9 @@ func _apply_visuals(line: CutsceneLine) -> void:
 	_apply_dim(line.speaking)
 	if line.shake > 0.0 and not _stacking:
 		_shake(line.shake, line.shake_time)
+	if _stacking and line.fade != CutsceneLine.Fade.NONE:
+		# 積み直しの途中。動かさず、そのコマが終わった状態だけ当てる
+		_set_veil(_veil_color(line.fade), _veil_end_alpha(line.fade))
 	_rotate_speaker(line.speaking)
 
 
@@ -660,6 +680,7 @@ func _clear_all() -> void:
 		_bg_mat.set_shader_parameter("hide", 0.0)   # 次のイベントへ持ち越さない
 		_set_bg_pattern(bg_pattern)                 # 動かし方も既定へ戻す
 	_stop_shake()
+	_clear_veil()
 	_fade_backdrop(0.0)
 	await _wait_fixed(fade_time)
 
@@ -738,7 +759,21 @@ func _build_ui() -> void:
 	box.add_child(_text_label)
 
 	_window.visible = false
+	_build_veil()
 	_build_note_box()
+
+
+## 画面全体をおおう幕。暗転・明転・フラッシュに使う。
+## ウインドウより後に足すので、本文ごと隠れる。
+## 〔演出：…〕の枠だけは確認用なので、この上に残す
+func _build_veil() -> void:
+	_veil = ColorRect.new()
+	_veil.name = "Veil"
+	_veil.color = Color(0.0, 0.0, 0.0, 0.0)
+	_veil.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_grow(_veil)
+	_veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_veil)
 
 
 ## 〔演出：…〕を出す枠。本文のウインドウとぶつからないよう画面の上に置く
@@ -1121,6 +1156,84 @@ func _kill_bgm_tween() -> void:
 	if _bgm_tween and _bgm_tween.is_valid():
 		_bgm_tween.kill()
 	_bgm_tween = null
+
+
+# ─────────────────────────────── 幕（暗転・明転・フラッシュ）
+
+
+## そのコマの幕の指定を実行する。
+## 上げ下げ (TO_*/FROM_*) は待つので、幕が動ききってから本文が出る。
+## フラッシュは待たない。殴られた瞬間と本文を同時に見せたいので
+func _run_fade(line: CutsceneLine) -> void:
+	if _veil == null or line.fade == CutsceneLine.Fade.NONE:
+		return
+	var sec := maxf(line.fade_sec if line.fade_sec > 0.0 else veil_time, 0.05)
+	var color := _veil_color(line.fade)
+	match line.fade:
+		CutsceneLine.Fade.TO_BLACK, CutsceneLine.Fade.TO_WHITE:
+			# 今の濃さから塗りつぶしへ。色だけ差し替えて濃さは引き継ぐ
+			_set_veil(color, _veil.color.a)
+			_start_veil(1.0, sec)
+			await _wait(sec)
+		CutsceneLine.Fade.FROM_BLACK, CutsceneLine.Fade.FROM_WHITE:
+			# 塗りつぶしから戻す。前のコマで幕を下ろしていなくても
+			# 同じ見え方になるよう、いったん塗りつぶしてから開ける
+			_set_veil(color, 1.0)
+			_start_veil(0.0, sec)
+			await _wait(sec)
+		CutsceneLine.Fade.FLASH_BLACK, CutsceneLine.Fade.FLASH_WHITE:
+			_flash_veil(color, sec)
+
+
+## 幕の濃さを sec かけて to にする
+func _start_veil(to: float, sec: float) -> void:
+	if _veil == null:
+		return
+	_kill_veil_tween()
+	_veil_tween = _tween(_veil, "color:a", to, sec)
+
+
+## ぱっと光ってすぐ戻す。立ち上がりを短くしないと光った感じにならない
+func _flash_veil(color: Color, sec: float) -> void:
+	if _veil == null:
+		return
+	_kill_veil_tween()
+	_set_veil(color, 0.0)
+	_veil_tween = create_tween()
+	_veil_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_veil_tween.tween_property(_veil, "color:a", 1.0, sec * 0.12)
+	_veil_tween.tween_property(_veil, "color:a", 0.0, sec * 0.88)
+
+
+func _set_veil(color: Color, alpha: float) -> void:
+	if _veil:
+		_veil.color = Color(color, alpha)
+
+
+func _veil_color(kind: int) -> Color:
+	var white := kind == CutsceneLine.Fade.TO_WHITE \
+		or kind == CutsceneLine.Fade.FROM_WHITE \
+		or kind == CutsceneLine.Fade.FLASH_WHITE
+	return Color(1.0, 1.0, 1.0) if white else Color(0.0, 0.0, 0.0)
+
+
+## そのコマが終わったときの幕の濃さ。積み直しで使う
+func _veil_end_alpha(kind: int) -> float:
+	var down := kind == CutsceneLine.Fade.TO_BLACK \
+		or kind == CutsceneLine.Fade.TO_WHITE
+	return 1.0 if down else 0.0
+
+
+func _kill_veil_tween() -> void:
+	if _veil_tween and _veil_tween.is_valid():
+		_veil_tween.kill()
+	_veil_tween = null
+
+
+## 幕を外す。イベントの外へ持ち越さない
+func _clear_veil() -> void:
+	_kill_veil_tween()
+	_set_veil(Color(0.0, 0.0, 0.0), 0.0)
 
 
 # ─────────────────────────────── カメラ揺れ
