@@ -48,6 +48,10 @@ const SHAKE_MARGIN := 56
 @export_range(0.0, 0.2, 0.005) var type_speed := 0.03
 ## 話していない側の立ち絵の暗さ (1.0 で暗くしない)
 @export_range(0.2, 1.0, 0.05) var dim_amount := 0.55
+## イベントの最後のコマを出しておく秒数。
+## ここではキー入力を待たず、この時間が過ぎたら自動で次のシーケンスへ進む。
+## 送り入力が来ればそこで切り上げる。コマ側の auto_advance があればそちらが優先
+@export_range(0.0, 5.0, 0.1) var last_line_hold := 1.5
 ## スライドインの移動量。画面幅に対する比率
 @export_range(0.0, 0.5, 0.01) var slide_distance := 0.08
 
@@ -259,11 +263,12 @@ func play(data: CutsceneData) -> void:
 	get_tree().paused = true
 	_fade_backdrop(1.0 if cover_game else 0.0)
 
-	for line in data.lines:
+	var last := _last_index(data)
+	for i in data.lines.size():
 		if _skip:
 			break
-		if line != null:
-			await _play_line(line)
+		if data.lines[i] != null:
+			await _play_line(data.lines[i], i == last)
 
 	_skip = false                    # 以降の待ちは飛ばさない
 	if data.clear_on_finish:
@@ -332,7 +337,7 @@ func end_preview() -> void:
 	visible = false
 
 
-func _play_line(line: CutsceneLine) -> void:
+func _play_line(line: CutsceneLine, is_last := false) -> void:
 	_show_note(line)
 	if line.delay > 0.0:
 		await _wait(line.delay)
@@ -386,6 +391,10 @@ func _play_line(line: CutsceneLine) -> void:
 
 	if line.auto_advance > 0.0:
 		await _wait(line.auto_advance)
+	elif is_last:
+		# 最後のコマはキー入力を待たない。読む間だけ置いて、そのまま
+		# 次のシーケンス（記憶コレクションや時間経過）へ渡す
+		await _wait_advance(last_line_hold)
 	else:
 		_advance = false
 		while not _advance and not _skip:
@@ -402,6 +411,28 @@ func _newline_positions() -> PackedInt32Array:
 		if parsed[i] == "\n":
 			result.append(i)
 	return result
+
+
+## 最後のコマの番号。末尾に空のコマが並んでいても、
+## 中身のある最後のものを最後として扱う。無ければ -1
+func _last_index(data: CutsceneData) -> int:
+	var last := -1
+	for i in data.lines.size():
+		if data.lines[i] != null:
+			last = i
+	return last
+
+
+## 送り入力かスキップが来たら途中で抜ける待ち
+func _wait_advance(sec: float) -> void:
+	_advance = false
+	var elapsed := 0.0
+	while elapsed < sec:
+		if _advance or _skip:
+			break
+		await get_tree().process_frame
+		elapsed += get_process_delta_time()
+	_advance = false
 
 
 ## pause 中でも進む待ち。スキップされたら途中で抜ける
