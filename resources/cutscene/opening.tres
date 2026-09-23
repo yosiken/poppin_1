@@ -1,16 +1,17 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://csjq6yaucuosl"]
 
-[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_yji8q"]
-[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="2_2ssu3"]
-[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="3_tlocn"]
-[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-03.png" id="4_v46gj"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="6_v46gj"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-23.png" id="10_nviov"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-04.png" id="92_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-05.png" id="93_art"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-01.png" id="94_art"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_yji8q"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_2ssu3"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="3_mgmiw"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_tlocn"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_crtyr"]
+[ext_resource type="Texture2D" uid="uid://cysx0gjnd74j8" path="res://resources/texture/event/popup/POP-03.png" id="4_v46gj"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="6_v46gj"]
+[ext_resource type="Texture2D" uid="uid://7bbe0r1i2qw" path="res://resources/texture/BG/event/BG-23.png" id="10_nviov"]
+[ext_resource type="Texture2D" uid="uid://dy88pvspe24sj" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
+[ext_resource type="Texture2D" uid="uid://dkqugc8vwcy2m" path="res://resources/texture/event/popup/POP-04.png" id="92_art"]
+[ext_resource type="Texture2D" uid="uid://dyc04lo7p7sx8" path="res://resources/texture/event/popup/POP-05.png" id="93_art"]
+[ext_resource type="Texture2D" uid="uid://drbxy3etw8peb" path="res://resources/texture/BG/event/BG-01.png" id="94_art"]
 
 [sub_resource type="Resource" id="Resource_yji8q"]
 script = ExtResource("1_yji8q")
@@ -19,6 +20,8 @@ text = "いやぁ……今日もいい配信だった……。もうお酒は控
 speaking = 2
 right = ExtResource("2_2ssu3")
 background = ExtResource("94_art")
+bg_hide = 1.0
+bgm = ExtResource("3_mgmiw")
 note = "演出：深夜
 演出：ゲーム配信を終え、すっかり泥酔したOBは、ふらふらしながら自宅へ帰ってきた"
 
@@ -252,6 +255,7 @@ speaker = "カニエナガ"
 text = "ほな行くで"
 speaking = 1
 background = ExtResource("6_v46gj")
+bgm_stop = true
 
 [resource]
 script = ExtResource("4_crtyr")

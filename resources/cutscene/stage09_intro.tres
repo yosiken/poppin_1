@@ -1,13 +1,13 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://clbequ4bft763"]
 
-[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_58fq2"]
-[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="2_pgf5g"]
-[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="3_rldng"]
-[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_blccb"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="5_74h8k"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-11.png" id="7_3k5n3"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-20.png" id="7_74h8k"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/MISS-07.png" id="91_art"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_58fq2"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_pgf5g"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_rldng"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_blccb"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="5_74h8k"]
+[ext_resource type="Texture2D" uid="uid://bipjwo4yrnqj2" path="res://resources/texture/BG/event/BG-11.png" id="7_3k5n3"]
+[ext_resource type="Texture2D" uid="uid://dkwr2qmqo0v4e" path="res://resources/texture/BG/event/BG-20.png" id="7_74h8k"]
+[ext_resource type="Texture2D" uid="uid://bujlgj1uy1kb4" path="res://resources/texture/event/popup/MISS-07.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_58fq2"]
 script = ExtResource("1_58fq2")

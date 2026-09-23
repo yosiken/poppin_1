@@ -2,10 +2,13 @@
 
 [ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_ycfur"]
 [ext_resource type="Texture2D" uid="uid://c6qc77gu0wcsn" path="res://resources/texture/BG/event/BG-02.png" id="2_4xutf"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_6kvyc"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_le35o"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_4xutf"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="3_n6p1y"]
 [ext_resource type="Texture2D" uid="uid://bujde245m5ssr" path="res://resources/texture/event/popup/MISS-01.png" id="4_le35o"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_n6p1y"]
+[ext_resource type="Texture2D" uid="uid://c5105a4mwr8tv" path="res://resources/texture/BG/event/BG-16.png" id="6_ckeky"]
 
 [sub_resource type="Resource" id="Resource_ycfur"]
 script = ExtResource("1_ycfur")
@@ -13,7 +16,9 @@ speaker = "カニエナガ"
 text = "まずは一つ目。ヒント出すで"
 speaking = 1
 left = ExtResource("2_le35o")
-background = ExtResource("2_4xutf")
+background = ExtResource("2_6kvyc")
+bg_hide = null
+bgm = ExtResource("3_n6p1y")
 
 [sub_resource type="Resource" id="Resource_le35o"]
 script = ExtResource("1_ycfur")
@@ -21,18 +26,22 @@ speaker = "OB"
 text = "ヒント？"
 speaking = 2
 right = ExtResource("3_4xutf")
+bg_hide = null
 
 [sub_resource type="Resource" id="Resource_4xutf"]
 script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
 text = "奈良生まれ。透きとおった液体や"
 speaking = 1
+background = ExtResource("6_ckeky")
+bg_hide = null
 
 [sub_resource type="Resource" id="Resource_n6p1y"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "……水？"
 speaking = 2
+bg_hide = null
 popup = ExtResource("4_le35o")
 popup_kind = 1
 
@@ -41,36 +50,44 @@ script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
 text = "水であそこまで喜ぶやつおらんわ"
 speaking = 1
+bg_hide = null
 
 [sub_resource type="Resource" id="Resource_6kvyc"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "じゃあ何なの"
 speaking = 2
+bg_hide = null
 
 [sub_resource type="Resource" id="Resource_ckeky"]
 script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
 text = "言わん。見たら分かる"
 speaking = 1
+background = ExtResource("2_4xutf")
+bg_hide = null
 
 [sub_resource type="Resource" id="Resource_fwekl"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "もったいぶるなぁ"
 speaking = 2
+bg_hide = null
 
 [sub_resource type="Resource" id="Resource_ouica"]
 script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
 text = "なんや、ちょっと飲みたそうな顔しとるぞ"
 speaking = 1
+bg_hide = null
 
 [sub_resource type="Resource" id="Resource_gq6qb"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "してないよ"
 speaking = 2
+bg_hide = null
+bgm_stop = true
 
 [resource]
 script = ExtResource("4_n6p1y")
