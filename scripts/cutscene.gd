@@ -62,7 +62,7 @@ const BG_HIDE_SHADER := "res://resources/shader/event_bg_hide.gdshader"
 @export_group("Background Effect")
 ## 背景を隠すシェーダー。未指定なら BG_HIDE_SHADER を読む
 @export var bg_hide_shader: Shader
-## 目の粗さ（画面の分割数）。小さいほど粗い。
+## hide=1 のときの目の粗さ（画面の分割数）。小さいほど粗い。
 ## 細かいと元の絵の縮小版にしかならず、隠せない
 @export_range(2.0, 120.0, 1.0) var bg_mosaic_cells := 14.0
 ## 目の位置がずれる量（セル何個ぶんか）
