@@ -40,6 +40,11 @@ const SHAKE_MARGIN := 56
 ## 立ち絵の幅の上限。画面幅に対する比率。
 ## 横長の絵は高さを揃えると横幅が伸びて画面を占領してしまうので、幅で頭打ちにする
 @export_range(0.1, 0.8, 0.01) var portrait_max_width_ratio := 0.34
+## 左の立ち絵の位置をずらす量 (px)。右が正、下が正。
+## 自動で決まる立ち位置（足元をウインドウの上端に合わせる）からの差分
+@export var portrait_offset_left := Vector2.ZERO
+## 右の立ち絵の位置をずらす量 (px)。右が正、下が正
+@export var portrait_offset_right := Vector2(0.0, 170.0)
 
 @export_group("Timing")
 ## 画像の切り替え・移動にかける秒数
@@ -881,7 +886,9 @@ func _layout_portrait(rect: TextureRect, is_left: bool) -> void:
 	if rect.texture == null:
 		var fallback := minf(screen.y * portrait_height_ratio, available)
 		rect.size = Vector2(fallback * 0.6, fallback)
-		rect.position = Vector2(_portrait_x(rect, is_left), available - fallback)
+		rect.position = Vector2(
+			_portrait_x(rect, is_left),
+			available - fallback + _portrait_offset(is_left).y)
 		return
 
 	var ts := rect.texture.get_size()
@@ -898,7 +905,9 @@ func _layout_portrait(rect: TextureRect, is_left: bool) -> void:
 		s = max_w / ts.x
 
 	rect.size = ts * s
-	rect.position = Vector2(_portrait_x(rect, is_left), available - used.end.y * s)
+	rect.position = Vector2(
+		_portrait_x(rect, is_left),
+		available - used.end.y * s + _portrait_offset(is_left).y)
 
 
 ## 透明な余白の量は絵ごとに違うので、キャンバスの端ではなく
@@ -913,9 +922,17 @@ func _portrait_x(rect: TextureRect, is_left: bool) -> float:
 			used = _used_rect(rect.texture)
 			used.position *= rect.size.x / ts.x
 			used.size *= rect.size.x / ts.x
+	# ずらす量はここで足す。スライドインの着地点もこの値を使うので、
+	# ここに入れておかないと滑り込んだあとに位置が飛ぶ
+	var shift := _portrait_offset(is_left).x
 	if is_left:
-		return inset - used.position.x
-	return screen_w - inset - used.end.x
+		return inset - used.position.x + shift
+	return screen_w - inset - used.end.x + shift
+
+
+## 左右どちらの立ち絵をどれだけずらすか (px)
+func _portrait_offset(is_left: bool) -> Vector2:
+	return portrait_offset_left if is_left else portrait_offset_right
 
 
 ## 不透明部分の矩形 (テクスチャのピクセル単位)。
