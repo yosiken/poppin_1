@@ -59,6 +59,7 @@ var _popup: OptionButton
 var _popup_kind: OptionButton
 var _popup_hold: SpinBox
 var _bg_hide: SpinBox
+var _bg_pattern: OptionButton
 var _bgm: OptionButton
 var _bgm_stop: CheckBox
 var _bgm_fade: SpinBox
@@ -275,7 +276,7 @@ func _mark(line: CutsceneLine) -> String:
 		or line.auto_advance > 0.0 or line.delay > 0.0 \
 		or line.popup != null \
 		or line.bgm != null or line.bgm_stop or line.sfx != null \
-		or line.bg_hide >= 0.0
+		or line.bg_hide >= 0.0 or line.bg_pattern >= 0
 	return ("＋" if line.inserted else "　") \
 		+ ("※" if line.note != "" else "　") \
 		+ ("●" if fx else "　")
@@ -318,6 +319,7 @@ func _select_line(index: int) -> void:
 	_popup_kind.selected = line.popup_kind
 	_popup_hold.value = line.popup_hold
 	_bg_hide.value = line.bg_hide
+	_bg_pattern.selected = line.bg_pattern + 1
 	_set_simple(_bgm, line.bgm, _bgms)
 	_bgm_stop.button_pressed = line.bgm_stop
 	_bgm_fade.value = line.bgm_fade
@@ -509,6 +511,14 @@ func _on_bg_hide_changed(value: float) -> void:
 	if _loading or line == null:
 		return
 	line.bg_hide = value
+	_touch()
+
+
+func _on_bg_pattern_changed(index: int) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.bg_pattern = index - 1   # 先頭が「変えない」(-1)
 	_touch()
 
 
@@ -821,7 +831,15 @@ func _build_detail() -> Control:
 
 	_bg_hide = _spin(-1.0, 1.0, 0.05)
 	_bg_hide.value_changed.connect(_on_bg_hide_changed)
-	_detail.add_child(_labeled("背景を隠す割合 0〜1 (-1=変えない)", _bg_hide))
+	_detail.add_child(_labeled("背景を隠す強さ 0〜1 (-1=変えない)", _bg_hide))
+
+	_bg_pattern = OptionButton.new()
+	_bg_pattern.add_item("（変えない）")
+	_bg_pattern.add_item("流れる")
+	_bg_pattern.add_item("中心から拡縮")
+	_bg_pattern.add_item("中心から放射")
+	_bg_pattern.item_selected.connect(_on_bg_pattern_changed)
+	_detail.add_child(_labeled("モザイクの動かし方", _bg_pattern))
 
 	_bgm = OptionButton.new()
 	_fill_simple(_bgm, _bgms, "（変えない）")

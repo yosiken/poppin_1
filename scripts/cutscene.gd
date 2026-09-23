@@ -69,8 +69,15 @@ const BG_HIDE_SHADER := "res://resources/shader/event_bg_hide.gdshader"
 @export_range(0.0, 1.0, 0.05) var bg_grid_drift := 0.5
 ## 目の大きさが伸び縮みする割合
 @export_range(0.0, 0.5, 0.01) var bg_cell_pulse := 0.08
-## 動きの速さ
+## 動きの速さ。どの動かし方でも共通で効く
 @export_range(0.0, 2.0, 0.05) var bg_drift_speed := 0.4
+## 目の動かし方の既定。0=流れる 1=中心から拡縮 2=中心から放射。
+## コマ側 (CutsceneLine.bg_pattern) で指定があればそちらが優先される
+@export_range(0, 2, 1) var bg_pattern := 0
+## 「中心から拡縮」で目が伸び縮みする割合。0.45 で 0.55〜1.45 倍を往復する
+@export_range(0.0, 0.9, 0.05) var bg_scale_amount := 0.45
+## 「中心から放射」で輪が外へ流れる速さ
+@export_range(0.0, 2.0, 0.05) var bg_radial_flow := 0.35
 
 @export_group("Audio")
 ## BGMの切り替え・停止にかける既定の秒数。コマ側の bgm_fade が 0 のとき使う
@@ -380,6 +387,8 @@ func _apply_visuals(line: CutsceneLine) -> void:
 		_fade_texture(_bg, line.background)
 	if line.bg_hide >= 0.0:
 		_fade_bg_hide(line.bg_hide)
+	if line.bg_pattern >= 0:
+		_set_bg_pattern(line.bg_pattern)
 
 	_show_popup(line)
 	_update_portrait(_left, line.left, line.clear_left, line.slide_in, true)
@@ -625,6 +634,7 @@ func _clear_all() -> void:
 		# 走っている Tween を止めてから書く。止めないと直後に上書きされる
 		_kill_bg_hide_tween()
 		_bg_mat.set_shader_parameter("hide", 0.0)   # 次のイベントへ持ち越さない
+		_set_bg_pattern(bg_pattern)                 # 動かし方も既定へ戻す
 	_fade_backdrop(0.0)
 	await _wait_fixed(fade_time)
 
@@ -1096,6 +1106,12 @@ func _setup_bg_material() -> void:
 	_bg_mat.set_shader_parameter("drift_speed", bg_drift_speed)
 	_bg_mat.set_shader_parameter("grid_drift", bg_grid_drift)
 	_bg_mat.set_shader_parameter("cell_pulse", bg_cell_pulse)
+	_bg_mat.set_shader_parameter("pattern", clampi(bg_pattern, 0, 2))
+	_bg_mat.set_shader_parameter("scale_amount", bg_scale_amount)
+	_bg_mat.set_shader_parameter("radial_flow", bg_radial_flow)
+	# 放射の輪を楕円にしないために、画面の縦横比をシェーダーへ渡す
+	var screen := _screen()
+	_bg_mat.set_shader_parameter("aspect", screen.x / maxf(screen.y, 1.0))
 	_bg.material = _bg_mat
 
 
@@ -1105,6 +1121,14 @@ func _fade_bg_hide(to: float) -> void:
 		return
 	_kill_bg_hide_tween()
 	_bg_hide_tween = _tween(_bg_mat, "shader_parameter/hide", clampf(to, 0.0, 1.0), fade_time)
+
+
+## 目の動かし方を切り替える。値はシェーダーの pattern と同じ（0/1/2）。
+## 見た目が飛ぶのを避けたいので、隠し具合が 0 のコマで切り替えるとよい
+func _set_bg_pattern(value: int) -> void:
+	if _bg_mat == null:
+		return
+	_bg_mat.set_shader_parameter("pattern", clampi(value, 0, 2))
 
 
 func _kill_bg_hide_tween() -> void:
