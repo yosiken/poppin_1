@@ -62,20 +62,15 @@ const BG_HIDE_SHADER := "res://resources/shader/event_bg_hide.gdshader"
 @export_group("Background Effect")
 ## 背景を隠すシェーダー。未指定なら BG_HIDE_SHADER を読む
 @export var bg_hide_shader: Shader
-## モザイクの粗さ（画像の分割数）。小さいほど粗い
-@export_range(4.0, 240.0, 1.0) var bg_mosaic_cells := 28.0
-## 隠すための覆いの色
-@export var bg_veil_color := Color(0.06, 0.07, 0.12, 1.0)
-## 覆いへ寄せる割合。1 にすると元の絵は一切残らない
-@export_range(0.0, 1.0, 0.01) var bg_veil_amount := 0.92
-## 色を抜く割合
-@export_range(0.0, 1.0, 0.05) var bg_desaturate := 1.0
-## ボケの広がり (px)
-@export_range(0.0, 16.0, 0.5) var bg_blur_px := 4.0
-## 隠している間の揺らぎの速さ
+## 目の粗さ（画面の分割数）。小さいほど粗い。
+## 細かいと元の絵の縮小版にしかならず、隠せない
+@export_range(2.0, 120.0, 1.0) var bg_mosaic_cells := 14.0
+## 目の位置がずれる量（セル何個ぶんか）
+@export_range(0.0, 1.0, 0.05) var bg_grid_drift := 0.5
+## 目の大きさが伸び縮みする割合
+@export_range(0.0, 0.5, 0.01) var bg_cell_pulse := 0.08
+## 動きの速さ
 @export_range(0.0, 2.0, 0.05) var bg_drift_speed := 0.4
-## 隠している間の揺らぎの大きさ
-@export_range(0.0, 0.05, 0.001) var bg_drift_amount := 0.005
 
 @export_group("Audio")
 ## BGMの切り替え・停止にかける既定の秒数。コマ側の bgm_fade が 0 のとき使う
@@ -1066,12 +1061,9 @@ func _setup_bg_material() -> void:
 	_bg_mat.shader = sh
 	_bg_mat.set_shader_parameter("hide", 0.0)
 	_bg_mat.set_shader_parameter("mosaic_cells", bg_mosaic_cells)
-	_bg_mat.set_shader_parameter("blur_px", bg_blur_px)
 	_bg_mat.set_shader_parameter("drift_speed", bg_drift_speed)
-	_bg_mat.set_shader_parameter("drift_amount", bg_drift_amount)
-	_bg_mat.set_shader_parameter("veil_color", bg_veil_color)
-	_bg_mat.set_shader_parameter("veil_amount", bg_veil_amount)
-	_bg_mat.set_shader_parameter("desaturate", bg_desaturate)
+	_bg_mat.set_shader_parameter("grid_drift", bg_grid_drift)
+	_bg_mat.set_shader_parameter("cell_pulse", bg_cell_pulse)
 	_bg.material = _bg_mat
 
 
