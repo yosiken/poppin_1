@@ -1,14 +1,14 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://b4uxbkvyq781p"]
 
-[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_ycfur"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-02.png" id="2_4xutf"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="2_6kvyc"]
-[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="2_le35o"]
-[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="3_4xutf"]
-[ext_resource type="AudioStream" path="res://resources/sound/bgm/event01.ogg" id="3_n6p1y"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/MISS-01.png" id="4_le35o"]
-[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_n6p1y"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-16.png" id="6_ckeky"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_ycfur"]
+[ext_resource type="Texture2D" uid="uid://c6qc77gu0wcsn" path="res://resources/texture/BG/event/BG-02.png" id="2_4xutf"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_6kvyc"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_le35o"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_4xutf"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="3_n6p1y"]
+[ext_resource type="Texture2D" uid="uid://bujde245m5ssr" path="res://resources/texture/event/popup/MISS-01.png" id="4_le35o"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_n6p1y"]
+[ext_resource type="Texture2D" uid="uid://c5105a4mwr8tv" path="res://resources/texture/BG/event/BG-16.png" id="6_ckeky"]
 
 [sub_resource type="Resource" id="Resource_ycfur"]
 script = ExtResource("1_ycfur")
