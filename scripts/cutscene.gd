@@ -24,6 +24,9 @@ const POPUP_SHARD_ROWS := 2
 
 ## 背景を隠すシェーダーの既定の置き場
 const BG_HIDE_SHADER := "res://resources/shader/event_bg_hide.gdshader"
+## 揺らしたときに画面の端へ隙間が出ないよう、暗幕と背景を画面より大きく作る (px)。
+## CutsceneLine.shake の上限より大きくしておくこと
+const SHAKE_MARGIN := 56
 
 @export_group("Layout")
 ## テキストウインドウの高さ (px)
@@ -78,6 +81,12 @@ const BG_HIDE_SHADER := "res://resources/shader/event_bg_hide.gdshader"
 @export_range(0.0, 0.9, 0.05) var bg_scale_amount := 0.45
 ## 「中心から放射」で輪が外へ流れる速さ
 @export_range(0.0, 2.0, 0.05) var bg_radial_flow := 0.35
+
+@export_group("Camera Shake")
+## 揺れが収まるまでの既定の秒数。コマ側の shake_time が 0 のとき使う
+@export_range(0.05, 2.0, 0.05) var shake_time := 0.35
+## 揺れの速さ (rad/秒)。大きいほど細かく震える
+@export_range(10.0, 200.0, 5.0) var shake_speed := 90.0
 
 @export_group("Audio")
 ## BGMの切り替え・停止にかける既定の秒数。コマ側の bgm_fade が 0 のとき使う
@@ -144,6 +153,12 @@ var _backdrop_tween: Tween
 var _bg_hide_tween: Tween
 ## 絵ごとに動いている出し入れの Tween。_fade_alpha() 参照
 var _fade_tweens: Dictionary[TextureRect, Tween] = {}
+## 揺れの Tween と、その位相。_shake() 参照
+var _shake_tween: Tween
+var _shake_phase := 0.0
+## 編集ツールのプレビューでコマを積み直している間だけ真。
+## 途中経過の揺れを出さないために見る
+var _stacking := false
 ## 絵ごとに動いている暗転の Tween。_tween_value() 参照。
 ## 出し入れ（modulate:a）とは別の値を触るので、辞書も分けて持つ
 var _dim_tweens: Dictionary[TextureRect, Tween] = {}
@@ -248,6 +263,7 @@ func play(data: CutsceneData) -> void:
 	else:
 		_backdrop.color.a = 0.0      # 絵は残すが、暗幕だけは外す
 
+	_stop_shake()                    # 揺れをイベントの外へ持ち越さない
 	get_tree().paused = false
 	visible = false
 	_playing = false
@@ -270,14 +286,19 @@ func preview(data: CutsceneData, index: int) -> void:
 	# 積み直しの途中経過は見せたくないので、フェードを切って一気に当てる
 	var saved := fade_time
 	fade_time = 0.0
+	_stacking = true
 	await _clear_all()
 	var last := clampi(index, 0, data.lines.size() - 1)
 	for i in last + 1:
 		if data.lines[i]:
 			_apply_visuals(data.lines[i])
+	_stacking = false
 	fade_time = saved
 
 	var line := data.lines[last]
+	# 揺れは選んだコマのぶんだけ見せる。積み直しの途中のぶんは出さない
+	if line and line.shake > 0.0:
+		_shake(line.shake, line.shake_time)
 	_show_note(line)
 	if line == null or line.text.strip_edges() == "":
 		_window.visible = false
@@ -293,6 +314,7 @@ func preview(data: CutsceneData, index: int) -> void:
 ## プレビューを終う
 func end_preview() -> void:
 	_previewing = false
+	_stop_shake()
 	_backdrop.color.a = 0.0
 	_set_talking(CutsceneLine.Side.NONE)
 	visible = false
@@ -402,6 +424,8 @@ func _apply_visuals(line: CutsceneLine) -> void:
 	elif line.right:
 		_base_right = line.right
 	_apply_dim(line.speaking)
+	if line.shake > 0.0 and not _stacking:
+		_shake(line.shake, line.shake_time)
 	_rotate_speaker(line.speaking)
 
 
@@ -635,8 +659,17 @@ func _clear_all() -> void:
 		_kill_bg_hide_tween()
 		_bg_mat.set_shader_parameter("hide", 0.0)   # 次のイベントへ持ち越さない
 		_set_bg_pattern(bg_pattern)                 # 動かし方も既定へ戻す
+	_stop_shake()
 	_fade_backdrop(0.0)
 	await _wait_fixed(fade_time)
+
+
+## 揺らしても端に隙間が出ないよう、画面いっぱいの Control を四方へ広げる
+func _grow(rect: Control) -> void:
+	rect.offset_left = -SHAKE_MARGIN
+	rect.offset_top = -SHAKE_MARGIN
+	rect.offset_right = SHAKE_MARGIN
+	rect.offset_bottom = SHAKE_MARGIN
 
 
 func _screen() -> Vector2:
@@ -650,6 +683,7 @@ func _build_ui() -> void:
 	_backdrop.name = "Backdrop"
 	_backdrop.color = Color(backdrop_color, 0.0)
 	_backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_grow(_backdrop)
 	_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_backdrop)
 
@@ -658,6 +692,7 @@ func _build_ui() -> void:
 	_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_grow(_bg)
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bg.modulate.a = 0.0
 	add_child(_bg)
@@ -1086,6 +1121,51 @@ func _kill_bgm_tween() -> void:
 	if _bgm_tween and _bgm_tween.is_valid():
 		_bgm_tween.kill()
 	_bgm_tween = null
+
+
+# ─────────────────────────────── カメラ揺れ
+
+
+## 画面を揺らす。strength は振れ幅 (px)、time は収まるまでの秒数 (0 で既定)。
+## CanvasLayer の offset を動かすので、暗幕・背景・立ち絵・ウインドウが
+## まとめて揺れる。端に隙間が出ないよう、暗幕と背景は画面より大きく作ってある
+func _shake(strength: float, time: float) -> void:
+	if strength <= 0.0:
+		return
+	# 走っている揺れは止めてから始める。重ねると振れ幅が足し合わさって暴れる
+	_kill_shake()
+	# 位相をコマごとにずらす。同じ強さが続いても同じ揺れ方にならないように
+	_shake_phase = randf() * TAU
+	_shake_tween = create_tween()
+	_shake_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_shake_tween.tween_method(
+		_apply_shake.bind(strength), 1.0, 0.0,
+		maxf(time if time > 0.0 else shake_time, 0.05))
+	_shake_tween.finished.connect(func() -> void: offset = Vector2.ZERO)
+
+
+## 揺れの1フレームぶん。decay は 1 から 0 へ落ちてくる
+func _apply_shake(decay: float, strength: float) -> void:
+	var t := Time.get_ticks_msec() * 0.001 * shake_speed + _shake_phase
+	# 終わり際をすっと収めたいので、減衰は二乗で効かせる
+	var amp := strength * decay * decay
+	# 正弦ひとつだと往復運動に見えるので、比の合わないものを混ぜて崩す
+	var x := sin(t) * 0.7 + sin(t * 2.7 + 1.3) * 0.3
+	var y := cos(t * 1.37) * 0.7 + cos(t * 3.1 + 0.7) * 0.3
+	# 縦を控えめにすると、地面から突き上げるより「殴られた」に近くなる
+	offset = Vector2(x * amp, y * amp * 0.7)
+
+
+func _kill_shake() -> void:
+	if _shake_tween and _shake_tween.is_valid():
+		_shake_tween.kill()
+	_shake_tween = null
+
+
+## 揺れを止めて位置を戻す
+func _stop_shake() -> void:
+	_kill_shake()
+	offset = Vector2.ZERO
 
 
 # ─────────────────────────────── 背景を隠す効果
