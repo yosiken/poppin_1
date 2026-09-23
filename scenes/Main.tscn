@@ -151,4 +151,7 @@ script = ExtResource("20_pass")
 
 [node name="Cutscene" type="CanvasLayer" parent="." unique_id=923868755]
 script = ExtResource("36_hq6as")
-bg_mosaic_cells = 56.0
+bg_mosaic_cells = 48.0
+bg_cell_pulse = 0.01
+bg_drift_speed = 1.0
+bg_pattern = 1
