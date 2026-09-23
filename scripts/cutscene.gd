@@ -130,6 +130,11 @@ var _bg_mat: ShaderMaterial
 var _left: TextureRect
 var _right: TextureRect
 var _used_rects: Dictionary[Texture2D, Rect2] = {}
+## 暗幕と、背景の隠し具合で動いている Tween。
+## 立ち絵と同じく、古いものを止めてから新しいものを作る。
+## 止めずに重ねると、イベントが続いたときに前の指定が後から効いてしまう
+var _backdrop_tween: Tween
+var _bg_hide_tween: Tween
 ## 絵ごとに動いている出し入れの Tween。_fade_alpha() 参照
 var _fade_tweens: Dictionary[TextureRect, Tween] = {}
 ## そのコマで指定された立ち絵。ローテーションで差し替えても、
@@ -593,8 +598,10 @@ func _tween_value(rect: TextureRect, value: float) -> void:
 func _fade_backdrop(to: float) -> void:
 	if _backdrop == null:
 		return
+	if _backdrop_tween and _backdrop_tween.is_valid():
+		_backdrop_tween.kill()
 	_backdrop.color = Color(backdrop_color, _backdrop.color.a)
-	_tween(_backdrop, "color:a", to * backdrop_color.a, fade_time)
+	_backdrop_tween = _tween(_backdrop, "color:a", to * backdrop_color.a, fade_time)
 
 
 func _clear_all() -> void:
@@ -606,6 +613,8 @@ func _clear_all() -> void:
 	for r in [_left, _right, _bg]:
 		_fade_texture(r, null)
 	if _bg_mat:
+		# 走っている Tween を止めてから書く。止めないと直後に上書きされる
+		_kill_bg_hide_tween()
 		_bg_mat.set_shader_parameter("hide", 0.0)   # 次のイベントへ持ち越さない
 	_fade_backdrop(0.0)
 	await _wait_fixed(fade_time)
@@ -1085,4 +1094,11 @@ func _setup_bg_material() -> void:
 func _fade_bg_hide(to: float) -> void:
 	if _bg_mat == null:
 		return
-	_tween(_bg_mat, "shader_parameter/hide", clampf(to, 0.0, 1.0), fade_time)
+	_kill_bg_hide_tween()
+	_bg_hide_tween = _tween(_bg_mat, "shader_parameter/hide", clampf(to, 0.0, 1.0), fade_time)
+
+
+func _kill_bg_hide_tween() -> void:
+	if _bg_hide_tween and _bg_hide_tween.is_valid():
+		_bg_hide_tween.kill()
+	_bg_hide_tween = null
