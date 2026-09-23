@@ -67,16 +67,16 @@ const SHAKE_MARGIN := 56
 @export var bg_hide_shader: Shader
 ## hide=1 のときの目の粗さ（画面の分割数）。小さいほど粗い。
 ## 細かいと元の絵の縮小版にしかならず、隠せない
-@export_range(2.0, 120.0, 1.0) var bg_mosaic_cells := 14.0
+@export_range(2.0, 120.0, 1.0) var bg_mosaic_cells := 48.0
 ## 目の位置がずれる量（セル何個ぶんか）
 @export_range(0.0, 1.0, 0.05) var bg_grid_drift := 0.5
 ## 目の大きさが伸び縮みする割合
-@export_range(0.0, 0.5, 0.01) var bg_cell_pulse := 0.08
+@export_range(0.0, 0.5, 0.01) var bg_cell_pulse := 0.01
 ## 動きの速さ。どの動かし方でも共通で効く
-@export_range(0.0, 2.0, 0.05) var bg_drift_speed := 0.4
+@export_range(0.0, 2.0, 0.05) var bg_drift_speed := 1.0
 ## 目の動かし方の既定。0=流れる 1=中心から拡縮 2=中心から放射。
 ## コマ側 (CutsceneLine.bg_pattern) で指定があればそちらが優先される
-@export_range(0, 2, 1) var bg_pattern := 0
+@export_range(0, 2, 1) var bg_pattern := 1
 ## 「中心から拡縮」で目が伸び縮みする割合。0.45 で 0.55〜1.45 倍を往復する
 @export_range(0.0, 0.9, 0.05) var bg_scale_amount := 0.45
 ## 「中心から放射」で輪が外へ流れる速さ
