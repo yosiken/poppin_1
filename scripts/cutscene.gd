@@ -66,10 +66,10 @@ const BG_HIDE_SHADER := "res://resources/shader/event_bg_hide.gdshader"
 @export_range(4.0, 240.0, 1.0) var bg_mosaic_cells := 28.0
 ## 隠すための覆いの色
 @export var bg_veil_color := Color(0.06, 0.07, 0.12, 1.0)
-## 覆いへ寄せる割合。1 で完全な単色になる
-@export_range(0.0, 1.0, 0.05) var bg_veil_amount := 0.8
+## 覆いへ寄せる割合。1 にすると元の絵は一切残らない
+@export_range(0.0, 1.0, 0.01) var bg_veil_amount := 0.92
 ## 色を抜く割合
-@export_range(0.0, 1.0, 0.05) var bg_desaturate := 0.8
+@export_range(0.0, 1.0, 0.05) var bg_desaturate := 1.0
 ## ボケの広がり (px)
 @export_range(0.0, 16.0, 0.5) var bg_blur_px := 4.0
 ## 隠している間の揺らぎの速さ
