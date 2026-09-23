@@ -187,6 +187,7 @@ func _copy_fx(src: CutsceneLine, dst: CutsceneLine) -> void:
 	dst.clear_right = src.clear_right
 	dst.background = src.background
 	dst.clear_background = src.clear_background
+	dst.bg_hide = src.bg_hide
 	dst.slide_in = src.slide_in
 	dst.auto_advance = src.auto_advance
 	dst.delay = src.delay
@@ -206,7 +207,8 @@ func _has_fx(l: CutsceneLine) -> bool:
 		or l.clear_left or l.clear_right or not l.slide_in \
 		or l.auto_advance > 0.0 or l.delay > 0.0 \
 		or l.popup != null \
-		or l.bgm != null or l.bgm_stop or l.sfx != null
+		or l.bgm != null or l.bgm_stop or l.sfx != null \
+		or l.bg_hide >= 0.0
 
 
 ## .tres の先頭行から uid="uid://..." を取り出す。無ければ空文字

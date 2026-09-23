@@ -22,6 +22,9 @@ const POPUP_PAD := 6
 const POPUP_SHARD_COLS := 3
 const POPUP_SHARD_ROWS := 2
 
+## 背景を隠すシェーダーの既定の置き場
+const BG_HIDE_SHADER := "res://resources/shader/event_bg_hide.gdshader"
+
 @export_group("Layout")
 ## テキストウインドウの高さ (px)
 @export_range(80, 600, 10) var window_height := 220
@@ -55,6 +58,18 @@ const POPUP_SHARD_ROWS := 2
 @export_range(0.02, 0.5, 0.01) var blink_hold := 0.12
 ## 口パクの開閉間隔 (秒)
 @export_range(0.02, 0.5, 0.01) var talk_step := 0.09
+
+@export_group("Background Effect")
+## 背景を隠すシェーダー。未指定なら BG_HIDE_SHADER を読む
+@export var bg_hide_shader: Shader
+## hide=1 のときのモザイクの粗さ（画像の分割数）。小さいほど粗い
+@export_range(8.0, 240.0, 1.0) var bg_mosaic_cells := 40.0
+## hide=1 のときのボケの広がり (px)
+@export_range(0.0, 16.0, 0.5) var bg_blur_px := 4.0
+## 隠している間の揺らぎの速さ
+@export_range(0.0, 2.0, 0.05) var bg_drift_speed := 0.4
+## 隠している間の揺らぎの大きさ
+@export_range(0.0, 0.05, 0.001) var bg_drift_amount := 0.005
 
 @export_group("Audio")
 ## BGMの切り替え・停止にかける既定の秒数。コマ側の bgm_fade が 0 のとき使う
@@ -109,6 +124,8 @@ var _line_sfx: AudioStreamPlayer
 ## 後ろのゲーム画面を隠す暗幕。_bg より奥に置く
 var _backdrop: ColorRect
 var _bg: TextureRect
+## _bg に噛ませたシェーダー。読めなかった場合は null（効果なしで動く）
+var _bg_mat: ShaderMaterial
 var _left: TextureRect
 var _right: TextureRect
 var _used_rects: Dictionary[Texture2D, Rect2] = {}
@@ -350,6 +367,8 @@ func _apply_visuals(line: CutsceneLine) -> void:
 		_fade_texture(_bg, null)
 	elif line.background:
 		_fade_texture(_bg, line.background)
+	if line.bg_hide >= 0.0:
+		_fade_bg_hide(line.bg_hide)
 
 	_show_popup(line)
 	_update_portrait(_left, line.left, line.clear_left, line.slide_in, true)
@@ -539,7 +558,7 @@ func _fade_texture(rect: TextureRect, tex: Texture2D) -> void:
 
 
 ## pause 中でも進む Tween を作る
-func _tween(node: Node, prop: String, to: Variant, time: float) -> Tween:
+func _tween(node: Object, prop: String, to: Variant, time: float) -> Tween:
 	if node == null:
 		return null
 	var tw := create_tween()
@@ -571,6 +590,8 @@ func _clear_all() -> void:
 		_note_box.visible = false
 	for r in [_left, _right, _bg]:
 		_fade_texture(r, null)
+	if _bg_mat:
+		_bg_mat.set_shader_parameter("hide", 0.0)   # 次のイベントへ持ち越さない
 	_fade_backdrop(0.0)
 	await _wait_fixed(fade_time)
 
@@ -597,6 +618,7 @@ func _build_ui() -> void:
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bg.modulate.a = 0.0
 	add_child(_bg)
+	_setup_bg_material()
 
 	_left = _make_portrait("PortraitLeft", true)
 	_right = _make_portrait("PortraitRight", false)
@@ -1021,3 +1043,31 @@ func _kill_bgm_tween() -> void:
 	if _bgm_tween and _bgm_tween.is_valid():
 		_bgm_tween.kill()
 	_bgm_tween = null
+
+
+# ─────────────────────────────── 背景を隠す効果
+
+
+## 背景にシェーダーを噛ませる。読めなければ何もしない（効果なしで動く）
+func _setup_bg_material() -> void:
+	var sh := bg_hide_shader
+	if sh == null:
+		sh = load(BG_HIDE_SHADER) as Shader
+	if sh == null:
+		push_warning("Cutscene: 背景シェーダーが読めません: %s" % BG_HIDE_SHADER)
+		return
+	_bg_mat = ShaderMaterial.new()
+	_bg_mat.shader = sh
+	_bg_mat.set_shader_parameter("hide", 0.0)
+	_bg_mat.set_shader_parameter("mosaic_cells", bg_mosaic_cells)
+	_bg_mat.set_shader_parameter("blur_px", bg_blur_px)
+	_bg_mat.set_shader_parameter("drift_speed", bg_drift_speed)
+	_bg_mat.set_shader_parameter("drift_amount", bg_drift_amount)
+	_bg.material = _bg_mat
+
+
+## 隠し具合を変える。他の切り替えと同じ尺でなじませる
+func _fade_bg_hide(to: float) -> void:
+	if _bg_mat == null:
+		return
+	_tween(_bg_mat, "shader_parameter/hide", clampf(to, 0.0, 1.0), fade_time)

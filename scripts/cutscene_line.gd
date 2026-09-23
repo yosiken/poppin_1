@@ -41,6 +41,10 @@ enum PopupKind { TALK, MISS }
 @export var background: Texture2D
 ## 背景を消す（暗転）
 @export var clear_background := false
+## 背景を隠す強さ。-1 なら変えない（前のコマの状態が続く）。
+## 0 で素通し、1 でモザイクとボケで完全に隠す。
+## ヒント中は隠しておき、正体が分かるコマで 0 に戻す、といった使い方をする
+@export_range(-1.0, 1.0, 0.05) var bg_hide := -1.0
 
 # ─────────────────────────────── ポップアップ（カットイン）
 @export_group("Popup")

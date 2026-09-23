@@ -58,6 +58,7 @@ var _background: OptionButton
 var _popup: OptionButton
 var _popup_kind: OptionButton
 var _popup_hold: SpinBox
+var _bg_hide: SpinBox
 var _bgm: OptionButton
 var _bgm_stop: CheckBox
 var _bgm_fade: SpinBox
@@ -273,7 +274,8 @@ func _mark(line: CutsceneLine) -> String:
 		or line.clear_left or line.clear_right or not line.slide_in \
 		or line.auto_advance > 0.0 or line.delay > 0.0 \
 		or line.popup != null \
-		or line.bgm != null or line.bgm_stop or line.sfx != null
+		or line.bgm != null or line.bgm_stop or line.sfx != null \
+		or line.bg_hide >= 0.0
 	return ("＋" if line.inserted else "　") \
 		+ ("※" if line.note != "" else "　") \
 		+ ("●" if fx else "　")
@@ -315,6 +317,7 @@ func _select_line(index: int) -> void:
 	_set_simple(_popup, line.popup, _popups)
 	_popup_kind.selected = line.popup_kind
 	_popup_hold.value = line.popup_hold
+	_bg_hide.value = line.bg_hide
 	_set_simple(_bgm, line.bgm, _bgms)
 	_bgm_stop.button_pressed = line.bgm_stop
 	_bgm_fade.value = line.bgm_fade
@@ -498,6 +501,14 @@ func _on_popup_hold_changed(value: float) -> void:
 	if _loading or line == null:
 		return
 	line.popup_hold = value
+	_touch()
+
+
+func _on_bg_hide_changed(value: float) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.bg_hide = value
 	_touch()
 
 
@@ -807,6 +818,10 @@ func _build_detail() -> Control:
 	_popup_hold = _spin(0.0, 5.0, 0.1)
 	_popup_hold.value_changed.connect(_on_popup_hold_changed)
 	_detail.add_child(_labeled("ポップアップ表示 秒 (0=既定)", _popup_hold))
+
+	_bg_hide = _spin(-1.0, 1.0, 0.05)
+	_bg_hide.value_changed.connect(_on_bg_hide_changed)
+	_detail.add_child(_labeled("背景を隠す 0〜1 (-1=変えない)", _bg_hide))
 
 	_bgm = OptionButton.new()
 	_fill_simple(_bgm, _bgms, "（変えない）")
