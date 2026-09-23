@@ -821,7 +821,7 @@ func _build_detail() -> Control:
 
 	_bg_hide = _spin(-1.0, 1.0, 0.05)
 	_bg_hide.value_changed.connect(_on_bg_hide_changed)
-	_detail.add_child(_labeled("背景を隠す 0〜1 (-1=変えない)", _bg_hide))
+	_detail.add_child(_labeled("背景を隠す割合 0〜1 (-1=変えない)", _bg_hide))
 
 	_bgm = OptionButton.new()
 	_fill_simple(_bgm, _bgms, "（変えない）")

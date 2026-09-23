@@ -62,15 +62,15 @@ const BG_HIDE_SHADER := "res://resources/shader/event_bg_hide.gdshader"
 @export_group("Background Effect")
 ## 背景を隠すシェーダー。未指定なら BG_HIDE_SHADER を読む
 @export var bg_hide_shader: Shader
-## hide=1 のときのモザイクの粗さ（画像の分割数）。小さいほど粗い
+## モザイクの粗さ（画像の分割数）。小さいほど粗い
 @export_range(4.0, 240.0, 1.0) var bg_mosaic_cells := 28.0
 ## 隠すための覆いの色
 @export var bg_veil_color := Color(0.06, 0.07, 0.12, 1.0)
-## hide=1 のときに覆いへ寄せる割合。実際の隠れ具合はここで決まる
-@export_range(0.0, 1.0, 0.05) var bg_veil_amount := 0.75
-## hide=1 のときに色を抜く割合
-@export_range(0.0, 1.0, 0.05) var bg_desaturate := 0.65
-## hide=1 のときのボケの広がり (px)
+## 覆いへ寄せる割合。1 で完全な単色になる
+@export_range(0.0, 1.0, 0.05) var bg_veil_amount := 0.8
+## 色を抜く割合
+@export_range(0.0, 1.0, 0.05) var bg_desaturate := 0.8
+## ボケの広がり (px)
 @export_range(0.0, 16.0, 0.5) var bg_blur_px := 4.0
 ## 隠している間の揺らぎの速さ
 @export_range(0.0, 2.0, 0.05) var bg_drift_speed := 0.4
