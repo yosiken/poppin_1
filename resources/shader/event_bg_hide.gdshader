@@ -15,7 +15,7 @@ shader_type canvas_item;
 // 止め絵にすると読み込みに失敗した絵や固まった画面と区別がつかないので、
 // 常に動かしている。動かすのは目の位置と大きさの2つ。色は触らない。
 //
-// 出力は MODULATE を掛ける。COLOR を掛けてはいけない（末尾の注記を参照）。
+// 出力に COLOR を掛けてはいけない（末尾の注記を参照）。
 //
 
 // 隠す強さ。0 で素通し、1 で mosaic_cells の粗さ
@@ -54,10 +54,14 @@ void fragment() {
 		rgb = texture(TEXTURE, uv).rgb;
 	}
 
-	// 掛けるのは MODULATE であって COLOR ではない。
-	// fragment に入ってくる COLOR は texture(TEXTURE, UV) * modulate が
-	// 既に入っている。ここで COLOR を掛けると、取り直したモザイクに
-	// 元の絵がもう一度掛かり、混ざったうえに暗くなる。
-	// 自分でテクスチャを取り直すシェーダーは MODULATE を使うこと
-	COLOR = vec4(rgb, src.a) * MODULATE;
+	// 色は取り直したものをそのまま出す。COLOR を掛けてはいけない。
+	// fragment に入ってくる COLOR には texture(TEXTURE, UV) * modulate が
+	// 既に入っているので、掛けると元の絵がもう一度掛かり、
+	// モザイクに元絵が混ざったうえ、暗くなる。
+	//
+	// 透明度だけは COLOR.a を使う。ここには modulate の alpha が
+	// 入っているので、Cutscene 側のフェード（modulate.a を動かす）が
+	// そのまま効く。alpha は元の絵の位置のものを使うので、
+	// モザイクで端がにじむこともない
+	COLOR = vec4(rgb, COLOR.a);
 }
