@@ -37,7 +37,7 @@
 [ext_resource type="PackedScene" uid="uid://bck8a0allkbw8" path="res://scenes/stages/Stage09.tscn" id="st09"]
 [ext_resource type="PackedScene" uid="uid://b4k5ycujv3f7s" path="res://scenes/stages/Stage10.tscn" id="st10"]
 
-[sub_resource type="Curve" id="Curve_kxyth"]
+[sub_resource type="Curve" id="Curve_hq6as"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
@@ -88,7 +88,7 @@ land_effect_scale = 0.9
 
 [node name="Trail" type="Line2D" parent="Player" unique_id=721328804]
 show_behind_parent = true
-width_curve = SubResource("Curve_kxyth")
+width_curve = SubResource("Curve_hq6as")
 gradient = SubResource("Gradient_g6wdg")
 joint_mode = 2
 begin_cap_mode = 2
@@ -151,5 +151,4 @@ script = ExtResource("20_pass")
 
 [node name="Cutscene" type="CanvasLayer" parent="." unique_id=923868755]
 script = ExtResource("36_hq6as")
-bg_veil_amount = 1.0
-bg_desaturate = 1.0
+bg_mosaic_cells = 56.0

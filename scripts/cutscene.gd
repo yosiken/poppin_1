@@ -130,6 +130,8 @@ var _bg_mat: ShaderMaterial
 var _left: TextureRect
 var _right: TextureRect
 var _used_rects: Dictionary[Texture2D, Rect2] = {}
+## 絵ごとに動いている出し入れの Tween。_fade_alpha() 参照
+var _fade_tweens: Dictionary[TextureRect, Tween] = {}
 ## そのコマで指定された立ち絵。ローテーションで差し替えても、
 ## 次の切り替え先を決める基準はこちらを見る
 var _base_left: Texture2D
@@ -402,7 +404,7 @@ func _update_portrait(rect: TextureRect, tex: Texture2D, clear: bool,
 		rect.position.x += -offset if is_left else offset
 		rect.modulate.a = 0.0
 		_tween(rect, "position:x", _portrait_x(rect, is_left), fade_time)
-	_tween(rect, "modulate:a", 1.0, fade_time)
+	_fade_alpha(rect, 1.0, fade_time)
 
 
 func _set_talking(speaking: int) -> void:
@@ -539,7 +541,7 @@ func _apply_dim(speaking: int) -> void:
 
 func _fade_texture(rect: TextureRect, tex: Texture2D) -> void:
 	if tex == null:
-		var t := _tween(rect, "modulate:a", 0.0, fade_time)
+		var t := _fade_alpha(rect, 0.0, fade_time)
 		if t:
 			t.finished.connect(func() -> void:
 				if rect.modulate.a <= 0.01:
@@ -548,14 +550,26 @@ func _fade_texture(rect: TextureRect, tex: Texture2D) -> void:
 	if rect.texture == null:
 		rect.texture = tex
 		rect.modulate.a = 0.0
-		_tween(rect, "modulate:a", 1.0, fade_time)
+		_fade_alpha(rect, 1.0, fade_time)
 		return
 	# 既に何か出ているときは一度落としてから差し替える（簡易クロスフェード）
-	var t2 := _tween(rect, "modulate:a", 0.0, fade_time * 0.5)
+	var t2 := _fade_alpha(rect, 0.0, fade_time * 0.5)
 	if t2:
 		t2.finished.connect(func() -> void:
 			rect.texture = tex
-			_tween(rect, "modulate:a", 1.0, fade_time * 0.5))
+			_fade_alpha(rect, 1.0, fade_time * 0.5))
+
+
+## 絵の出し入れ（modulate:a）の Tween。同じ絵に対しては常に最新の1本だけを生かす。
+## 前のフェードを残すと、消すフェードの終わりで絵を外す処理が、
+## 後から差し込んだ立ち絵まで外してしまう（イベントを続けて流したときに起きる）
+func _fade_alpha(rect: TextureRect, to: float, time: float) -> Tween:
+	var old: Tween = _fade_tweens.get(rect)
+	if old and old.is_valid():
+		old.kill()
+	var tw := _tween(rect, "modulate:a", to, time)
+	_fade_tweens[rect] = tw
+	return tw
 
 
 ## pause 中でも進む Tween を作る

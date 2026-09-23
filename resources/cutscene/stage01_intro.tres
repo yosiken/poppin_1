@@ -17,7 +17,6 @@ text = "まずは一つ目。ヒント出すで"
 speaking = 1
 left = ExtResource("2_le35o")
 background = ExtResource("2_6kvyc")
-bg_hide = null
 bgm = ExtResource("3_n6p1y")
 
 [sub_resource type="Resource" id="Resource_le35o"]
@@ -26,7 +25,6 @@ speaker = "OB"
 text = "ヒント？"
 speaking = 2
 right = ExtResource("3_4xutf")
-bg_hide = null
 
 [sub_resource type="Resource" id="Resource_4xutf"]
 script = ExtResource("1_ycfur")
@@ -34,14 +32,12 @@ speaker = "カニエナガ"
 text = "奈良生まれ。透きとおった液体や"
 speaking = 1
 background = ExtResource("6_ckeky")
-bg_hide = null
 
 [sub_resource type="Resource" id="Resource_n6p1y"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "……水？"
 speaking = 2
-bg_hide = null
 popup = ExtResource("4_le35o")
 popup_kind = 1
 
@@ -50,14 +46,12 @@ script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
 text = "水であそこまで喜ぶやつおらんわ"
 speaking = 1
-bg_hide = null
 
 [sub_resource type="Resource" id="Resource_6kvyc"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "じゃあ何なの"
 speaking = 2
-bg_hide = null
 
 [sub_resource type="Resource" id="Resource_ckeky"]
 script = ExtResource("1_ycfur")
@@ -65,28 +59,24 @@ speaker = "カニエナガ"
 text = "言わん。見たら分かる"
 speaking = 1
 background = ExtResource("2_4xutf")
-bg_hide = null
 
 [sub_resource type="Resource" id="Resource_fwekl"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "もったいぶるなぁ"
 speaking = 2
-bg_hide = null
 
 [sub_resource type="Resource" id="Resource_ouica"]
 script = ExtResource("1_ycfur")
 speaker = "カニエナガ"
 text = "なんや、ちょっと飲みたそうな顔しとるぞ"
 speaking = 1
-bg_hide = null
 
 [sub_resource type="Resource" id="Resource_gq6qb"]
 script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "してないよ"
 speaking = 2
-bg_hide = null
 bgm_stop = true
 
 [resource]

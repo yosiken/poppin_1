@@ -16,9 +16,6 @@ text = "…………！"
 speaking = 2
 right = ExtResource("2_5wwyp")
 background = ExtResource("2_h1pga")
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_5wwyp"]
 script = ExtResource("1_ygqeh")
@@ -26,9 +23,6 @@ speaker = "カニエナガ"
 text = "お？"
 speaking = 1
 left = ExtResource("3_1ilod")
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_1ilod"]
 script = ExtResource("1_ygqeh")
@@ -36,74 +30,50 @@ speaker = "OB"
 text = "これ……お酒だ。日本酒の瓶……"
 speaking = 2
 background = ExtResource("5_hbbsx")
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_h1pga"]
 script = ExtResource("1_ygqeh")
 speaker = "カニエナガ"
 text = "ラベル、読んでみ"
 speaking = 1
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_hbbsx"]
 script = ExtResource("1_ygqeh")
 speaker = "OB"
 text = "……『風の林』"
 speaking = 2
-bg_hide = null
 popup = ExtResource("4_5wwyp")
 popup_hold = 1.5
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_oqwq2"]
 script = ExtResource("1_ygqeh")
 speaker = "カニエナガ"
 text = "思い出したか？"
 speaking = 1
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_6k0rt"]
 script = ExtResource("1_ygqeh")
 speaker = "OB"
 text = "わからない。でも……"
 speaking = 2
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_3377l"]
 script = ExtResource("1_ygqeh")
 speaker = "カニエナガ"
 text = "でも？"
 speaking = 1
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_cuxgv"]
 script = ExtResource("1_ygqeh")
 speaker = "OB"
 text = "体が震える。これは絶対に私が好きなやつ！"
 speaking = 2
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_8fbim"]
 script = ExtResource("1_ygqeh")
 speaker = "カニエナガ"
 text = "本能だけ戻ったな"
 speaking = 1
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_5c2cr"]
 script = ExtResource("1_ygqeh")
@@ -111,36 +81,24 @@ speaker = "OB"
 text = "奈良の……一番好きな日本酒だった気がする"
 speaking = 2
 background = ExtResource("7_hbbsx")
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_g1inb"]
 script = ExtResource("1_ygqeh")
 speaker = "カニエナガ"
 text = "よし、記憶が一つ戻ったで"
 speaking = 1
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_nceck"]
 script = ExtResource("1_ygqeh")
 speaker = "OB"
 text = "これ、ちょっと飲んでいい？"
 speaking = 2
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [sub_resource type="Resource" id="Resource_2nkvs"]
 script = ExtResource("1_ygqeh")
 speaker = "カニエナガ"
 text = "これからが本番やのに飲むな！"
 speaking = 1
-bg_hide = null
-bgm_stop = null
-bgm_fade = null
 
 [resource]
 script = ExtResource("4_h1pga")
