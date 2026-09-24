@@ -1,0 +1,123 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://cl1lu8kh6q4ft"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_x8uju"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_5o0ow"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_hgvhn"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_5qr67"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_5o0ow"]
+[ext_resource type="Texture2D" uid="uid://yb7jpspa1jf0" path="res://resources/texture/BG/event/BG-05.png" id="5_2cma1"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="6_2gm1v"]
+[ext_resource type="Texture2D" uid="uid://bh57y503sxtsj" path="res://resources/texture/event/popup/MISS-04.png" id="6_kebiv"]
+[ext_resource type="Texture2D" uid="uid://c4hvo4prsmriy" path="res://resources/texture/OB_e.png" id="7_2cma1"]
+
+[sub_resource type="Resource" id="Resource_x8uju"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "三つ目のヒントいくで"
+speaking = 1
+left = ExtResource("2_hgvhn")
+background = ExtResource("2_5o0ow")
+
+[sub_resource type="Resource" id="Resource_hgvhn"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "はいはい"
+speaking = 2
+right = ExtResource("3_5qr67")
+
+[sub_resource type="Resource" id="Resource_5qr67"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "赤い。足が多い。殻がある"
+speaking = 1
+background = ExtResource("5_2cma1")
+bg_hide = 1.0
+bg_pattern = 0
+fade = 4
+fade_sec = 3.0
+
+[sub_resource type="Resource" id="Resource_5o0ow"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "……カニエナガ？"
+speaking = 2
+popup = ExtResource("6_kebiv")
+popup_kind = 1
+bgm = ExtResource("6_2gm1v")
+
+[sub_resource type="Resource" id="Resource_2cma1"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "ワイちゃうわ！"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_kebiv"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "えー"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_2gm1v"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "最後まで聞け。湯気が立っとって、めちゃくちゃ高い"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_xvrql"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "…………"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_s816i"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "どうした、顔がにやけとるぞ"
+speaking = 1
+right = ExtResource("7_2cma1")
+shake = 10.0
+shake_time = 2.0
+
+[sub_resource type="Resource" id="Resource_cetr6"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "なんか……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_3citv"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "なんや？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_v1r8m"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "すごくほじりたい"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_2cx7o"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "もう答え言うてるようなもんやん"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_20j3p"]
+script = ExtResource("1_x8uju")
+speaker = "OB"
+text = "早く行こう！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_76hai"]
+script = ExtResource("1_x8uju")
+speaker = "カニエナガ"
+text = "急に元気になったな……"
+speaking = 1
+fade = 1
+fade_sec = 3.0
+bgm_stop = true
+bgm_fade = 3.0
+
+[resource]
+script = ExtResource("4_5o0ow")
+lines = Array[ExtResource("1_x8uju")]([SubResource("Resource_x8uju"), SubResource("Resource_hgvhn"), SubResource("Resource_5qr67"), SubResource("Resource_5o0ow"), SubResource("Resource_2cma1"), SubResource("Resource_kebiv"), SubResource("Resource_2gm1v"), SubResource("Resource_xvrql"), SubResource("Resource_s816i"), SubResource("Resource_cetr6"), SubResource("Resource_3citv"), SubResource("Resource_v1r8m"), SubResource("Resource_2cx7o"), SubResource("Resource_20j3p"), SubResource("Resource_76hai")])

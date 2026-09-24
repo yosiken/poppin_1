@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/bg_layer.gd" id="1_bg"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/bg_a_01.png" id="tex_a"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/bg_b_01.png" id="tex_b"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/bg_c_01.png" id="tex_c"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/bg_d_01.png" id="tex_d"]
+
+[node name="Background" type="Node2D"]
+z_index = -500
+y_sort_enabled = false
+
+[node name="Sky" type="Parallax2D" parent="."]
+script = ExtResource("1_bg")
+texture = ExtResource("tex_d")
+cover_screen = true
+anchor_y = 0.5
+parallax = Vector2(0.03, 1.0)
+flow = Vector2(-4, 0)
+repeat_x = true
+
+[node name="Far" type="Parallax2D" parent="."]
+script = ExtResource("1_bg")
+texture = ExtResource("tex_c")
+cover_screen = true
+anchor_y = 0.5
+parallax = Vector2(0.08, 1.0)
+repeat_x = true
+raster = true
+raster_amplitude = 3.0
+raster_wavelength = 18.0
+raster_speed = 1.5
+raster_from = 0.56
+raster_to = 1.0
+
+[node name="Mid" type="Parallax2D" parent="."]
+script = ExtResource("1_bg")
+texture = ExtResource("tex_b")
+tint = Color(1, 1, 1, 0.85)
+zoom = 2.007435
+anchor_y = 0.1
+parallax = Vector2(0.25, 1.0)
+repeat_x = true
+
+[node name="Near" type="Parallax2D" parent="."]
+script = ExtResource("1_bg")
+texture = ExtResource("tex_a")
+zoom = 2.007435
+anchor_y = 1.0
+image_offset = Vector2(0, 230)
+parallax = Vector2(0.55, 1.0)
+repeat_x = true

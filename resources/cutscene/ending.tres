@@ -1,0 +1,73 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://chj2dx3pijim5"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_3jl66"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_k0l5e"]
+[ext_resource type="Texture2D" uid="uid://bu2fwws6bwau0" path="res://resources/texture/BG/event/BG-white.png" id="2_oc4by"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_5a5rl"]
+[ext_resource type="Texture2D" uid="uid://drbxy3etw8peb" path="res://resources/texture/BG/event/BG-01.png" id="4_1xhdg"]
+[ext_resource type="Texture2D" uid="uid://dkqugc8vwcy2m" path="res://resources/texture/event/popup/POP-04.png" id="5_0bwdq"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="6_bcojw"]
+
+[sub_resource type="Resource" id="Resource_3jl66"]
+script = ExtResource("1_3jl66")
+speaker = "OB"
+text = "…………ん？"
+speaking = 2
+right = ExtResource("2_k0l5e")
+background = ExtResource("2_oc4by")
+note = "演出：光に包まれるOB"
+
+[sub_resource type="Resource" id="Resource_k0l5e"]
+script = ExtResource("1_3jl66")
+speaker = "OB"
+text = "……夢だったの？"
+speaking = 2
+background = ExtResource("4_1xhdg")
+note = "演出：目を覚ます
+演出：自分の部屋
+演出：ベッドの上
+演出：肩にはいつもの小さなシマエナガ"
+
+[sub_resource type="Resource" id="Resource_5a5rl"]
+script = ExtResource("1_3jl66")
+speaker = "OB"
+text = "……そっか"
+speaking = 2
+note = "演出：肩のシマエナガは「チュン」と鳴くだけ
+演出：と鳴くだけ"
+
+[sub_resource type="Resource" id="Resource_7h71w"]
+script = ExtResource("1_3jl66")
+speaker = "OB"
+text = "いったぁぁぁぁぁ！！"
+speaking = 2
+popup = ExtResource("5_0bwdq")
+note = "演出：OBは少し寂しそうに笑う
+演出：そしてベッドから立ち上がる
+演出：ゴンッ！"
+
+[sub_resource type="Resource" id="Resource_oc4by"]
+script = ExtResource("1_3jl66")
+speaker = "OB"
+text = "もう二度とお酒飲まない……"
+speaking = 2
+note = "演出：画面暗転
+演出：しばらくして、"
+
+[sub_resource type="Resource" id="Resource_1xhdg"]
+script = ExtResource("1_3jl66")
+speaker = "OB"
+text = "…………いや、飲むわ"
+speaking = 2
+background = ExtResource("6_bcojw")
+note = "演出：間。………"
+
+[sub_resource type="Resource" id="Resource_0bwdq"]
+script = ExtResource("1_3jl66")
+speaker = "オビラーたち"
+text = "大丈夫？結婚する？"
+note = "演出：THE END"
+
+[resource]
+script = ExtResource("3_5a5rl")
+lines = Array[ExtResource("1_3jl66")]([SubResource("Resource_3jl66"), SubResource("Resource_k0l5e"), SubResource("Resource_5a5rl"), SubResource("Resource_7h71w"), SubResource("Resource_oc4by"), SubResource("Resource_1xhdg"), SubResource("Resource_0bwdq")])

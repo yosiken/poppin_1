@@ -1,0 +1,95 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://brsrlytkeew0i"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_x8fab"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_br8eg"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_p2xug"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_gujyp"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="3_l5hxo"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_br8eg"]
+[ext_resource type="Texture2D" uid="uid://d1f6nrewu4dhj" path="res://resources/texture/BG/event/BG-06.png" id="5_8p4s8"]
+[ext_resource type="Texture2D" uid="uid://cb3krt826ks2q" path="res://resources/texture/event/popup/POP-11.png" id="6_qbr27"]
+[ext_resource type="Texture2D" uid="uid://crp173i7rxh13" path="res://resources/texture/OB_b.png" id="7_qbr27"]
+[ext_resource type="Texture2D" uid="uid://c4hvo4prsmriy" path="res://resources/texture/OB_e.png" id="8_l5hxo"]
+
+[sub_resource type="Resource" id="Resource_x8fab"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "これ……弾ける！"
+speaking = 2
+right = ExtResource("2_p2xug")
+background = ExtResource("2_br8eg")
+fade = 5
+shake = 30.0
+shake_time = 2.0
+bgm = ExtResource("3_l5hxo")
+
+[sub_resource type="Resource" id="Resource_p2xug"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "おお！"
+speaking = 1
+left = ExtResource("3_gujyp")
+
+[sub_resource type="Resource" id="Resource_gujyp"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "ウクレレだ！　私、これ使ってた！"
+speaking = 2
+background = ExtResource("5_8p4s8")
+fade = 2
+fade_sec = 3.0
+
+[sub_resource type="Resource" id="Resource_br8eg"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "やっとちゃんとした記憶が戻ったな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_8p4s8"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "名前も思い出した。『レッドアイ田中』"
+speaking = 2
+right = ExtResource("7_qbr27")
+shake = 20.0
+shake_time = 1.0
+popup = ExtResource("6_qbr27")
+
+[sub_resource type="Resource" id="Resource_qbr27"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "それや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_l5hxo"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "赤いから……レッドアイ……なのかな"
+speaking = 2
+right = ExtResource("8_l5hxo")
+
+[sub_resource type="Resource" id="Resource_bpheo"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "うん"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_oaua2"]
+script = ExtResource("1_x8fab")
+speaker = "OB"
+text = "田中は誰やねん"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_wy0qh"]
+script = ExtResource("1_x8fab")
+speaker = "カニエナガ"
+text = "ホンマに誰やねん！"
+speaking = 1
+fade = 1
+fade_sec = 3.0
+bgm_stop = true
+bgm_fade = 3.0
+
+[resource]
+script = ExtResource("4_br8eg")
+lines = Array[ExtResource("1_x8fab")]([SubResource("Resource_x8fab"), SubResource("Resource_p2xug"), SubResource("Resource_gujyp"), SubResource("Resource_br8eg"), SubResource("Resource_8p4s8"), SubResource("Resource_qbr27"), SubResource("Resource_l5hxo"), SubResource("Resource_bpheo"), SubResource("Resource_oaua2"), SubResource("Resource_wy0qh")])

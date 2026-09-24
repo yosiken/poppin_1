@@ -1,0 +1,138 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://clbequ4bft763"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_58fq2"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_pgf5g"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_rldng"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_blccb"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="5_74h8k"]
+[ext_resource type="Texture2D" uid="uid://bipjwo4yrnqj2" path="res://resources/texture/BG/event/BG-11.png" id="7_3k5n3"]
+[ext_resource type="Texture2D" uid="uid://dkwr2qmqo0v4e" path="res://resources/texture/BG/event/BG-20.png" id="7_74h8k"]
+[ext_resource type="Texture2D" uid="uid://bujlgj1uy1kb4" path="res://resources/texture/event/popup/MISS-07.png" id="91_art"]
+
+[sub_resource type="Resource" id="Resource_58fq2"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "だいぶ来たな"
+speaking = 1
+left = ExtResource("2_pgf5g")
+background = ExtResource("5_74h8k")
+
+[sub_resource type="Resource" id="Resource_pgf5g"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "次は？"
+speaking = 2
+right = ExtResource("3_rldng")
+
+[sub_resource type="Resource" id="Resource_rldng"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "ヒントいくで。握るもんや"
+speaking = 1
+background = ExtResource("7_3k5n3")
+
+[sub_resource type="Resource" id="Resource_blccb"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "握る……おにぎり？"
+speaking = 2
+popup = ExtResource("91_art")
+popup_kind = 1
+
+[sub_resource type="Resource" id="Resource_74h8k"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "食いもんから離れろ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_3k5n3"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "じゃあ何"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_aqoq6"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "それに向かうとお前の十八番歌いたくなるやろな"
+speaking = 1
+background = ExtResource("7_3k5n3")
+
+[sub_resource type="Resource" id="Resource_0pyhc"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "歌！"
+speaking = 2
+background = ExtResource("7_74h8k")
+
+[sub_resource type="Resource" id="Resource_gylu7"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "曲名は言わんぞ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_puagd"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "えー"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_aa82q"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "ヒントだけや。……山を越える歌や"
+speaking = 1
+background = ExtResource("7_3k5n3")
+
+[sub_resource type="Resource" id="Resource_ycbdi"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "山……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_mrc50"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "越えられるか？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_lppni"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "それ、たぶん歌える！"
+speaking = 2
+background = ExtResource("5_74h8k")
+
+[sub_resource type="Resource" id="Resource_sukku"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "そこは自信あるんやな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_54kjk"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "でも……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_oxf0j"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "なんや？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_q2i5y"]
+script = ExtResource("1_58fq2")
+speaker = "OB"
+text = "山、越えられるかな？　ちょっと心配"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_gk0m5"]
+script = ExtResource("1_58fq2")
+speaker = "カニエナガ"
+text = "歌の話やろ？"
+speaking = 1
+
+[resource]
+script = ExtResource("4_blccb")
+lines = Array[ExtResource("1_58fq2")]([SubResource("Resource_58fq2"), SubResource("Resource_pgf5g"), SubResource("Resource_rldng"), SubResource("Resource_blccb"), SubResource("Resource_74h8k"), SubResource("Resource_3k5n3"), SubResource("Resource_aqoq6"), SubResource("Resource_0pyhc"), SubResource("Resource_gylu7"), SubResource("Resource_puagd"), SubResource("Resource_aa82q"), SubResource("Resource_ycbdi"), SubResource("Resource_mrc50"), SubResource("Resource_lppni"), SubResource("Resource_sukku"), SubResource("Resource_54kjk"), SubResource("Resource_oxf0j"), SubResource("Resource_q2i5y"), SubResource("Resource_gk0m5")])

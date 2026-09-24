@@ -1,0 +1,242 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://behsayoxv2drc"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_pkok5"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_2djjo"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_pkok5"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_shl02"]
+[ext_resource type="Texture2D" uid="uid://dxevhieo0j7c6" path="res://resources/texture/event/popup/POP-22.png" id="3_mxxe4"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_3lb5k"]
+[ext_resource type="Texture2D" uid="uid://ba0ddqwaec28t" path="res://resources/texture/BG/event/BG-12.png" id="5_74v4e"]
+[ext_resource type="Texture2D" uid="uid://brf1r21m66r0w" path="res://resources/texture/BG/event/BG-13.png" id="7_wd6no"]
+[ext_resource type="Texture2D" uid="uid://lf6weeb7kii6" path="res://resources/texture/BG/event/BG-15.png" id="9_28f1e"]
+[ext_resource type="Texture2D" uid="uid://t0jtuqc77k00" path="res://resources/texture/BG/event/BG-14.png" id="91_art"]
+
+[sub_resource type="Resource" id="Resource_pkok5"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "…………え"
+speaking = 2
+right = ExtResource("2_pkok5")
+background = ExtResource("2_2djjo")
+popup = ExtResource("3_mxxe4")
+note = "演出：最後のアイテムが、光の中に浮かび上がる"
+
+[sub_resource type="Resource" id="Resource_shl02"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "…………"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_rec0e"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "これ……カニエナガ？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_3lb5k"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "せや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_oal20"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "なんで……？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_s2b2x"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "お前が現実で一番そばに置いとったもんや。ずっと肩に乗っとったやろ"
+speaking = 1
+background = ExtResource("5_74v4e")
+
+[sub_resource type="Resource" id="Resource_2djjo"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "じゃあ、ここにいるカニエナガは……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_mxxe4"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "ワイは異世界の偶像や。本物が待っとるで"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_74v4e"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "カニエナガ……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_wd6no"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "これで全部や"
+speaking = 1
+left = ExtResource("2_shl02")
+note = "演出：10個のアイテムがすべて揃う"
+
+[sub_resource type="Resource" id="Resource_28f1e"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "…………"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_our85"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "どうした？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_273wk"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "全部思い出した"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_lpn2s"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "そうか"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_sloqe"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "お酒も、カニも、ゲームも……"
+speaking = 2
+background = ExtResource("7_wd6no")
+
+[sub_resource type="Resource" id="Resource_ti6hw"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "うん"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_i2upt"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "配信も"
+speaking = 2
+background = ExtResource("91_art")
+
+[sub_resource type="Resource" id="Resource_kw6du"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "うん"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_y5qxl"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "そして……"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_6blhg"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "いつも肩に乗ってた、カニエナガのことも"
+speaking = 2
+background = ExtResource("5_74v4e")
+popup = ExtResource("3_mxxe4")
+note = "演出：OBがカニエナガを見る"
+
+[sub_resource type="Resource" id="Resource_dbsin"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "…………"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_4w1pn"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "せっかくカニエナガと話せるようになったのに"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_vkqqf"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "なんか帰りたくなくなってきちゃった"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_m7fh4"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "そんなこと言うなよ"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_v8hlq"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "だって…"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_w1reo"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "現実には、お前を待っとる人がおる"
+speaking = 1
+background = ExtResource("9_28f1e")
+
+[sub_resource type="Resource" id="Resource_wwgqr"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "……オビラーたち？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_6mh03"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "せや。みんなお前と重婚したがってるんや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_4bsfk"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "そっか"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_dqh5g"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "行ってこい"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_wj17o"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "……うん"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ps1tq"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "こっちのカニエナガも一緒に行けない？"
+speaking = 2
+background = ExtResource("5_74v4e")
+note = "演出：目の前に光のゲートが開く"
+
+[sub_resource type="Resource" id="Resource_cogvr"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "………"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_tapu1"]
+script = ExtResource("1_pkok5")
+speaker = "OB"
+text = "………"
+speaking = 2
+background = ExtResource("2_2djjo")
+
+[sub_resource type="Resource" id="Resource_3yf5v"]
+script = ExtResource("1_pkok5")
+speaker = "カニエナガ"
+text = "……元気でな。もう小指ぶつけるなよ"
+speaking = 1
+
+[resource]
+script = ExtResource("4_3lb5k")
+lines = Array[ExtResource("1_pkok5")]([SubResource("Resource_pkok5"), SubResource("Resource_shl02"), SubResource("Resource_rec0e"), SubResource("Resource_3lb5k"), SubResource("Resource_oal20"), SubResource("Resource_s2b2x"), SubResource("Resource_2djjo"), SubResource("Resource_mxxe4"), SubResource("Resource_74v4e"), SubResource("Resource_wd6no"), SubResource("Resource_28f1e"), SubResource("Resource_our85"), SubResource("Resource_273wk"), SubResource("Resource_lpn2s"), SubResource("Resource_sloqe"), SubResource("Resource_ti6hw"), SubResource("Resource_i2upt"), SubResource("Resource_kw6du"), SubResource("Resource_y5qxl"), SubResource("Resource_6blhg"), SubResource("Resource_dbsin"), SubResource("Resource_4w1pn"), SubResource("Resource_vkqqf"), SubResource("Resource_m7fh4"), SubResource("Resource_v8hlq"), SubResource("Resource_w1reo"), SubResource("Resource_wwgqr"), SubResource("Resource_6mh03"), SubResource("Resource_4bsfk"), SubResource("Resource_dqh5g"), SubResource("Resource_wj17o"), SubResource("Resource_ps1tq"), SubResource("Resource_cogvr"), SubResource("Resource_tapu1"), SubResource("Resource_3yf5v")])

@@ -1,0 +1,101 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://d3b814sxk5w43"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_r35ad"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_82dx4"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_q87b5"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_82dx4"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_rr3ph"]
+[ext_resource type="Texture2D" uid="uid://ba0ddqwaec28t" path="res://resources/texture/BG/event/BG-12.png" id="5_rr3ph"]
+
+[sub_resource type="Resource" id="Resource_r35ad"]
+script = ExtResource("1_r35ad")
+speaker = "OB"
+text = "最後のアイテムは？"
+speaking = 2
+right = ExtResource("2_q87b5")
+background = ExtResource("2_82dx4")
+
+[sub_resource type="Resource" id="Resource_q87b5"]
+script = ExtResource("1_r35ad")
+speaker = "カニエナガ"
+text = "…………"
+speaking = 1
+left = ExtResource("3_82dx4")
+
+[sub_resource type="Resource" id="Resource_82dx4"]
+script = ExtResource("1_r35ad")
+speaker = "OB"
+text = "どうしたの？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_rr3ph"]
+script = ExtResource("1_r35ad")
+speaker = "カニエナガ"
+text = "……今回は、ヒントも一個だけや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_0s1qs"]
+script = ExtResource("1_r35ad")
+speaker = "OB"
+text = "えっ"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_r8tqt"]
+script = ExtResource("1_r35ad")
+speaker = "カニエナガ"
+text = "お前が現実で、一番そばに置いとったもんや"
+speaking = 1
+background = ExtResource("5_rr3ph")
+
+[sub_resource type="Resource" id="Resource_72ihu"]
+script = ExtResource("1_r35ad")
+speaker = "OB"
+text = "一番そばに……？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_8atj6"]
+script = ExtResource("1_r35ad")
+speaker = "カニエナガ"
+text = "思い出せんか"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_ab7rp"]
+script = ExtResource("1_r35ad")
+speaker = "OB"
+text = "……わからない"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_ywlps"]
+script = ExtResource("1_r35ad")
+speaker = "カニエナガ"
+text = "…………"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_33d2c"]
+script = ExtResource("1_r35ad")
+speaker = "OB"
+text = "ねえ、なんで今回はそんなに静かなの"
+speaking = 2
+background = ExtResource("2_82dx4")
+
+[sub_resource type="Resource" id="Resource_jmc1e"]
+script = ExtResource("1_r35ad")
+speaker = "カニエナガ"
+text = "さあ、最後のステージや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_nec6o"]
+script = ExtResource("1_r35ad")
+speaker = "OB"
+text = "一緒に行こう！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_776ll"]
+script = ExtResource("1_r35ad")
+speaker = "カニエナガ"
+text = "当たり前や！"
+speaking = 1
+
+[resource]
+script = ExtResource("4_rr3ph")
+lines = Array[ExtResource("1_r35ad")]([SubResource("Resource_r35ad"), SubResource("Resource_q87b5"), SubResource("Resource_82dx4"), SubResource("Resource_rr3ph"), SubResource("Resource_0s1qs"), SubResource("Resource_r8tqt"), SubResource("Resource_72ihu"), SubResource("Resource_8atj6"), SubResource("Resource_ab7rp"), SubResource("Resource_ywlps"), SubResource("Resource_33d2c"), SubResource("Resource_jmc1e"), SubResource("Resource_nec6o"), SubResource("Resource_776ll")])

@@ -1,0 +1,90 @@
+[gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://dhgg5ito0qmbd"]
+
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_l2nqf"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_3yb3t"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="3_r1v8d"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_yrt2d"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_pnpx8"]
+[ext_resource type="Texture2D" uid="uid://dkihoxv1hbj4i" path="res://resources/texture/BG/event/BG-18.png" id="5_4h2om"]
+[ext_resource type="Texture2D" uid="uid://ccuhx8mmh0sis" path="res://resources/texture/event/popup/POP-16.png" id="6_4h2om"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="7_4h2om"]
+[ext_resource type="Texture2D" uid="uid://b0fvdcfjsjoq0" path="res://resources/texture/BG/event/BG-10.png" id="90_art"]
+
+[sub_resource type="Resource" id="Resource_l2nqf"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "六つ目や"
+speaking = 1
+left = ExtResource("2_3yb3t")
+background = ExtResource("90_art")
+bgm = ExtResource("3_r1v8d")
+
+[sub_resource type="Resource" id="Resource_3yb3t"]
+script = ExtResource("1_l2nqf")
+speaker = "OB"
+text = "ヒント"
+speaking = 2
+right = ExtResource("3_yrt2d")
+
+[sub_resource type="Resource" id="Resource_yrt2d"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "四角い。そんで、ふーふー吹くやつや"
+speaking = 1
+background = ExtResource("5_4h2om")
+popup = ExtResource("6_4h2om")
+
+[sub_resource type="Resource" id="Resource_pnpx8"]
+script = ExtResource("1_l2nqf")
+speaker = "OB"
+text = "……ふーふー？"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_4h2om"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "テレビに挿したら、世界が広がるんや"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_r1v8d"]
+script = ExtResource("1_l2nqf")
+speaker = "OB"
+text = "……！"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_1yon7"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "どうした？"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_w672w"]
+script = ExtResource("1_l2nqf")
+speaker = "OB"
+text = "なんか……胸がざわざわする"
+speaking = 2
+
+[sub_resource type="Resource" id="Resource_7t5hw"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "そらそうや。お前の配信の出世作やからな"
+speaking = 1
+
+[sub_resource type="Resource" id="Resource_vs2ep"]
+script = ExtResource("1_l2nqf")
+speaker = "OB"
+text = "出世作……？"
+speaking = 2
+background = ExtResource("7_4h2om")
+
+[sub_resource type="Resource" id="Resource_nwwcg"]
+script = ExtResource("1_l2nqf")
+speaker = "カニエナガ"
+text = "行ったら思い出すわ"
+speaking = 1
+bgm_stop = true
+bgm_fade = 3.0
+
+[resource]
+script = ExtResource("4_pnpx8")
+lines = Array[ExtResource("1_l2nqf")]([SubResource("Resource_l2nqf"), SubResource("Resource_3yb3t"), SubResource("Resource_yrt2d"), SubResource("Resource_pnpx8"), SubResource("Resource_4h2om"), SubResource("Resource_r1v8d"), SubResource("Resource_1yon7"), SubResource("Resource_w672w"), SubResource("Resource_7t5hw"), SubResource("Resource_vs2ep"), SubResource("Resource_nwwcg")])
