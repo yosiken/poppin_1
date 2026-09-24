@@ -130,6 +130,8 @@ var _index := -1
 var _stage: Stage
 var _clear_overlay: CanvasLayer
 var _pause_overlay: CanvasLayer
+## ポーズメニューの一行メッセージ。セーブした結果を出す
+var _pause_note: Label
 var _select: PanelContainer
 ## イベントセレクト（F6）。最初に開いたときに組み立てる
 var _event_panel: PanelContainer
@@ -226,10 +228,40 @@ func _ready() -> void:
 	if OS.has_feature("testplay"):
 		skip_cutscenes = true
 		debug_shortcuts = false
+	var resumed := _apply_save()
 	var skip_demo := Settings.test_mode or skip_cutscenes
-	if opening and not skip_demo:
+	# 続きから始めるときは OP を出さない。もう見ているため
+	if opening and not skip_demo and not resumed:
 		await cutscene.play(opening)
 	load_stage(start_index, not skip_demo)
+
+
+## タイトルの CONTINUE から入っていれば、セーブの続きを組み立てる。
+## 続きから始めるなら true。NEW GAME やタイトルを経由しない起動では何もしない
+func _apply_save() -> bool:
+	if not SaveGame.continue_requested:
+		return false
+	# 一度きりの合図。タイトルへ戻ったらもう一度選んでもらう
+	SaveGame.continue_requested = false
+	if not SaveGame.has_save() or stages.is_empty():
+		return false
+	start_index = clampi(SaveGame.stage_index, 0, stages.size() - 1)
+	_total_clear_time = SaveGame.total_clear_time
+	_total_falls = SaveGame.total_falls
+	if memory:
+		memory.restore(SaveGame.memory_indices)
+	print("[Game] 続きから開始: ステージ %d" % (start_index + 1))
+	return true
+
+
+## 今の進行を書く。next_stage は次に始めるステージ番号。書けたら true。
+## 試し遊びの結果で続きを上書きしないよう、テスト用の設定では書かない
+func _write_save(next_stage: int) -> bool:
+	if Settings.test_mode or test_play_mode:
+		return false
+	var acquired := memory.acquired_indices() if memory else PackedInt32Array()
+	SaveGame.write(next_stage, _total_clear_time, _total_falls, acquired)
+	return true
 
 
 func _physics_process(_delta: float) -> void:
@@ -698,11 +730,18 @@ func _on_goal_reached(clear_time: float) -> void:
 		return
 
 	if is_last:
+		# 最後まで到達したので続きは無い。CONTINUE を残さない
+		if not (Settings.test_mode or test_play_mode):
+			SaveGame.erase()
 		if ending and not skip_cutscenes:
 			await cutscene.play(ending)
 		all_cleared.emit()
 		_show_clear(_total_clear_time, true)
 		return
+
+	# ここまでを自動で保存する。記憶コレクションを見せ終えた時点＝
+	# そのステージが完全に終わった時点なので、区切りとして分かりやすい
+	_write_save(_index + 1)
 
 	# 時間経過。暗転したまま次のステージへ移り、load_stage の中で明ける
 	if time_passage:
@@ -1087,7 +1126,16 @@ func _open_pause_menu() -> void:
 	esc.keycode = KEY_ESCAPE
 	shortcut.events = [esc]
 	resume.shortcut = shortcut
+	_add_pause_button(box, "SAVE", _save_from_pause)
 	_add_pause_button(box, "RETURN TO TITLE", _return_to_title)
+	_add_pause_button(box, "QUIT GAME", _quit_game)
+
+	_pause_note = Label.new()
+	_pause_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_pause_note.add_theme_font_size_override("font_size", 20)
+	_pause_note.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
+	box.add_child(_pause_note)
+
 	resume.grab_focus()
 
 	get_tree().paused = true
@@ -1103,11 +1151,35 @@ func _add_pause_button(parent: Node, text: String, callback: Callable) -> Button
 	return b
 
 
+## ポーズメニューからの手動セーブ。ステージの途中の状態は持たないので、
+## 「今のステージの頭から」として書く。次に CONTINUE すると
+## このステージを最初からやり直すことになる
+func _save_from_pause() -> void:
+	if _write_save(_index):
+		_set_pause_note("SAVED  —  STAGE %d の頭から再開できます" % (_index + 1))
+	else:
+		_set_pause_note("テスト用の設定が入っているので保存しません")
+
+
+func _set_pause_note(text: String) -> void:
+	if _pause_note:
+		_pause_note.text = text
+
+
+## ESC のメニューからゲームを終了する。
+## 進行は各ステージの終わりに自動で書いているので、ここでは書かない。
+## 途中まで進めたぶんを残したければ、先に SAVE を押してもらう
+func _quit_game() -> void:
+	get_tree().paused = false      # 終了処理の途中でツリーを止めたままにしない
+	get_tree().quit()
+
+
 func _close_pause_menu() -> void:
 	if _pause_overlay == null:
 		return
 	_pause_overlay.queue_free()
 	_pause_overlay = null
+	_pause_note = null
 	get_tree().paused = false
 
 

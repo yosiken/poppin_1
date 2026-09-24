@@ -80,6 +80,25 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+## セーブから取得済みの状態を戻す。画面は出さない。
+## 枠をまだ組み立てていなければ、組み立てたときに反映される
+func restore(indices: PackedInt32Array) -> void:
+	_acquired.clear()
+	for i in indices:
+		_acquired[i] = true
+	if not _slots.is_empty():
+		_refresh(-1)
+
+
+## 取得済みのステージ番号。セーブに書くために使う
+func acquired_indices() -> PackedInt32Array:
+	var out: PackedInt32Array = []
+	for i in _acquired.keys():
+		out.append(i)
+	out.sort()
+	return out
+
+
 ## そのステージのアイテムを取り戻したことにして、画面を見せる。
 ## 呼び出し側は await できる
 func acquire(index: int) -> void:

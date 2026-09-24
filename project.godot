@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 [autoload]
 
 Settings="*res://scripts/settings.gd"
+SaveGame="*res://scripts/save_game.gd"
 SilentWolf="*uid://c813r2vqw4w11"
 
 [display]

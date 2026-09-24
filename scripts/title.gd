@@ -3,7 +3,10 @@ extends Control
 ##
 ## 仮のタイトル画面。
 ##
-## メニュー: ゲームスタート / オプション / スコアランキング
+## メニュー: NEW GAME / CONTINUE / オプション / スコアランキング
+##
+## CONTINUE はセーブ (SaveGame) があるときだけ押せる。
+## NEW GAME はセーブを消すので、消す前に確認を挟む
 ## オプション: BGMボリューム / SEボリューム / プレイヤー名
 ##
 ## Settings.test_mode（オープニング等のデモ短縮・スコア送信抑制）は開発用の
@@ -103,7 +106,14 @@ func _build_ui() -> void:
 	_menu.add_theme_constant_override("separation", 20)
 	add_child(_menu)
 
-	_add_menu_button("START", _start_game)
+	_add_menu_button("NEW GAME", _new_game)
+	var cont := _add_menu_button("CONTINUE", _continue_game)
+	if SaveGame.has_save():
+		cont.text = "CONTINUE  —  %s" % SaveGame.summary()
+	else:
+		cont.disabled = true
+		# 押せないボタンに W/S のフォーカスが止まらないようにする
+		cont.focus_mode = Control.FOCUS_NONE
 	_add_menu_button("OPTIONS", _show_options)
 	_add_menu_button("RANKING", _show_ranking)
 
@@ -198,13 +208,14 @@ func _add_dancer() -> void:
 	visual.play_clip()
 
 
-func _add_menu_button(text: String, callback: Callable) -> void:
+func _add_menu_button(text: String, callback: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
 	b.custom_minimum_size = Vector2(280, 56)
 	b.add_theme_font_size_override("font_size", 26)
 	b.pressed.connect(callback)
 	_menu.add_child(b)
+	return b
 
 
 func _build_options_panel() -> Control:
@@ -363,7 +374,36 @@ func _add_back_row(box: VBoxContainer, callback: Callable) -> void:
 
 # ═══════════════════════════════ 画面遷移
 
-func _start_game() -> void:
+## 最初から始める。セーブがあれば消してよいか訊いてから
+func _new_game() -> void:
+	if not SaveGame.has_save():
+		_start_new()
+		return
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "NEW GAME"
+	dlg.dialog_text = "セーブ（%s）を消して最初から始めます。\nよろしいですか？" % SaveGame.summary()
+	dlg.ok_button_text = "はじめる"
+	dlg.cancel_button_text = "やめる"
+	dlg.confirmed.connect(_start_new)
+	# 決定でも取り消しでも、閉じたら片付ける
+	dlg.canceled.connect(dlg.queue_free)
+	dlg.close_requested.connect(dlg.queue_free)
+	dlg.confirmed.connect(dlg.queue_free)
+	add_child(dlg)
+	dlg.popup_centered()
+
+
+func _start_new() -> void:
+	SaveGame.erase()
+	SaveGame.continue_requested = false
+	get_tree().change_scene_to_file(MAIN_SCENE)
+
+
+## セーブの続きから始める
+func _continue_game() -> void:
+	if not SaveGame.has_save():
+		return
+	SaveGame.continue_requested = true
 	get_tree().change_scene_to_file(MAIN_SCENE)
 
 
