@@ -1200,6 +1200,14 @@ func _stop_bgm(fade: float) -> void:
 		p.volume_db = 0.0)
 
 
+## BGM の切り替え・停止がまだ動いているか。
+## イベントの直後にステージBGMへ戻してよいかを Game が判断するのに使う。
+## フェードの途中で覗くと「まだ鳴っている」に見えて、
+## 止めたつもりの曲を引き継いだものと取り違える
+func bgm_busy() -> bool:
+	return _bgm_tween != null and _bgm_tween.is_valid()
+
+
 func _kill_bgm_tween() -> void:
 	if _bgm_tween and _bgm_tween.is_valid():
 		_bgm_tween.kill()
