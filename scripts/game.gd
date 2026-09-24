@@ -458,6 +458,9 @@ func load_stage(index: int, manual := true) -> void:
 		await cutscene.play(_stage.intro)
 		if gen != _load_gen:
 			return          # 待っている間に別のステージへ切り替わった
+		# 冒頭イベントが BGM を止めて終わることがある（台本の「ここで初めて
+		# BGMを止め」）。そのままだとステージが無音で始まるので鳴らし直す
+		_resume_stage_bgm(index, gen)
 
 	await _show_stage_title(gen)
 
@@ -502,6 +505,24 @@ func _play_stage_bgm(index: int) -> void:
 		(track as AudioStreamOggVorbis).loop = true
 	bgm_player.stream = track
 	bgm_player.play()
+
+
+## 冒頭イベントのあとでステージBGMへ戻す。
+##
+## ステージBGMはイベントより先に鳴らしてある（イベント中も曲が続くように）。
+## イベントが自前の曲を鳴らしたまま終えたときは、それを引き継ぐのが
+## 意図なので触らない。止めて終えたときだけステージBGMを始める
+func _resume_stage_bgm(index: int, gen: int) -> void:
+	if bgm_player == null:
+		return
+	# 止めるフェードがまだ動いていることがある。終わるのを待ってから見る
+	while cutscene and cutscene.bgm_busy():
+		await get_tree().process_frame
+		if gen != _load_gen:
+			return
+	if bgm_player.playing:
+		return          # イベントが鳴らしたまま引き渡した曲。そのまま続ける
+	_play_stage_bgm(index)
 
 
 func _apply_camera_bounds() -> void:
