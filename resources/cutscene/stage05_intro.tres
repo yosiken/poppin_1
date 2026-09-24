@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_fvknb"]
 [ext_resource type="Texture2D" uid="uid://15w8jl1sk543" path="res://resources/texture/BG/event/BG-07.png" id="5_0aqf8"]
 [ext_resource type="Texture2D" uid="uid://38jk5kyyvpaj" path="res://resources/texture/OB_d.png" id="7_0aqf8"]
+[ext_resource type="Texture2D" uid="uid://b2s3yp5mgomfh" path="res://resources/texture/event/popup/POP-28.png" id="8_g0rfd"]
 [ext_resource type="Texture2D" uid="uid://s4l06l22rner" path="res://resources/texture/event/popup/MISS-05.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_tuajt"]
@@ -56,12 +57,14 @@ script = ExtResource("1_tuajt")
 speaker = "OB"
 text = "じゃあ漫画？"
 speaking = 2
+popup = ExtResource("8_g0rfd")
 
 [sub_resource type="Resource" id="Resource_g0rfd"]
 script = ExtResource("1_tuajt")
 speaker = "カニエナガ"
 text = "ご名答"
 speaking = 1
+fade = 5
 shake = 20.0
 shake_time = 1.0
 
@@ -83,6 +86,7 @@ speaker = "OB"
 text = "ケチ！"
 speaking = 2
 right = ExtResource("7_0aqf8")
+shake = 20.0
 
 [sub_resource type="Resource" id="Resource_qst7m"]
 script = ExtResource("1_tuajt")

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_fhe7r"]
 [ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_x22lb"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_x30e5"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="3_3tgp8"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="3_gwmgv"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_x30e5"]
 [ext_resource type="Texture2D" uid="uid://b0fvdcfjsjoq0" path="res://resources/texture/BG/event/BG-10.png" id="5_3tgp8"]
@@ -15,6 +16,7 @@ text = "八つ目や"
 speaking = 1
 left = ExtResource("2_x30e5")
 background = ExtResource("2_x22lb")
+bgm = ExtResource("3_3tgp8")
 
 [sub_resource type="Resource" id="Resource_gwmgv"]
 script = ExtResource("1_fhe7r")
@@ -35,6 +37,7 @@ speaker = "OB"
 text = "また漫画？"
 speaking = 2
 background = ExtResource("5_3tgp8")
+bg_hide = 1.0
 
 [sub_resource type="Resource" id="Resource_3tgp8"]
 script = ExtResource("1_fhe7r")
@@ -47,6 +50,9 @@ script = ExtResource("1_fhe7r")
 speaker = "OB"
 text = "！！！"
 speaking = 2
+fade = 5
+shake = 48.0
+shake_time = 1.0
 
 [sub_resource type="Resource" id="Resource_8m0od"]
 script = ExtResource("1_fhe7r")
@@ -71,6 +77,9 @@ script = ExtResource("1_fhe7r")
 speaker = "OB"
 text = "かねやかねやー！"
 speaking = 2
+fade = 5
+shake = 40.0
+shake_time = 2.0
 
 [sub_resource type="Resource" id="Resource_tuila"]
 script = ExtResource("1_fhe7r")
@@ -90,7 +99,10 @@ script = ExtResource("1_fhe7r")
 speaker = "カニエナガ"
 text = "その顔やめろ！　目が＄になっとるぞ"
 speaking = 1
+fade = 1
+fade_sec = 3.0
 popup = ExtResource("6_7ifoj")
+bgm_stop = true
 
 [resource]
 script = ExtResource("3_gwmgv")

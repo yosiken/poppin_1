@@ -13,6 +13,9 @@ script = ExtResource("1_0cpef")
 speaker = "ミミック"
 text = "ガブガブ"
 background = ExtResource("2_shg23")
+fade = 4
+shake = 48.0
+shake_time = 2.0
 popup = ExtResource("7_s10vh")
 note = "演出：宝箱がミミックだった。OBが噛みつかれる"
 
@@ -30,12 +33,16 @@ text = "だから言うたやろ！"
 speaking = 1
 left = ExtResource("3_br2v1")
 background = ExtResource("2_shg23")
+fade = 5
+shake = 48.0
 
 [sub_resource type="Resource" id="Resource_l54um"]
 script = ExtResource("1_0cpef")
 speaker = "OB"
 text = "暗いよー！怖いよー！でも…お宝ほしいよー！"
 speaking = 2
+shake = 40.0
+shake_time = 2.0
 popup = ExtResource("7_s10vh")
 
 [sub_resource type="Resource" id="Resource_shg23"]
@@ -68,6 +75,8 @@ script = ExtResource("1_0cpef")
 speaker = "カニエナガ"
 text = "お前は一生治らんな"
 speaking = 1
+fade = 1
+fade_sec = 3.0
 
 [resource]
 script = ExtResource("4_l54um")

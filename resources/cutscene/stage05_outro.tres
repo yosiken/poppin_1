@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://c4hvo4prsmriy" path="res://resources/texture/OB_e.png" id="7_ee3wo"]
 [ext_resource type="Texture2D" uid="uid://ch03tlsuwe3i1" path="res://resources/texture/BG/event/BG-17.png" id="7_u8a0j"]
 [ext_resource type="Texture2D" uid="uid://crp173i7rxh13" path="res://resources/texture/OB_b.png" id="8_lv627"]
+[ext_resource type="AudioStream" uid="uid://dpqjb67twm6yc" path="res://resources/sound/bgm/event02.ogg" id="11_vi5hp"]
 
 [sub_resource type="Resource" id="Resource_cgvsy"]
 script = ExtResource("1_cgvsy")
@@ -123,6 +124,7 @@ speaker = "OB"
 text = "……ということは"
 speaking = 2
 fade = 5
+bgm_stop = true
 
 [sub_resource type="Resource" id="Resource_vyrg2"]
 script = ExtResource("1_cgvsy")
@@ -137,6 +139,7 @@ text = "私、本当にゲームの世界に転生したんだ……"
 speaking = 2
 background = ExtResource("7_u8a0j")
 fade = 4
+bgm = ExtResource("11_vi5hp")
 
 [sub_resource type="Resource" id="Resource_safx4"]
 script = ExtResource("1_cgvsy")
@@ -145,6 +148,8 @@ text = "今さらかい！"
 speaking = 1
 fade = 1
 fade_sec = 3.0
+shake = 48.0
+shake_time = 2.0
 bgm_stop = true
 bgm_fade = 3.0
 

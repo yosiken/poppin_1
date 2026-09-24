@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://dkihoxv1hbj4i" path="res://resources/texture/BG/event/BG-18.png" id="5_4h2om"]
 [ext_resource type="Texture2D" uid="uid://ccuhx8mmh0sis" path="res://resources/texture/event/popup/POP-16.png" id="6_4h2om"]
 [ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="7_4h2om"]
-[ext_resource type="Texture2D" uid="uid://b0fvdcfjsjoq0" path="res://resources/texture/BG/event/BG-10.png" id="90_art"]
 
 [sub_resource type="Resource" id="Resource_l2nqf"]
 script = ExtResource("1_l2nqf")
@@ -16,7 +15,7 @@ speaker = "カニエナガ"
 text = "六つ目や"
 speaking = 1
 left = ExtResource("2_3yb3t")
-background = ExtResource("90_art")
+background = ExtResource("7_4h2om")
 bgm = ExtResource("3_r1v8d")
 
 [sub_resource type="Resource" id="Resource_3yb3t"]
@@ -32,13 +31,14 @@ speaker = "カニエナガ"
 text = "四角い。そんで、ふーふー吹くやつや"
 speaking = 1
 background = ExtResource("5_4h2om")
-popup = ExtResource("6_4h2om")
+bg_hide = 1.0
 
 [sub_resource type="Resource" id="Resource_pnpx8"]
 script = ExtResource("1_l2nqf")
 speaker = "OB"
 text = "……ふーふー？"
 speaking = 2
+popup = ExtResource("6_4h2om")
 
 [sub_resource type="Resource" id="Resource_4h2om"]
 script = ExtResource("1_l2nqf")
@@ -51,6 +51,9 @@ script = ExtResource("1_l2nqf")
 speaker = "OB"
 text = "……！"
 speaking = 2
+fade = 5
+shake = 48.0
+shake_time = 1.0
 
 [sub_resource type="Resource" id="Resource_1yon7"]
 script = ExtResource("1_l2nqf")
@@ -76,12 +79,15 @@ speaker = "OB"
 text = "出世作……？"
 speaking = 2
 background = ExtResource("7_4h2om")
+fade = 5
 
 [sub_resource type="Resource" id="Resource_nwwcg"]
 script = ExtResource("1_l2nqf")
 speaker = "カニエナガ"
 text = "行ったら思い出すわ"
 speaking = 1
+fade = 1
+fade_sec = 3.0
 bgm_stop = true
 bgm_fade = 3.0
 

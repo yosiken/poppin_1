@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_58fq2"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_pgf5g"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="3_3k5n3"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="3_rldng"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_blccb"]
 [ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="5_74h8k"]
@@ -16,6 +17,7 @@ text = "だいぶ来たな"
 speaking = 1
 left = ExtResource("2_pgf5g")
 background = ExtResource("5_74h8k")
+bgm = ExtResource("3_3k5n3")
 
 [sub_resource type="Resource" id="Resource_pgf5g"]
 script = ExtResource("1_58fq2")
@@ -30,6 +32,7 @@ speaker = "カニエナガ"
 text = "ヒントいくで。握るもんや"
 speaking = 1
 background = ExtResource("7_3k5n3")
+bg_hide = 1.0
 
 [sub_resource type="Resource" id="Resource_blccb"]
 script = ExtResource("1_58fq2")
@@ -44,6 +47,7 @@ script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
 text = "食いもんから離れろ"
 speaking = 1
+shake = 30.0
 
 [sub_resource type="Resource" id="Resource_3k5n3"]
 script = ExtResource("1_58fq2")
@@ -102,6 +106,7 @@ speaker = "OB"
 text = "それ、たぶん歌える！"
 speaking = 2
 background = ExtResource("5_74h8k")
+fade = 5
 
 [sub_resource type="Resource" id="Resource_sukku"]
 script = ExtResource("1_58fq2")
@@ -132,6 +137,9 @@ script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
 text = "歌の話やろ？"
 speaking = 1
+fade = 1
+fade_sec = 3.0
+bgm_stop = true
 
 [resource]
 script = ExtResource("4_blccb")

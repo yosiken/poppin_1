@@ -1,15 +1,18 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://behsayoxv2drc"]
 
-[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_pkok5"]
-[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_2djjo"]
-[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_pkok5"]
-[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_shl02"]
-[ext_resource type="Texture2D" uid="uid://dxevhieo0j7c6" path="res://resources/texture/event/popup/POP-22.png" id="3_mxxe4"]
-[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_3lb5k"]
-[ext_resource type="Texture2D" uid="uid://ba0ddqwaec28t" path="res://resources/texture/BG/event/BG-12.png" id="5_74v4e"]
-[ext_resource type="Texture2D" uid="uid://brf1r21m66r0w" path="res://resources/texture/BG/event/BG-13.png" id="7_wd6no"]
-[ext_resource type="Texture2D" uid="uid://lf6weeb7kii6" path="res://resources/texture/BG/event/BG-15.png" id="9_28f1e"]
-[ext_resource type="Texture2D" uid="uid://t0jtuqc77k00" path="res://resources/texture/BG/event/BG-14.png" id="91_art"]
+[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_pkok5"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="2_2djjo"]
+[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="2_pkok5"]
+[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="2_shl02"]
+[ext_resource type="AudioStream" path="res://resources/sound/bgm/bgm01.mp3" id="3_74v4e"]
+[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-22.png" id="3_mxxe4"]
+[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_3lb5k"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-12.png" id="5_74v4e"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-13.png" id="7_wd6no"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-15.png" id="9_28f1e"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-26.png" id="10_74v4e"]
+[ext_resource type="AudioStream" path="res://resources/sound/bgm/event03.ogg" id="11_wd6no"]
+[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-14.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_pkok5"]
 script = ExtResource("1_pkok5")
@@ -19,6 +22,7 @@ speaking = 2
 right = ExtResource("2_pkok5")
 background = ExtResource("2_2djjo")
 popup = ExtResource("3_mxxe4")
+bgm = ExtResource("3_74v4e")
 note = "演出：最後のアイテムが、光の中に浮かび上がる"
 
 [sub_resource type="Resource" id="Resource_shl02"]
@@ -38,6 +42,7 @@ script = ExtResource("1_pkok5")
 speaker = "カニエナガ"
 text = "せや"
 speaking = 1
+left = ExtResource("2_shl02")
 
 [sub_resource type="Resource" id="Resource_oal20"]
 script = ExtResource("1_pkok5")
@@ -63,6 +68,7 @@ script = ExtResource("1_pkok5")
 speaker = "カニエナガ"
 text = "ワイは異世界の偶像や。本物が待っとるで"
 speaking = 1
+popup = ExtResource("3_mxxe4")
 
 [sub_resource type="Resource" id="Resource_74v4e"]
 script = ExtResource("1_pkok5")
@@ -108,6 +114,8 @@ speaker = "OB"
 text = "お酒も、カニも、ゲームも……"
 speaking = 2
 background = ExtResource("7_wd6no")
+fade = 4
+fade_sec = 1.0
 
 [sub_resource type="Resource" id="Resource_ti6hw"]
 script = ExtResource("1_pkok5")
@@ -121,6 +129,8 @@ speaker = "OB"
 text = "配信も"
 speaking = 2
 background = ExtResource("91_art")
+fade = 4
+fade_sec = 1.0
 
 [sub_resource type="Resource" id="Resource_kw6du"]
 script = ExtResource("1_pkok5")
@@ -139,8 +149,7 @@ script = ExtResource("1_pkok5")
 speaker = "OB"
 text = "いつも肩に乗ってた、カニエナガのことも"
 speaking = 2
-background = ExtResource("5_74v4e")
-popup = ExtResource("3_mxxe4")
+background = ExtResource("10_74v4e")
 note = "演出：OBがカニエナガを見る"
 
 [sub_resource type="Resource" id="Resource_dbsin"]
@@ -148,18 +157,21 @@ script = ExtResource("1_pkok5")
 speaker = "カニエナガ"
 text = "…………"
 speaking = 1
+bgm_stop = true
 
 [sub_resource type="Resource" id="Resource_4w1pn"]
 script = ExtResource("1_pkok5")
 speaker = "OB"
 text = "せっかくカニエナガと話せるようになったのに"
 speaking = 2
+bgm = ExtResource("11_wd6no")
 
 [sub_resource type="Resource" id="Resource_vkqqf"]
 script = ExtResource("1_pkok5")
 speaker = "OB"
 text = "なんか帰りたくなくなってきちゃった"
 speaking = 2
+background = ExtResource("2_2djjo")
 
 [sub_resource type="Resource" id="Resource_m7fh4"]
 script = ExtResource("1_pkok5")
@@ -179,6 +191,8 @@ speaker = "カニエナガ"
 text = "現実には、お前を待っとる人がおる"
 speaking = 1
 background = ExtResource("9_28f1e")
+fade = 4
+fade_sec = 3.0
 
 [sub_resource type="Resource" id="Resource_wwgqr"]
 script = ExtResource("1_pkok5")
@@ -203,6 +217,7 @@ script = ExtResource("1_pkok5")
 speaker = "カニエナガ"
 text = "行ってこい"
 speaking = 1
+background = ExtResource("2_2djjo")
 
 [sub_resource type="Resource" id="Resource_wj17o"]
 script = ExtResource("1_pkok5")
@@ -215,7 +230,7 @@ script = ExtResource("1_pkok5")
 speaker = "OB"
 text = "こっちのカニエナガも一緒に行けない？"
 speaking = 2
-background = ExtResource("5_74v4e")
+background = ExtResource("10_74v4e")
 note = "演出：目の前に光のゲートが開く"
 
 [sub_resource type="Resource" id="Resource_cogvr"]
@@ -236,6 +251,9 @@ script = ExtResource("1_pkok5")
 speaker = "カニエナガ"
 text = "……元気でな。もう小指ぶつけるなよ"
 speaking = 1
+fade = 3
+fade_sec = 3.0
+bgm_stop = true
 
 [resource]
 script = ExtResource("4_3lb5k")

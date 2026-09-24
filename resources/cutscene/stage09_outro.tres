@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_836e4"]
 [ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_ejyft"]
 [ext_resource type="Texture2D" uid="uid://dkibn8kb1y5ru" path="res://resources/texture/BG/event/BG-21.png" id="2_r7c1k"]
+[ext_resource type="AudioStream" uid="uid://bnj02htuljvh1" path="res://resources/sound/bgm/event01.ogg" id="3_oj5kc"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_pelsk"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_ejyft"]
 [ext_resource type="Texture2D" uid="uid://bipjwo4yrnqj2" path="res://resources/texture/BG/event/BG-11.png" id="5_r7c1k"]
@@ -16,6 +17,8 @@ text = "越えたー！"
 speaking = 2
 right = ExtResource("2_836e4")
 background = ExtResource("2_r7c1k")
+fade = 5
+bgm = ExtResource("3_oj5kc")
 
 [sub_resource type="Resource" id="Resource_836e4"]
 script = ExtResource("1_t1p1n")
@@ -43,6 +46,8 @@ script = ExtResource("1_t1p1n")
 speaker = "OB"
 text = "歌も歌ったし、山も越えた"
 speaking = 2
+shake = 48.0
+shake_time = 1.0
 popup = ExtResource("6_oj5kc")
 
 [sub_resource type="Resource" id="Resource_oj5kc"]
@@ -56,6 +61,7 @@ script = ExtResource("1_t1p1n")
 speaker = "OB"
 text = "これであと一つ？"
 speaking = 2
+background = ExtResource("2_ejyft")
 
 [sub_resource type="Resource" id="Resource_u508f"]
 script = ExtResource("1_t1p1n")
@@ -63,6 +69,7 @@ speaker = "カニエナガ"
 text = "そうや"
 speaking = 1
 background = ExtResource("2_ejyft")
+bgm_stop = true
 
 [sub_resource type="Resource" id="Resource_a5mrr"]
 script = ExtResource("1_t1p1n")
@@ -75,6 +82,8 @@ script = ExtResource("1_t1p1n")
 speaker = "OB"
 text = "……カニエナガ？"
 speaking = 2
+fade = 1
+fade_sec = 3.0
 note = "演出：カニエナガは答えない"
 
 [resource]

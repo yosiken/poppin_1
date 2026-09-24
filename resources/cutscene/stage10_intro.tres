@@ -4,8 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_82dx4"]
 [ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_q87b5"]
 [ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="3_82dx4"]
+[ext_resource type="AudioStream" uid="uid://byl18mhr17j0o" path="res://resources/sound/bgm/bgm01.mp3" id="3_r8tqt"]
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_rr3ph"]
 [ext_resource type="Texture2D" uid="uid://ba0ddqwaec28t" path="res://resources/texture/BG/event/BG-12.png" id="5_rr3ph"]
+[ext_resource type="Texture2D" uid="uid://cuog5g4r6fng2" path="res://resources/texture/OB_c.png" id="6_72ihu"]
+[ext_resource type="Texture2D" uid="uid://crp173i7rxh13" path="res://resources/texture/OB_b.png" id="7_8atj6"]
 
 [sub_resource type="Resource" id="Resource_r35ad"]
 script = ExtResource("1_r35ad")
@@ -14,6 +17,7 @@ text = "最後のアイテムは？"
 speaking = 2
 right = ExtResource("2_q87b5")
 background = ExtResource("2_82dx4")
+bgm = ExtResource("3_r8tqt")
 
 [sub_resource type="Resource" id="Resource_q87b5"]
 script = ExtResource("1_r35ad")
@@ -27,6 +31,7 @@ script = ExtResource("1_r35ad")
 speaker = "OB"
 text = "どうしたの？"
 speaking = 2
+right = ExtResource("6_72ihu")
 
 [sub_resource type="Resource" id="Resource_rr3ph"]
 script = ExtResource("1_r35ad")
@@ -39,6 +44,7 @@ script = ExtResource("1_r35ad")
 speaker = "OB"
 text = "えっ"
 speaking = 2
+right = ExtResource("7_8atj6")
 
 [sub_resource type="Resource" id="Resource_r8tqt"]
 script = ExtResource("1_r35ad")
@@ -46,6 +52,8 @@ speaker = "カニエナガ"
 text = "お前が現実で、一番そばに置いとったもんや"
 speaking = 1
 background = ExtResource("5_rr3ph")
+bg_hide = 1.0
+bgm_stop = true
 
 [sub_resource type="Resource" id="Resource_72ihu"]
 script = ExtResource("1_r35ad")
@@ -77,6 +85,7 @@ speaker = "OB"
 text = "ねえ、なんで今回はそんなに静かなの"
 speaking = 2
 background = ExtResource("2_82dx4")
+shake = 30.0
 
 [sub_resource type="Resource" id="Resource_jmc1e"]
 script = ExtResource("1_r35ad")
@@ -95,6 +104,9 @@ script = ExtResource("1_r35ad")
 speaker = "カニエナガ"
 text = "当たり前や！"
 speaking = 1
+fade = 1
+fade_sec = 3.0
+shake = 48.0
 
 [resource]
 script = ExtResource("4_rr3ph")
