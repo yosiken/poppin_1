@@ -258,6 +258,12 @@ func _unhandled_input(event: InputEvent) -> void:
 ## イベントを最後まで再生する。呼び出し側は await できる
 func play(data: CutsceneData) -> void:
 	if data == null or data.lines.is_empty():
+		# cover_now() で暗幕を下ろしたまま来ることがある。
+		# 外さずに抜けると、画面が黒いままゲームが始まってしまう
+		_clear_veil()
+		if _backdrop:
+			_backdrop.color.a = 0.0
+		visible = false
 		finished.emit()
 		return
 
@@ -287,6 +293,28 @@ func play(data: CutsceneData) -> void:
 	visible = false
 	_playing = false
 	finished.emit()
+
+
+## 会話を始める前に、暗幕だけを先に下ろしておく。
+##
+## 時間経過の暗転から会話へ、画面を一度も明るくせずに渡すために使う。
+## これを挟まずに明けると、会話が始まって暗幕が下りるまでの一瞬だけ
+## 次のステージが見えてしまう。
+##
+## 前のイベントの絵が残っていることがある（clear_on_finish が false のとき）ので、
+## いったん片付けてから出す。片付けはフェードを切って一瞬で終わらせる
+func cover_now() -> void:
+	if _backdrop == null or not cover_game:
+		return
+	var saved := fade_time
+	fade_time = 0.0
+	await _clear_all()
+	fade_time = saved
+	# _clear_all() が暗幕を外しにかかっているので、止めてから塗り直す
+	if _backdrop_tween and _backdrop_tween.is_valid():
+		_backdrop_tween.kill()
+	_backdrop.color = Color(backdrop_color, backdrop_color.a)
+	visible = true
 
 
 ## イベント編集ツール用。指定したコマの見た目を、入力待ちも文字送りもせずに作る。
@@ -319,7 +347,7 @@ func preview(data: CutsceneData, index: int) -> void:
 	var line := data.lines[last]
 	# 幕は待たずに動かす。待つと編集UIが固まる
 	if line:
-		_run_fade(line)
+		_run_fade(line, not _closes_veil(line.fade))
 	_show_note(line)
 	if line == null or line.text.strip_edges() == "":
 		_window.visible = false
@@ -351,15 +379,16 @@ func _play_line(line: CutsceneLine, is_last := false) -> void:
 
 	_apply_visuals(line)
 	_apply_audio(line)
-	# 幕の上げ下げは本文より先に済ませる。暗転の途中で喋り出すと読みにくい。
-	# フラッシュだけは待たないので、本文と同時に光る
-	await _run_fade(line)
+	# 幕を上げる指定（黒から/白から）とフラッシュは本文より先。
+	# 暗転の途中で喋り出すと読みにくいため
+	await _run_fade(line, true)
 	if _skip:
 		return
 
 	if line.text.strip_edges() == "":
 		_window.visible = false
 		await _wait(maxf(fade_time, 0.05))
+		await _run_fade(line, false)
 		return
 
 	_window.visible = true
@@ -405,6 +434,10 @@ func _play_line(line: CutsceneLine, is_last := false) -> void:
 		while not _advance and not _skip:
 			await get_tree().process_frame
 		_advance = false
+
+	# 幕を下ろす指定（黒へ/白へ）は本文を読み終えてから。
+	# 先に下ろすと、そのコマの本文が幕の裏で進んでしまう
+	await _run_fade(line, false)
 
 
 ## 本文中の改行の位置。visible_characters と突き合わせるため、
@@ -716,12 +749,38 @@ func _clear_all() -> void:
 		_bg_mat.set_shader_parameter("hide", 0.0)   # 次のイベントへ持ち越さない
 		_set_bg_pattern(bg_pattern)                 # 動かし方も既定へ戻す
 	_stop_shake()
-	_clear_veil()
+	# 幕は fade_time かけて外す。下ろしたまま終わるコマがあるので、
+	# 即座に外すと黒からステージへ飛ぶように切り替わる
+	_fade_out_veil()
 	_fade_backdrop(0.0)
 	await _wait_fixed(fade_time)
 
 
-## 揺らしても端に隙間が出ないよう、画面いっぱいの Control を四方へ広げる
+## 背景を画面ぴったりに置く。margin を入れると四方へ広げる。
+##
+## 素材は 640x360（画面の 1/3）で作ってある。画面と同じ 16:9 のまま置くと
+## ちょうど3倍に拡大されるので、点がきれいに3x3へ並ぶ。
+## 暗幕のように四方へ同じ量だけ広げると縦横比が変わり、
+## KEEP_ASPECT_COVERED が左右を切って倍率も半端になる（3.175倍など）。
+## このプロジェクトの既定のテクスチャフィルタは Nearest なので、
+## 半端な倍率だと点の大きさが場所によって変わってガタつく。
+##
+## そのため、広げるときも画面と同じ縦横比を保つ。
+## 揺らしている間だけ広げて、端に隙間が出ないようにする
+func _layout_bg(margin: float) -> void:
+	if _bg == null:
+		return
+	var screen := _screen()
+	var mx := maxf(margin, 0.0)
+	var my := mx * screen.y / maxf(screen.x, 1.0)
+	_bg.offset_left = -mx
+	_bg.offset_right = mx
+	_bg.offset_top = -my
+	_bg.offset_bottom = my
+
+
+## 揺らしても端に隙間が出ないよう、画面いっぱいの Control を四方へ広げる。
+## 単色の暗幕と幕にだけ使う。絵の乗る背景は _layout_bg() を使うこと
 func _grow(rect: Control) -> void:
 	rect.offset_left = -SHAKE_MARGIN
 	rect.offset_top = -SHAKE_MARGIN
@@ -749,7 +808,7 @@ func _build_ui() -> void:
 	_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_grow(_bg)
+	_layout_bg(0.0)
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bg.modulate.a = 0.0
 	add_child(_bg)
@@ -1217,11 +1276,19 @@ func _kill_bgm_tween() -> void:
 # ─────────────────────────────── 幕（暗転・明転・フラッシュ）
 
 
-## そのコマの幕の指定を実行する。
-## 上げ下げ (TO_*/FROM_*) は待つので、幕が動ききってから本文が出る。
-## フラッシュは待たない。殴られた瞬間と本文を同時に見せたいので
-func _run_fade(line: CutsceneLine) -> void:
+## そのコマの幕の指定を実行する。本文の前後で2回呼ばれ、
+## その回に出すものだけを処理する。
+##
+##   本文の前 … 幕を上げる (FROM_*) とフラッシュ。
+##              幕が上がりきってから本文が出る
+##   本文の後 … 幕を下ろす (TO_*)。
+##              先に下ろすと、そのコマの本文が幕の裏で進んでしまう
+##
+## 上げ下げは待つ。フラッシュは待たないので本文と同時に光る
+func _run_fade(line: CutsceneLine, phase_before: bool) -> void:
 	if _veil == null or line.fade == CutsceneLine.Fade.NONE:
+		return
+	if _closes_veil(line.fade) == phase_before:
 		return
 	var sec := maxf(line.fade_sec if line.fade_sec > 0.0 else veil_time, 0.05)
 	var color := _veil_color(line.fade)
@@ -1273,6 +1340,12 @@ func _veil_color(kind: int) -> Color:
 	return Color(1.0, 1.0, 1.0) if white else Color(0.0, 0.0, 0.0)
 
 
+## 幕を下ろす指定か（本文のあとに出すもの）
+func _closes_veil(kind: int) -> bool:
+	return kind == CutsceneLine.Fade.TO_BLACK \
+		or kind == CutsceneLine.Fade.TO_WHITE
+
+
 ## そのコマが終わったときの幕の濃さ。積み直しで使う
 func _veil_end_alpha(kind: int) -> float:
 	var down := kind == CutsceneLine.Fade.TO_BLACK \
@@ -1286,7 +1359,17 @@ func _kill_veil_tween() -> void:
 	_veil_tween = null
 
 
-## 幕を外す。イベントの外へ持ち越さない
+## 幕を fade_time かけて外す。既に外れていれば何もしない
+func _fade_out_veil() -> void:
+	if _veil == null:
+		return
+	_kill_veil_tween()
+	if _veil.color.a <= 0.001:
+		return
+	_veil_tween = _tween(_veil, "color:a", 0.0, fade_time)
+
+
+## 幕を即座に外す。イベントの外へ持ち越さない
 func _clear_veil() -> void:
 	_kill_veil_tween()
 	_set_veil(Color(0.0, 0.0, 0.0), 0.0)
@@ -1310,7 +1393,12 @@ func _shake(strength: float, time: float) -> void:
 	_shake_tween.tween_method(
 		_apply_shake.bind(strength), 1.0, 0.0,
 		maxf(time if time > 0.0 else shake_time, 0.05))
-	_shake_tween.finished.connect(func() -> void: offset = Vector2.ZERO)
+	# 揺れている間だけ背景を広げる。広げないと端に暗幕が覗く。
+	# 縦の振れは横の 0.7 倍なので、横基準で 1.3 倍見ておけば両方足りる
+	_layout_bg(strength * 1.3)
+	_shake_tween.finished.connect(func() -> void:
+		offset = Vector2.ZERO
+		_layout_bg(0.0))
 
 
 ## 揺れの1フレームぶん。decay は 1 から 0 へ落ちてくる
@@ -1335,6 +1423,7 @@ func _kill_shake() -> void:
 func _stop_shake() -> void:
 	_kill_shake()
 	offset = Vector2.ZERO
+	_layout_bg(0.0)
 
 
 # ─────────────────────────────── 背景を隠す効果

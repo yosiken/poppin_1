@@ -449,12 +449,22 @@ func load_stage(index: int, manual := true) -> void:
 	stage_loaded.emit(index, _stage)
 
 	# 時間経過の演出で暗転したままここへ来ている。差し替えが済んでから明ける。
-	# 冒頭デモより先に明けるので「時間が飛んで、次の場所にいる」順に見える
+	var has_intro := _stage.intro != null and not skip_cutscenes \
+		and (manual or play_intro_on_select)
+	# 冒頭イベントがあるときは、明ける前にイベント側の暗幕を下ろしておく。
+	# 先に明けてしまうと、会話が始まって暗幕が下りるまでの一瞬だけ
+	# 次のステージが見えてしまう（時間経過の幕は CanvasLayer 40 で
+	# イベントの 32 より上なので、暗転したまま会話を出すことはできない）。
+	# ステージが見えるのは会話が終わって暗幕が上がるときになる
+	if has_intro and cutscene:
+		await cutscene.cover_now()
+	# 明転はどの経路からも必ず通す。通し忘れると画面が暗いまま
+	# 操作を受け付けなくなるので、ここで gen を見て降りてはいけない
 	await _reveal()
 	if gen != _load_gen:
 		return
 
-	if _stage.intro and not skip_cutscenes and (manual or play_intro_on_select):
+	if has_intro:
 		await cutscene.play(_stage.intro)
 		if gen != _load_gen:
 			return          # 待っている間に別のステージへ切り替わった
