@@ -816,7 +816,14 @@ func _setup_clips() -> void:
 	var source := clip_source
 	if source == null and ResourceLoader.exists(DEFAULT_CLIP_PATH):
 		source = load(DEFAULT_CLIP_PATH) as PackedScene
-	if source == null or _skeleton == null or _yaw == null:
+	if source == null:
+		# 素材はリポジトリに含めていないので、無くても止めない。
+		# ただし黙って何も起きないと「なぜ踊らないのか」が分からないので、
+		# 置き場所が分かる一行だけ残す
+		print("[PlayerVisual] ゴールの全身アニメーションが見つかりません。"
+			+ "置き場所: %s" % DEFAULT_CLIP_PATH)
+		return
+	if _skeleton == null or _yaw == null:
 		return
 	var src := source.instantiate()
 	var src_anim := _find_node_of_type(src, "AnimationPlayer") as AnimationPlayer
