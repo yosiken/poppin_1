@@ -15,6 +15,9 @@ text = "七つ目のヒントや"
 speaking = 1
 left = ExtResource("2_d1rpl")
 background = ExtResource("2_jrclr")
+fade = 1
+fade_sec = 3.0
+bgm_stop = true
 
 [sub_resource type="Resource" id="Resource_d1rpl"]
 script = ExtResource("1_mh7c8")
@@ -118,10 +121,16 @@ script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
 text = "どうなっても知らんで"
 speaking = 1
-fade = 1
 fade_sec = 3.0
 popup = ExtResource("6_jrclr")
 
+[sub_resource type="Resource" id="Resource_qsnnu"]
+script = ExtResource("1_mh7c8")
+fade = 1
+fade_sec = 3.0
+bgm_stop = true
+inserted = true
+
 [resource]
 script = ExtResource("4_jrclr")
-lines = Array[ExtResource("1_mh7c8")]([SubResource("Resource_mh7c8"), SubResource("Resource_d1rpl"), SubResource("Resource_ljqqe"), SubResource("Resource_jrclr"), SubResource("Resource_qeown"), SubResource("Resource_woajy"), SubResource("Resource_npvkm"), SubResource("Resource_831vb"), SubResource("Resource_g8f0t"), SubResource("Resource_pr3q1"), SubResource("Resource_f6m3d"), SubResource("Resource_kbpjl"), SubResource("Resource_gvlfi"), SubResource("Resource_umlfc"), SubResource("Resource_dlepo"), SubResource("Resource_otxmp"), SubResource("Resource_snqu4")])
+lines = Array[ExtResource("1_mh7c8")]([SubResource("Resource_mh7c8"), SubResource("Resource_d1rpl"), SubResource("Resource_ljqqe"), SubResource("Resource_jrclr"), SubResource("Resource_qeown"), SubResource("Resource_woajy"), SubResource("Resource_npvkm"), SubResource("Resource_831vb"), SubResource("Resource_g8f0t"), SubResource("Resource_pr3q1"), SubResource("Resource_f6m3d"), SubResource("Resource_kbpjl"), SubResource("Resource_gvlfi"), SubResource("Resource_umlfc"), SubResource("Resource_dlepo"), SubResource("Resource_otxmp"), SubResource("Resource_snqu4"), SubResource("Resource_qsnnu")])

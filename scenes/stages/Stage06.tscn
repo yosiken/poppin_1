@@ -17,15 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://cf5lq0u22xy8w" path="res://resources/texture/precipice.png" id="15_a3rrc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fm5oo"]
-size = Vector2(106.46594, 158.55)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_23x76"]
-shader = ExtResource("8_uq8sw")
-shader_parameter/mirror_tiling = false
-shader_parameter/shadow_height = 24.0
-shader_parameter/shadow_strength = 0.35
-shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/bottom_y = 100.0
+size = Vector2(91.91305, 91.91305)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2wft3"]
 shader = ExtResource("8_uq8sw")
@@ -34,6 +26,14 @@ shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 75.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_23x76"]
+shader = ExtResource("8_uq8sw")
+shader_parameter/mirror_tiling = false
+shader_parameter/shadow_height = 24.0
+shader_parameter/shadow_strength = 0.35
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/bottom_y = 100.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_a3rrc"]
 shader = ExtResource("8_uq8sw")
@@ -328,6 +328,54 @@ frame = 5
 position = Vector2(-15, -40)
 shape = SubResource("RectangleShape2D_fm5oo")
 
+[node name="BackGraphics" type="Node2D" parent="." unique_id=31720718]
+z_index = -200
+
+[node name="BgE01" type="Sprite2D" parent="BackGraphics" unique_id=1827930921]
+visible = false
+texture_filter = 1
+position = Vector2(713, -1456)
+scale = Vector2(1.7871112, 2.3718748)
+texture = ExtResource("13_23x76")
+
+[node name="Gfx_Intro3" type="Polygon2D" parent="BackGraphics" unique_id=1630176612]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_2wft3")
+position = Vector2(993, 543)
+scale = Vector2(1, 0.38666666)
+texture = ExtResource("11_s7e8c")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -75, 200, -75, 201, -168.1034, 304, 5.1724854, 200, 157.75867, 200, 75, -200, 75)
+script = ExtResource("10_hegly")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Intro1")
+
+[node name="Signboard01" type="Sprite2D" parent="BackGraphics" unique_id=696342095]
+position = Vector2(2485.0002, -707.00006)
+scale = Vector2(0.2914871, 0.2914871)
+texture = ExtResource("14_2wft3")
+
+[node name="Gfx_Intro4" type="Polygon2D" parent="BackGraphics" unique_id=739485397]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_2wft3")
+position = Vector2(2702, 637)
+rotation = -2.38017
+scale = Vector2(0.5193211, 0.3626877)
+skew = 0.6537837
+texture = ExtResource("11_s7e8c")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -75, 200, -75, 201, -168.1034, 304, 5.1724854, 200, 157.75867, 200, 75, -200, 75)
+script = ExtResource("10_hegly")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Intro1")
+
+[node name="Precipice" type="Sprite2D" parent="BackGraphics" unique_id=497695116]
+position = Vector2(2578, -401)
+scale = Vector2(2.3112247, 2.3112247)
+texture = ExtResource("15_a3rrc")
+
 [node name="Graphics" type="Node2D" parent="." unique_id=1535351888]
 
 [node name="Gfx_Floor" type="Polygon2D" parent="Graphics" unique_id=1253508550]
@@ -342,62 +390,37 @@ script = ExtResource("10_hegly")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Floor")
 
+[node name="Gfx_Intro5" type="Polygon2D" parent="Graphics" unique_id=2044062323]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_2wft3")
+position = Vector2(-19.5, 538)
+scale = Vector2(1.3725001, 0.49333334)
+texture = ExtResource("9_s7e8c")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -75, 200, -75, 200, 75, -200, 75)
+script = ExtResource("10_hegly")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Intro1")
+
+[node name="Gfx_Intro6" type="Polygon2D" parent="Graphics" unique_id=1334238951]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_2wft3")
+position = Vector2(-9.499996, 1019)
+scale = Vector2(1.3775, 0.88)
+texture = ExtResource("9_s7e8c")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-200, -75, 200, -75, 200, 75, -200, 75)
+script = ExtResource("10_hegly")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Intro1")
+
 [node name="Gfx_Intro1" type="Polygon2D" parent="Graphics" unique_id=1592106667]
 texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_2wft3")
 position = Vector2(700, 925)
-texture = ExtResource("9_s7e8c")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-200, -75, 200, -75, 200, 75, -200, 75)
-script = ExtResource("10_hegly")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Intro1")
-
-[node name="Gfx_Intro1" type="Polygon2D" parent="Graphics/Gfx_Intro1" unique_id=1630176612]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_2wft3")
-position = Vector2(293, -382)
-scale = Vector2(1, 0.38666666)
-texture = ExtResource("11_s7e8c")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-200, -75, 200, -75, 201, -168.1034, 304, 5.1724854, 200, 157.75867, 200, 75, -200, 75)
-script = ExtResource("10_hegly")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Intro1")
-
-[node name="Gfx_Intro1" type="Polygon2D" parent="Graphics/Gfx_Intro1/Gfx_Intro1" unique_id=739485397]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_2wft3")
-position = Vector2(1709.0001, 243.1034)
-rotation = -1.9561785
-scale = Vector2(1, 0.38666666)
-texture = ExtResource("11_s7e8c")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-200, -75, 200, -75, 201, -168.1034, 304, 5.1724854, 200, 157.75867, 200, 75, -200, 75)
-script = ExtResource("10_hegly")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Intro1")
-
-[node name="Gfx_Intro2" type="Polygon2D" parent="Graphics/Gfx_Intro1" unique_id=1334238951]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_2wft3")
-position = Vector2(-704, 85)
-texture = ExtResource("9_s7e8c")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-200, -75, 200, -75, 200, 75, -200, 75)
-script = ExtResource("10_hegly")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Intro1")
-
-[node name="Gfx_Intro1" type="Polygon2D" parent="Graphics/Gfx_Intro1/Gfx_Intro2" unique_id=2044062323]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_2wft3")
-position = Vector2(-18, -510)
 texture = ExtResource("9_s7e8c")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-200, -75, 200, -75, 200, 75, -200, 75)
@@ -417,11 +440,11 @@ script = ExtResource("10_hegly")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Intro2")
 
-[node name="Gfx_Step1" type="Polygon2D" parent="Graphics" unique_id=1977949744]
+[node name="Gfx_Step11" type="Polygon2D" parent="Graphics" unique_id=1810408336]
 texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_bh07d")
-position = Vector2(2325, 815)
+position = Vector2(2409, 984)
 texture = ExtResource("9_s7e8c")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-275, -35, 275, -35, 275, 35, -275, 35)
@@ -429,11 +452,24 @@ script = ExtResource("10_hegly")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Step1")
 
-[node name="Gfx_Step1" type="Polygon2D" parent="Graphics/Gfx_Step1" unique_id=1810408336]
+[node name="Gfx_Step12" type="Polygon2D" parent="Graphics" unique_id=398027321]
 texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_bh07d")
-position = Vector2(84, 169)
+position = Vector2(3105.0002, 966.5)
+scale = Vector2(0.30909044, 1.0428582)
+texture = ExtResource("9_s7e8c")
+texture_scale = Vector2(1.1636363, 1.1636363)
+polygon = PackedVector2Array(-275, -35, -80.88281, -106.917725, 132.64648, -90.616394, 275, -35, 275, 35, -275, 35)
+script = ExtResource("10_hegly")
+tile_size = Vector2(220, 0)
+copy_from = NodePath("../../Terrain/Step1")
+
+[node name="Gfx_Step1" type="Polygon2D" parent="Graphics" unique_id=1977949744]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_bh07d")
+position = Vector2(2325, 815)
 texture = ExtResource("9_s7e8c")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-275, -35, 275, -35, 275, 35, -275, 35)
@@ -592,23 +628,3 @@ polygon = PackedVector2Array(-575, -300, 575, -300, 575, 300, -575, 300)
 script = ExtResource("10_hegly")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/ExitTerrace")
-
-[node name="BackGraphics" type="Node2D" parent="." unique_id=31720718]
-z_index = -200
-
-[node name="BgE01" type="Sprite2D" parent="BackGraphics" unique_id=1827930921]
-visible = false
-texture_filter = 1
-position = Vector2(713, -1456)
-scale = Vector2(1.7871112, 2.3718748)
-texture = ExtResource("13_23x76")
-
-[node name="Signboard01" type="Sprite2D" parent="BackGraphics" unique_id=696342095]
-position = Vector2(2485.0002, -707.00006)
-scale = Vector2(0.2914871, 0.2914871)
-texture = ExtResource("14_2wft3")
-
-[node name="Precipice" type="Sprite2D" parent="BackGraphics" unique_id=497695116]
-position = Vector2(2578, -401)
-scale = Vector2(2.3112247, 2.3112247)
-texture = ExtResource("15_a3rrc")

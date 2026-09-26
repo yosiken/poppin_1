@@ -98,6 +98,13 @@ fade_sec = 3.0
 bgm_stop = true
 bgm_fade = 3.0
 
+[sub_resource type="Resource" id="Resource_2uf0q"]
+script = ExtResource("1_tuajt")
+fade = 1
+fade_sec = 3.0
+bgm_stop = true
+inserted = true
+
 [resource]
 script = ExtResource("4_fvknb")
-lines = Array[ExtResource("1_tuajt")]([SubResource("Resource_tuajt"), SubResource("Resource_50bnv"), SubResource("Resource_kccec"), SubResource("Resource_fvknb"), SubResource("Resource_0aqf8"), SubResource("Resource_57cw5"), SubResource("Resource_g0rfd"), SubResource("Resource_a56xp"), SubResource("Resource_dw85g"), SubResource("Resource_8acxc"), SubResource("Resource_qst7m")])
+lines = Array[ExtResource("1_tuajt")]([SubResource("Resource_tuajt"), SubResource("Resource_50bnv"), SubResource("Resource_kccec"), SubResource("Resource_fvknb"), SubResource("Resource_0aqf8"), SubResource("Resource_57cw5"), SubResource("Resource_g0rfd"), SubResource("Resource_a56xp"), SubResource("Resource_dw85g"), SubResource("Resource_8acxc"), SubResource("Resource_qst7m"), SubResource("Resource_2uf0q")])

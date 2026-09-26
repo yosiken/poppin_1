@@ -85,11 +85,16 @@ script = ExtResource("1_x8fab")
 speaker = "カニエナガ"
 text = "ホンマに誰やねん！"
 speaking = 1
+fade_sec = 3.0
+bgm_fade = 3.0
+
+[sub_resource type="Resource" id="Resource_dakjw"]
+script = ExtResource("1_x8fab")
 fade = 1
 fade_sec = 3.0
 bgm_stop = true
-bgm_fade = 3.0
+inserted = true
 
 [resource]
 script = ExtResource("4_br8eg")
-lines = Array[ExtResource("1_x8fab")]([SubResource("Resource_x8fab"), SubResource("Resource_p2xug"), SubResource("Resource_gujyp"), SubResource("Resource_br8eg"), SubResource("Resource_8p4s8"), SubResource("Resource_qbr27"), SubResource("Resource_l5hxo"), SubResource("Resource_bpheo"), SubResource("Resource_oaua2"), SubResource("Resource_wy0qh")])
+lines = Array[ExtResource("1_x8fab")]([SubResource("Resource_x8fab"), SubResource("Resource_p2xug"), SubResource("Resource_gujyp"), SubResource("Resource_br8eg"), SubResource("Resource_8p4s8"), SubResource("Resource_qbr27"), SubResource("Resource_l5hxo"), SubResource("Resource_bpheo"), SubResource("Resource_oaua2"), SubResource("Resource_wy0qh"), SubResource("Resource_dakjw")])

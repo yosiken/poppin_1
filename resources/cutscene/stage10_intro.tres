@@ -104,10 +104,16 @@ script = ExtResource("1_r35ad")
 speaker = "カニエナガ"
 text = "当たり前や！"
 speaking = 1
-fade = 1
 fade_sec = 3.0
 shake = 48.0
 
+[sub_resource type="Resource" id="Resource_0hpv7"]
+script = ExtResource("1_r35ad")
+fade = 1
+fade_sec = 3.0
+bgm_stop = true
+inserted = true
+
 [resource]
 script = ExtResource("4_rr3ph")
-lines = Array[ExtResource("1_r35ad")]([SubResource("Resource_r35ad"), SubResource("Resource_q87b5"), SubResource("Resource_82dx4"), SubResource("Resource_rr3ph"), SubResource("Resource_0s1qs"), SubResource("Resource_r8tqt"), SubResource("Resource_72ihu"), SubResource("Resource_8atj6"), SubResource("Resource_ab7rp"), SubResource("Resource_ywlps"), SubResource("Resource_33d2c"), SubResource("Resource_jmc1e"), SubResource("Resource_nec6o"), SubResource("Resource_776ll")])
+lines = Array[ExtResource("1_r35ad")]([SubResource("Resource_r35ad"), SubResource("Resource_q87b5"), SubResource("Resource_82dx4"), SubResource("Resource_rr3ph"), SubResource("Resource_0s1qs"), SubResource("Resource_r8tqt"), SubResource("Resource_72ihu"), SubResource("Resource_8atj6"), SubResource("Resource_ab7rp"), SubResource("Resource_ywlps"), SubResource("Resource_33d2c"), SubResource("Resource_jmc1e"), SubResource("Resource_nec6o"), SubResource("Resource_776ll"), SubResource("Resource_0hpv7")])

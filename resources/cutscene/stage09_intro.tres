@@ -137,10 +137,15 @@ script = ExtResource("1_58fq2")
 speaker = "カニエナガ"
 text = "歌の話やろ？"
 speaking = 1
+fade_sec = 3.0
+
+[sub_resource type="Resource" id="Resource_2wnsn"]
+script = ExtResource("1_58fq2")
 fade = 1
 fade_sec = 3.0
 bgm_stop = true
+inserted = true
 
 [resource]
 script = ExtResource("4_blccb")
-lines = Array[ExtResource("1_58fq2")]([SubResource("Resource_58fq2"), SubResource("Resource_pgf5g"), SubResource("Resource_rldng"), SubResource("Resource_blccb"), SubResource("Resource_74h8k"), SubResource("Resource_3k5n3"), SubResource("Resource_aqoq6"), SubResource("Resource_0pyhc"), SubResource("Resource_gylu7"), SubResource("Resource_puagd"), SubResource("Resource_aa82q"), SubResource("Resource_ycbdi"), SubResource("Resource_mrc50"), SubResource("Resource_lppni"), SubResource("Resource_sukku"), SubResource("Resource_54kjk"), SubResource("Resource_oxf0j"), SubResource("Resource_q2i5y"), SubResource("Resource_gk0m5")])
+lines = Array[ExtResource("1_58fq2")]([SubResource("Resource_58fq2"), SubResource("Resource_pgf5g"), SubResource("Resource_rldng"), SubResource("Resource_blccb"), SubResource("Resource_74h8k"), SubResource("Resource_3k5n3"), SubResource("Resource_aqoq6"), SubResource("Resource_0pyhc"), SubResource("Resource_gylu7"), SubResource("Resource_puagd"), SubResource("Resource_aa82q"), SubResource("Resource_ycbdi"), SubResource("Resource_mrc50"), SubResource("Resource_lppni"), SubResource("Resource_sukku"), SubResource("Resource_54kjk"), SubResource("Resource_oxf0j"), SubResource("Resource_q2i5y"), SubResource("Resource_gk0m5"), SubResource("Resource_2wnsn")])

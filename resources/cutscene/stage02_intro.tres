@@ -74,11 +74,16 @@ speaker = "カニエナガ"
 text = "ゴールであの缶を開ける音を聞いたら、イヤでも思い出すわ"
 speaking = 1
 background = ExtResource("2_3ft0g")
+fade_sec = 3.0
+bgm_fade = 3.0
+
+[sub_resource type="Resource" id="Resource_dpvx5"]
+script = ExtResource("1_23evt")
 fade = 1
 fade_sec = 3.0
 bgm_stop = true
-bgm_fade = 3.0
+inserted = true
 
 [resource]
 script = ExtResource("4_3ft0g")
-lines = Array[ExtResource("1_23evt")]([SubResource("Resource_23evt"), SubResource("Resource_otxka"), SubResource("Resource_x6aby"), SubResource("Resource_3ft0g"), SubResource("Resource_8aqdv"), SubResource("Resource_dnyg0"), SubResource("Resource_mntkg"), SubResource("Resource_rl6cv"), SubResource("Resource_8ojgj")])
+lines = Array[ExtResource("1_23evt")]([SubResource("Resource_23evt"), SubResource("Resource_otxka"), SubResource("Resource_x6aby"), SubResource("Resource_3ft0g"), SubResource("Resource_8aqdv"), SubResource("Resource_dnyg0"), SubResource("Resource_mntkg"), SubResource("Resource_rl6cv"), SubResource("Resource_8ojgj"), SubResource("Resource_dpvx5")])

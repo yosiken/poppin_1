@@ -82,6 +82,12 @@ speaker = "オビラーたち"
 text = "大丈夫？結婚する？"
 note = "演出：THE END"
 
+[sub_resource type="Resource" id="Resource_bcojw"]
+script = ExtResource("1_3jl66")
+fade = 3
+bgm_stop = true
+inserted = true
+
 [resource]
 script = ExtResource("3_5a5rl")
-lines = Array[ExtResource("1_3jl66")]([SubResource("Resource_3jl66"), SubResource("Resource_k0l5e"), SubResource("Resource_5a5rl"), SubResource("Resource_7h71w"), SubResource("Resource_oc4by"), SubResource("Resource_1xhdg"), SubResource("Resource_0bwdq")])
+lines = Array[ExtResource("1_3jl66")]([SubResource("Resource_3jl66"), SubResource("Resource_k0l5e"), SubResource("Resource_5a5rl"), SubResource("Resource_7h71w"), SubResource("Resource_oc4by"), SubResource("Resource_1xhdg"), SubResource("Resource_0bwdq"), SubResource("Resource_bcojw")])

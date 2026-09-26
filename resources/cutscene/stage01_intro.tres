@@ -80,10 +80,15 @@ script = ExtResource("1_ycfur")
 speaker = "OB"
 text = "してないよ"
 speaking = 2
-fade = 1
 fade_sec = 2.0
+
+[sub_resource type="Resource" id="Resource_17olf"]
+script = ExtResource("1_ycfur")
+fade = 1
+fade_sec = 3.0
 bgm_stop = true
+inserted = true
 
 [resource]
 script = ExtResource("4_n6p1y")
-lines = Array[ExtResource("1_ycfur")]([SubResource("Resource_ycfur"), SubResource("Resource_le35o"), SubResource("Resource_4xutf"), SubResource("Resource_n6p1y"), SubResource("Resource_ussie"), SubResource("Resource_6kvyc"), SubResource("Resource_ckeky"), SubResource("Resource_fwekl"), SubResource("Resource_ouica"), SubResource("Resource_gq6qb")])
+lines = Array[ExtResource("1_ycfur")]([SubResource("Resource_ycfur"), SubResource("Resource_le35o"), SubResource("Resource_4xutf"), SubResource("Resource_n6p1y"), SubResource("Resource_ussie"), SubResource("Resource_6kvyc"), SubResource("Resource_ckeky"), SubResource("Resource_fwekl"), SubResource("Resource_ouica"), SubResource("Resource_gq6qb"), SubResource("Resource_17olf")])

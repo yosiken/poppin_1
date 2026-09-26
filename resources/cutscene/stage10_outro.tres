@@ -1,18 +1,18 @@
 [gd_resource type="Resource" script_class="CutsceneData" format=3 uid="uid://behsayoxv2drc"]
 
-[ext_resource type="Script" path="res://scripts/cutscene_line.gd" id="1_pkok5"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-black.png" id="2_2djjo"]
-[ext_resource type="Texture2D" path="res://resources/texture/OB_a.png" id="2_pkok5"]
-[ext_resource type="Texture2D" path="res://resources/texture/kanie_a.png" id="2_shl02"]
-[ext_resource type="AudioStream" path="res://resources/sound/bgm/bgm01.mp3" id="3_74v4e"]
-[ext_resource type="Texture2D" path="res://resources/texture/event/popup/POP-22.png" id="3_mxxe4"]
-[ext_resource type="Script" path="res://scripts/cutscene_data.gd" id="4_3lb5k"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-12.png" id="5_74v4e"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-13.png" id="7_wd6no"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-15.png" id="9_28f1e"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-26.png" id="10_74v4e"]
-[ext_resource type="AudioStream" path="res://resources/sound/bgm/event03.ogg" id="11_wd6no"]
-[ext_resource type="Texture2D" path="res://resources/texture/BG/event/BG-14.png" id="91_art"]
+[ext_resource type="Script" uid="uid://bqyr8gw275yuu" path="res://scripts/cutscene_line.gd" id="1_pkok5"]
+[ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="2_2djjo"]
+[ext_resource type="Texture2D" uid="uid://bapvuydl2abwd" path="res://resources/texture/OB_a.png" id="2_pkok5"]
+[ext_resource type="Texture2D" uid="uid://d1plbi1v65put" path="res://resources/texture/kanie_a.png" id="2_shl02"]
+[ext_resource type="AudioStream" uid="uid://byl18mhr17j0o" path="res://resources/sound/bgm/bgm01.mp3" id="3_74v4e"]
+[ext_resource type="Texture2D" uid="uid://dxevhieo0j7c6" path="res://resources/texture/event/popup/POP-22.png" id="3_mxxe4"]
+[ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_3lb5k"]
+[ext_resource type="Texture2D" uid="uid://ba0ddqwaec28t" path="res://resources/texture/BG/event/BG-12.png" id="5_74v4e"]
+[ext_resource type="Texture2D" uid="uid://brf1r21m66r0w" path="res://resources/texture/BG/event/BG-13.png" id="7_wd6no"]
+[ext_resource type="Texture2D" uid="uid://lf6weeb7kii6" path="res://resources/texture/BG/event/BG-15.png" id="9_28f1e"]
+[ext_resource type="Texture2D" uid="uid://cyyeca7wvmfl7" path="res://resources/texture/BG/event/BG-26.png" id="10_74v4e"]
+[ext_resource type="AudioStream" uid="uid://bg7x5vas3ukfh" path="res://resources/sound/bgm/event03.ogg" id="11_wd6no"]
+[ext_resource type="Texture2D" uid="uid://t0jtuqc77k00" path="res://resources/texture/BG/event/BG-14.png" id="91_art"]
 
 [sub_resource type="Resource" id="Resource_pkok5"]
 script = ExtResource("1_pkok5")
@@ -251,10 +251,16 @@ script = ExtResource("1_pkok5")
 speaker = "カニエナガ"
 text = "……元気でな。もう小指ぶつけるなよ"
 speaking = 1
-fade = 3
 fade_sec = 3.0
 bgm_stop = true
 
+[sub_resource type="Resource" id="Resource_kiwry"]
+script = ExtResource("1_pkok5")
+fade = 3
+fade_sec = 3.0
+bgm_stop = true
+inserted = true
+
 [resource]
 script = ExtResource("4_3lb5k")
-lines = Array[ExtResource("1_pkok5")]([SubResource("Resource_pkok5"), SubResource("Resource_shl02"), SubResource("Resource_rec0e"), SubResource("Resource_3lb5k"), SubResource("Resource_oal20"), SubResource("Resource_s2b2x"), SubResource("Resource_2djjo"), SubResource("Resource_mxxe4"), SubResource("Resource_74v4e"), SubResource("Resource_wd6no"), SubResource("Resource_28f1e"), SubResource("Resource_our85"), SubResource("Resource_273wk"), SubResource("Resource_lpn2s"), SubResource("Resource_sloqe"), SubResource("Resource_ti6hw"), SubResource("Resource_i2upt"), SubResource("Resource_kw6du"), SubResource("Resource_y5qxl"), SubResource("Resource_6blhg"), SubResource("Resource_dbsin"), SubResource("Resource_4w1pn"), SubResource("Resource_vkqqf"), SubResource("Resource_m7fh4"), SubResource("Resource_v8hlq"), SubResource("Resource_w1reo"), SubResource("Resource_wwgqr"), SubResource("Resource_6mh03"), SubResource("Resource_4bsfk"), SubResource("Resource_dqh5g"), SubResource("Resource_wj17o"), SubResource("Resource_ps1tq"), SubResource("Resource_cogvr"), SubResource("Resource_tapu1"), SubResource("Resource_3yf5v")])
+lines = Array[ExtResource("1_pkok5")]([SubResource("Resource_pkok5"), SubResource("Resource_shl02"), SubResource("Resource_rec0e"), SubResource("Resource_3lb5k"), SubResource("Resource_oal20"), SubResource("Resource_s2b2x"), SubResource("Resource_2djjo"), SubResource("Resource_mxxe4"), SubResource("Resource_74v4e"), SubResource("Resource_wd6no"), SubResource("Resource_28f1e"), SubResource("Resource_our85"), SubResource("Resource_273wk"), SubResource("Resource_lpn2s"), SubResource("Resource_sloqe"), SubResource("Resource_ti6hw"), SubResource("Resource_i2upt"), SubResource("Resource_kw6du"), SubResource("Resource_y5qxl"), SubResource("Resource_6blhg"), SubResource("Resource_dbsin"), SubResource("Resource_4w1pn"), SubResource("Resource_vkqqf"), SubResource("Resource_m7fh4"), SubResource("Resource_v8hlq"), SubResource("Resource_w1reo"), SubResource("Resource_wwgqr"), SubResource("Resource_6mh03"), SubResource("Resource_4bsfk"), SubResource("Resource_dqh5g"), SubResource("Resource_wj17o"), SubResource("Resource_ps1tq"), SubResource("Resource_cogvr"), SubResource("Resource_tapu1"), SubResource("Resource_3yf5v"), SubResource("Resource_kiwry")])

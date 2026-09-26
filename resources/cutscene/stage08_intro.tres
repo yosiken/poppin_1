@@ -99,11 +99,16 @@ script = ExtResource("1_fhe7r")
 speaker = "カニエナガ"
 text = "その顔やめろ！　目が＄になっとるぞ"
 speaking = 1
-fade = 1
 fade_sec = 3.0
 popup = ExtResource("6_7ifoj")
+
+[sub_resource type="Resource" id="Resource_6ilup"]
+script = ExtResource("1_fhe7r")
+fade = 1
+fade_sec = 3.0
 bgm_stop = true
+inserted = true
 
 [resource]
 script = ExtResource("3_gwmgv")
-lines = Array[ExtResource("1_fhe7r")]([SubResource("Resource_x30e5"), SubResource("Resource_gwmgv"), SubResource("Resource_88ss5"), SubResource("Resource_x22lb"), SubResource("Resource_3tgp8"), SubResource("Resource_7ifoj"), SubResource("Resource_8m0od"), SubResource("Resource_y7078"), SubResource("Resource_pcmwx"), SubResource("Resource_xibnu"), SubResource("Resource_tuila"), SubResource("Resource_iyrgd"), SubResource("Resource_wk6qd")])
+lines = Array[ExtResource("1_fhe7r")]([SubResource("Resource_x30e5"), SubResource("Resource_gwmgv"), SubResource("Resource_88ss5"), SubResource("Resource_x22lb"), SubResource("Resource_3tgp8"), SubResource("Resource_7ifoj"), SubResource("Resource_8m0od"), SubResource("Resource_y7078"), SubResource("Resource_pcmwx"), SubResource("Resource_xibnu"), SubResource("Resource_tuila"), SubResource("Resource_iyrgd"), SubResource("Resource_wk6qd"), SubResource("Resource_6ilup")])

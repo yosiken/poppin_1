@@ -113,11 +113,16 @@ script = ExtResource("1_x8uju")
 speaker = "カニエナガ"
 text = "急に元気になったな……"
 speaking = 1
+fade_sec = 3.0
+bgm_fade = 3.0
+
+[sub_resource type="Resource" id="Resource_ckyr4"]
+script = ExtResource("1_x8uju")
 fade = 1
 fade_sec = 3.0
 bgm_stop = true
-bgm_fade = 3.0
+inserted = true
 
 [resource]
 script = ExtResource("4_5o0ow")
-lines = Array[ExtResource("1_x8uju")]([SubResource("Resource_x8uju"), SubResource("Resource_hgvhn"), SubResource("Resource_5qr67"), SubResource("Resource_5o0ow"), SubResource("Resource_2cma1"), SubResource("Resource_kebiv"), SubResource("Resource_2gm1v"), SubResource("Resource_xvrql"), SubResource("Resource_s816i"), SubResource("Resource_cetr6"), SubResource("Resource_3citv"), SubResource("Resource_v1r8m"), SubResource("Resource_2cx7o"), SubResource("Resource_20j3p"), SubResource("Resource_76hai")])
+lines = Array[ExtResource("1_x8uju")]([SubResource("Resource_x8uju"), SubResource("Resource_hgvhn"), SubResource("Resource_5qr67"), SubResource("Resource_5o0ow"), SubResource("Resource_2cma1"), SubResource("Resource_kebiv"), SubResource("Resource_2gm1v"), SubResource("Resource_xvrql"), SubResource("Resource_s816i"), SubResource("Resource_cetr6"), SubResource("Resource_3citv"), SubResource("Resource_v1r8m"), SubResource("Resource_2cx7o"), SubResource("Resource_20j3p"), SubResource("Resource_76hai"), SubResource("Resource_ckyr4")])
