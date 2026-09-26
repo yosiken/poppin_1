@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
-size = Vector2(93.65664, 139.47427)
+size = Vector2(80.85465, 80.85465)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_goxyr"]
 shader = ExtResource("7_tjrwd")
@@ -206,8 +206,8 @@ intro = ExtResource("cut_intro")
 outro = ExtResource("cut_outro")
 
 [node name="CameraBounds" type="Polygon2D" parent="." unique_id=580260667]
-position = Vector2(97.78795, 260.26413)
-scale = Vector2(0.86969703, 0.7418868)
+position = Vector2(97.78795, 254.3773)
+scale = Vector2(0.86969703, 0.73698115)
 color = Color(1, 0.85, 0.3, 0.15)
 polygon = PackedVector2Array(-700, -1200, 2600, -1200, 2600, 1450, -700, 1450)
 

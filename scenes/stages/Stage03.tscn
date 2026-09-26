@@ -142,9 +142,8 @@ intro = ExtResource("cut_intro")
 outro = ExtResource("cut_outro")
 
 [node name="CameraBounds" type="Polygon2D" parent="." unique_id=1757847507]
-visible = false
-position = Vector2(-250.19998, 0)
-scale = Vector2(1.139, 1)
+position = Vector2(-250.19998, -17.181824)
+scale = Vector2(1.139, 0.9809091)
 color = Color(1, 0.85, 0.3, 0.15)
 polygon = PackedVector2Array(-200, -900, 1800, -900, 1800, 1300, -200, 1300)
 
