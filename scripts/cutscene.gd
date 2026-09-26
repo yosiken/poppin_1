@@ -289,6 +289,28 @@ func play(data: CutsceneData) -> void:
 	finished.emit()
 
 
+## 会話を始める前に、暗幕だけを先に下ろしておく。
+##
+## 時間経過の暗転から会話へ、画面を一度も明るくせずに渡すために使う。
+## これを挟まずに明けると、会話が始まって暗幕が下りるまでの一瞬だけ
+## 次のステージが見えてしまう。
+##
+## 前のイベントの絵が残っていることがある（clear_on_finish が false のとき）ので、
+## いったん片付けてから出す。片付けはフェードを切って一瞬で終わらせる
+func cover_now() -> void:
+	if _backdrop == null or not cover_game:
+		return
+	var saved := fade_time
+	fade_time = 0.0
+	await _clear_all()
+	fade_time = saved
+	# _clear_all() が暗幕を外しにかかっているので、止めてから塗り直す
+	if _backdrop_tween and _backdrop_tween.is_valid():
+		_backdrop_tween.kill()
+	_backdrop.color = Color(backdrop_color, backdrop_color.a)
+	visible = true
+
+
 ## イベント編集ツール用。指定したコマの見た目を、入力待ちも文字送りもせずに作る。
 ##
 ## 立ち絵と背景は「指定したものだけ変わる」方式なので、途中のコマを単独で当てても
