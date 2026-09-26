@@ -458,8 +458,8 @@ func load_stage(index: int, manual := true) -> void:
 	# ステージが見えるのは会話が終わって暗幕が上がるときになる
 	if has_intro and cutscene:
 		await cutscene.cover_now()
-		if gen != _load_gen:
-			return
+	# 明転はどの経路からも必ず通す。通し忘れると画面が暗いまま
+	# 操作を受け付けなくなるので、ここで gen を見て降りてはいけない
 	await _reveal()
 	if gen != _load_gen:
 		return
