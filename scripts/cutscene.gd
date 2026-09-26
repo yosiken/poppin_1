@@ -756,7 +756,31 @@ func _clear_all() -> void:
 	await _wait_fixed(fade_time)
 
 
-## 揺らしても端に隙間が出ないよう、画面いっぱいの Control を四方へ広げる
+## 背景を画面ぴったりに置く。margin を入れると四方へ広げる。
+##
+## 素材は 640x360（画面の 1/3）で作ってある。画面と同じ 16:9 のまま置くと
+## ちょうど3倍に拡大されるので、点がきれいに3x3へ並ぶ。
+## 暗幕のように四方へ同じ量だけ広げると縦横比が変わり、
+## KEEP_ASPECT_COVERED が左右を切って倍率も半端になる（3.175倍など）。
+## このプロジェクトの既定のテクスチャフィルタは Nearest なので、
+## 半端な倍率だと点の大きさが場所によって変わってガタつく。
+##
+## そのため、広げるときも画面と同じ縦横比を保つ。
+## 揺らしている間だけ広げて、端に隙間が出ないようにする
+func _layout_bg(margin: float) -> void:
+	if _bg == null:
+		return
+	var screen := _screen()
+	var mx := maxf(margin, 0.0)
+	var my := mx * screen.y / maxf(screen.x, 1.0)
+	_bg.offset_left = -mx
+	_bg.offset_right = mx
+	_bg.offset_top = -my
+	_bg.offset_bottom = my
+
+
+## 揺らしても端に隙間が出ないよう、画面いっぱいの Control を四方へ広げる。
+## 単色の暗幕と幕にだけ使う。絵の乗る背景は _layout_bg() を使うこと
 func _grow(rect: Control) -> void:
 	rect.offset_left = -SHAKE_MARGIN
 	rect.offset_top = -SHAKE_MARGIN
@@ -784,7 +808,7 @@ func _build_ui() -> void:
 	_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_grow(_bg)
+	_layout_bg(0.0)
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bg.modulate.a = 0.0
 	add_child(_bg)
@@ -1369,7 +1393,12 @@ func _shake(strength: float, time: float) -> void:
 	_shake_tween.tween_method(
 		_apply_shake.bind(strength), 1.0, 0.0,
 		maxf(time if time > 0.0 else shake_time, 0.05))
-	_shake_tween.finished.connect(func() -> void: offset = Vector2.ZERO)
+	# 揺れている間だけ背景を広げる。広げないと端に暗幕が覗く。
+	# 縦の振れは横の 0.7 倍なので、横基準で 1.3 倍見ておけば両方足りる
+	_layout_bg(strength * 1.3)
+	_shake_tween.finished.connect(func() -> void:
+		offset = Vector2.ZERO
+		_layout_bg(0.0))
 
 
 ## 揺れの1フレームぶん。decay は 1 から 0 へ落ちてくる
@@ -1394,6 +1423,7 @@ func _kill_shake() -> void:
 func _stop_shake() -> void:
 	_kill_shake()
 	offset = Vector2.ZERO
+	_layout_bg(0.0)
 
 
 # ─────────────────────────────── 背景を隠す効果
