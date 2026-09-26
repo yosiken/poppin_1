@@ -16,7 +16,6 @@
 [ext_resource type="Resource" uid="uid://csjq6yaucuosl" path="res://resources/cutscene/opening.tres" id="17_op"]
 [ext_resource type="Resource" uid="uid://chj2dx3pijim5" path="res://resources/cutscene/ending.tres" id="18_ed"]
 [ext_resource type="Script" uid="uid://dqgdirupf7s26" path="res://scripts/design_grid.gd" id="19_grid"]
-[ext_resource type="Script" uid="uid://cvdwqytmo4yrh" path="res://scripts/time_passage.gd" id="20_pass"]
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="21_bg"]
 [ext_resource type="AudioStream" uid="uid://bdwrqq6652bkc" path="res://resources/sound/bgm/bgm01.ogg" id="22_bgm1"]
 [ext_resource type="Script" uid="uid://blrdn7l2mu5jx" path="res://scripts/jump_trail.gd" id="22_trail"]
@@ -55,7 +54,6 @@ player = NodePath("Player")
 stage_host = NodePath("StageHost")
 sfx_fall = NodePath("SfxFall")
 sfx_goal = NodePath("SfxGoal")
-time_passage = NodePath("TimePassage")
 bgm_player = NodePath("BgmPlayer")
 
 [node name="Background" parent="." unique_id=1586633226 instance=ExtResource("21_bg")]
@@ -145,9 +143,6 @@ position_smoothing_speed = 8.0
 script = ExtResource("2_tuner")
 target = NodePath("../Player")
 start_visible = false
-
-[node name="TimePassage" type="CanvasLayer" parent="." unique_id=164641574]
-script = ExtResource("20_pass")
 
 [node name="Cutscene" type="CanvasLayer" parent="." unique_id=923868755]
 script = ExtResource("36_hq6as")

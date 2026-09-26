@@ -119,9 +119,6 @@ signal player_fell(from_position: Vector2)
 @export var cutscene: Cutscene
 ## 記憶コレクション画面。未割り当てなら実行時に作る
 @export var memory: MemoryCollection
-## クリアデモと次のステージの冒頭デモの間に挟む時間経過の演出。
-## 未設定なら実行時に作る
-@export var time_passage: TimePassage
 ## ステージBGM再生用。未設定なら実行時に作る
 @export var bgm_player: AudioStreamPlayer
 
@@ -199,12 +196,6 @@ func _ready() -> void:
 		add_child(memory)
 	if memory.items.is_empty():
 		memory.items = _resolve_memory_items()
-	if time_passage == null:
-		time_passage = get_node_or_null(^"TimePassage") as TimePassage
-	if time_passage == null:
-		time_passage = TimePassage.new()
-		time_passage.name = "TimePassage"
-		add_child(time_passage)
 	if bgm_player == null:
 		bgm_player = get_node_or_null(^"BgmPlayer") as AudioStreamPlayer
 	if bgm_player == null:
@@ -401,7 +392,7 @@ func _warp_to_point(index: int) -> void:
 func load_stage(index: int, manual := true) -> void:
 	if index < 0 or index >= stages.size():
 		push_warning("Game: ステージ番号が範囲外です: %d" % index)
-		await _reveal()
+		_uncover()
 		return
 
 	_clear_overlay_hide()
@@ -418,7 +409,7 @@ func load_stage(index: int, manual := true) -> void:
 	_stage = (stages[index].instantiate()) as Stage
 	if _stage == null:
 		push_error("Game: ステージ %d のルートが Stage ではありません" % index)
-		await _reveal()
+		_uncover()
 		return
 	# ツリーに入れる前に開始位置へ移す。前のステージのゴール前に立ったままだと、
 	# ステージによってはそこが次のステージのゴール判定の中に入っていて、
@@ -448,39 +439,31 @@ func load_stage(index: int, manual := true) -> void:
 		% [index + 1, stages.size(), _stage.get_display_name()])
 	stage_loaded.emit(index, _stage)
 
-	# 時間経過の演出で暗転したままここへ来ている。差し替えが済んでから明ける。
 	var has_intro := _stage.intro != null and not skip_cutscenes \
 		and (manual or play_intro_on_select)
-	# 冒頭イベントがあるときは、明ける前にイベント側の暗幕を下ろしておく。
-	# 先に明けてしまうと、会話が始まって暗幕が下りるまでの一瞬だけ
-	# 次のステージが見えてしまう（時間経過の幕は CanvasLayer 40 で
-	# イベントの 32 より上なので、暗転したまま会話を出すことはできない）。
+	# 差し替えの瞬間が見えないよう、冒頭イベントの暗幕を先に下ろしておく。
 	# ステージが見えるのは会話が終わって暗幕が上がるときになる
 	if has_intro and cutscene:
 		await cutscene.cover_now()
-	# 明転はどの経路からも必ず通す。通し忘れると画面が暗いまま
-	# 操作を受け付けなくなるので、ここで gen を見て降りてはいけない
-	await _reveal()
-	if gen != _load_gen:
-		return
-
-	if has_intro:
 		await cutscene.play(_stage.intro)
 		if gen != _load_gen:
 			return          # 待っている間に別のステージへ切り替わった
 		# 冒頭イベントが BGM を止めて終わることがある（台本の「ここで初めて
 		# BGMを止め」）。そのままだとステージが無音で始まるので鳴らし直す
 		_resume_stage_bgm(index, gen)
+	else:
+		# 会話を出さないので、覆ったままにしない
+		_uncover()
 
 	await _show_stage_title(gen)
 
 
-## 時間経過の演出で暗転していたら明ける。暗転していなければ何もしない。
-## 読み込みに失敗して途中で戻る経路からも必ず通す。通し忘れると
-## 画面が暗いまま操作を受け付けなくなり、原因が追いにくい
-func _reveal() -> void:
-	if time_passage:
-		await time_passage.fade_in()
+## 次のステージへ移る間に下ろした暗幕を外す。
+## 会話を出さずに終わる経路からは必ず通す。通し忘れると
+## 画面が黒いままゲームが始まり、原因が追いにくい
+func _uncover() -> void:
+	if cutscene:
+		cutscene.uncover()
 
 
 func _reset_player() -> void:
@@ -774,10 +757,9 @@ func _on_goal_reached(clear_time: float) -> void:
 	# そのステージが完全に終わった時点なので、区切りとして分かりやすい
 	_write_save(_index + 1)
 
-	# 時間経過。暗転したまま次のステージへ移り、load_stage の中で明ける
-	if time_passage:
-		var caption := _stage.time_passage_text if _stage else ""
-		await time_passage.fade_out(caption)
+	# 差し替えの瞬間が見えないよう、先に画面を覆ってから次のステージへ移る
+	if cutscene:
+		await cutscene.cover_now()
 	load_stage(_index + 1)
 
 

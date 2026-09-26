@@ -317,6 +317,18 @@ func cover_now() -> void:
 	visible = true
 
 
+## cover_now() で下ろした暗幕を外す。
+## 会話を出さずに終わる経路（冒頭イベントの無いステージ、読み込み失敗）で必ず呼ぶ。
+## 呼び忘れると画面が黒いままゲームが始まる
+func uncover() -> void:
+	if _playing:
+		return          # 再生中は play() の終わりが片付ける
+	_clear_veil()
+	if _backdrop:
+		_backdrop.color.a = 0.0
+	visible = false
+
+
 ## イベント編集ツール用。指定したコマの見た目を、入力待ちも文字送りもせずに作る。
 ##
 ## 立ち絵と背景は「指定したものだけ変わる」方式なので、途中のコマを単独で当てても

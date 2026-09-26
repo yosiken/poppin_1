@@ -29,8 +29,6 @@ var camera_bounds: Rect2:
 @export var intro: CutsceneData
 ## ゴール到達後に再生するイベント
 @export var outro: CutsceneData
-## クリアデモの後の「時間経過」に出す文言。空なら TimePassage の既定を使う
-@export var time_passage_text := ""
 
 
 ## CameraBounds のポリゴンを囲む矩形を返す。
