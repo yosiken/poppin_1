@@ -101,6 +101,14 @@ class_name PlayerVisual
 ## ゴール到達時に再生するアニメーション名。空なら clip_source の最初のものを使う
 @export var goal_clip: StringName = &""
 
+## 全身アニメーションの末尾で動きが止まっている区間を詰めたあと、
+## 先頭へ戻るまでに残す秒数。
+##
+## ループは「最後のキー → 先頭のキー」を尺の余りぶんかけて補間する作りなので、
+## 末尾に静止した区間があるとそこで止まって見える。詰めたうえで、
+## ここで指定した秒数だけ戻りの補間に使う。0 にすると先頭へ瞬間的に戻る
+@export_range(0.0, 1.0, 0.05) var clip_loop_blend := 0.15
+
 @export_group("Toon")
 ## この名前のマテリアルはトゥーンを掛けず、陰影なし(unlit)で描く。
 ## ライトの向きで暗くなってほしくない部分（白目やハイライトなど）に使う
@@ -971,4 +979,36 @@ func _retarget_clip(src: Animation, src_root: Node) -> Animation:
 		for k in src.track_get_key_count(t):
 			out.rotation_track_insert_key(dst, src.track_get_key_time(t, k),
 				(src.track_get_key_value(t, k) as Quaternion) * fix)
+	_trim_still_tail(out)
 	return out
+
+
+## 末尾で動きが止まっている区間を詰める。
+##
+## ループ再生は「最後のキー → 先頭のキー」を尺の余りぶんかけて補間する
+## （Godot の LOOP_LINEAR の仕様）。素材の末尾に静止した区間があると、
+## そこと戻りの補間が合わさって数フレーム止まって見える。
+## どのボーンも動かなくなる時刻まで尺を詰め、戻りの補間ぶんだけ残す
+func _trim_still_tail(anim: Animation) -> void:
+	var motion_end := 0.0
+	for t in anim.get_track_count():
+		var n := anim.track_get_key_count(t)
+		if n < 2:
+			continue
+		# 後ろから見て、ひとつ前と姿勢が変わる最初のキーを探す
+		for i in range(n - 1, 0, -1):
+			var a: Quaternion = anim.track_get_key_value(t, i)
+			var b: Quaternion = anim.track_get_key_value(t, i - 1)
+			# 四元数は q と -q が同じ姿勢なので絶対値で見る。
+			# 0.99999 はおよそ 0.5 度。これ未満の差は動いていないとみなす
+			if absf(a.dot(b)) < 0.99999:
+				motion_end = maxf(motion_end, anim.track_get_key_time(t, i))
+				break
+	if motion_end <= 0.0:
+		return
+	var trimmed := minf(motion_end + clip_loop_blend, anim.length)
+	if trimmed >= anim.length - 0.001:
+		return          # 末尾に無駄が無い。そのまま
+	print("[PlayerVisual] 末尾 %.2f秒は静止していたので詰めました (%.2f秒 → %.2f秒)"
+		% [anim.length - trimmed, anim.length, trimmed])
+	anim.length = trimmed
