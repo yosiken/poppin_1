@@ -81,8 +81,11 @@ class_name PlayerVisual
 
 ## ゴールで踊っている間、ボールを頭の上へどれだけ浮かせるか。
 ## ボールの上半径に対する倍率で、1.0 ならボールの下端が頭にちょうど触れる高さ。
-## 0 にすると頭にめり込むので、少し余裕を持たせてある
-@export_range(0.0, 6.0, 0.1) var dance_ball_lift := 1.6
+##
+## 上げすぎるとキャラクターを写している枠（SubViewport）の外へ出て消える。
+## 枠は踊っている間 clip_view_zoom 倍まで広がるが、それでも足りなければ
+## この値を下げるか clip_view_zoom を上げること
+@export_range(0.0, 6.0, 0.1) var dance_ball_lift := 0.8
 
 @export_group("Animation")
 ## 再生するアニメーション名。空ならモデルが持つ最初のアニメーションを使う。
@@ -157,6 +160,7 @@ var _ball_skeleton: Skeleton3D         ## ボール用（ボーン1本）のス�
 var _ball_bone_idx := -1
 var _ball_base_scale := Vector3.ONE
 var _ball_base_pos := Vector3.ZERO     ## 踊りで頭の上へ動かす前の位置（戻す用）
+var _saved_process_mode := Node.PROCESS_MODE_INHERIT   ## 踊る前の設定（戻す用）
 var _ball_top_y := 0.0                 ## ボーン原点からボール上端までの高さ
 var _char_base_y := 0.0                ## キャラクター側スケルトンの基準の高さ
 var _squash := 1.0
@@ -808,9 +812,18 @@ func play_clip(clip_name: StringName = &"") -> bool:
 		_park_ball_above_head()
 	# 土台が変わるので、揺れの基準と溜まった角度は捨てる
 	_reset_secondary_state()
+	# AnimationPlayer だけ動かしても、髪の揺れと頭の上のボールは
+	# こちらの _process が回していて取り残される。踊る間は一緒に動かす
+	_saved_process_mode = process_mode
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_clip_playing = true
 	_clip_zoom = maxf(visual_stats.clip_view_zoom, 1.0)
 	_apply_visual_stats()
+	# 次のステージへ移るまで踊り続ける。取り込みのときにも LOOP_LINEAR を
+	# 入れているが、供給元を差し替えたときに落ちないよう再生の直前でも確かめる
+	var anim := _clip_player.get_animation(clip)
+	if anim and anim.loop_mode != Animation.LOOP_LINEAR:
+		anim.loop_mode = Animation.LOOP_LINEAR
 	_clip_player.play(clip)
 	return true
 
@@ -830,6 +843,7 @@ func stop_clip() -> void:
 	if not _clip_playing:
 		return
 	_clip_playing = false
+	process_mode = _saved_process_mode
 	_clip_zoom = 1.0
 	_apply_visual_stats()
 	if _clip_player:
@@ -908,6 +922,10 @@ func _setup_clips() -> void:
 
 	_clip_player = AnimationPlayer.new()
 	_clip_player.name = "ClipPlayer"
+	# イベントやポーズでツリーが止まっても踊り続ける。
+	# ゴールのあとは会話がツリーを止めるので、これが無いと
+	# 会話の裏でモーションが固まったまま次のステージへ行く
+	_clip_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	# root_node の既定は "..", つまり親の _yaw。トラックのパスもそこ基準で作る
 	_yaw.add_child(_clip_player)
 	_clip_player.add_animation_library("", lib)
