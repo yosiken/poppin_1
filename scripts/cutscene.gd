@@ -71,6 +71,24 @@ const SHAKE_MARGIN := 56
 ## 口パクの開閉間隔 (秒)
 @export_range(0.02, 0.5, 0.01) var talk_step := 0.09
 
+@export_group("Voice")
+## セリフに合わせて鳴らす、声のような音。null なら鳴らさない。
+## 意味は聞き取れなくてよく、拍に合わせて短く鳴らすだけ
+@export var voice_stream: AudioStream = preload("res://resources/sound/voice.mp3")
+## 音源の頭にある無音を飛ばす秒数。
+## voice.mp3 は先頭 0.10 秒が無音で、そこから鳴らさないと
+## 次の拍で切られて何も聞こえないまま終わる
+@export_range(0.0, 1.0, 0.01) var voice_start := 0.1
+## 続けて鳴らす最短間隔 (秒)。文字送りが速くても機関銃にならないようにする
+@export_range(0.0, 0.5, 0.01) var voice_min_interval := 0.07
+## 音程のゆらぎ。±この割合で散らして単調さを消す
+@export_range(0.0, 0.5, 0.01) var voice_pitch_jitter := 0.08
+## 話者ごとの音程。同じ音源でも別人に聞こえる。ここに無い話者は 1.0
+@export var voice_pitch: Dictionary[String, float] = {
+	"OB": 0.82,
+	"カニエナガ": 1.22,
+}
+
 @export_group("Background Effect")
 ## 背景を隠すシェーダー。未指定なら BG_HIDE_SHADER を読む
 @export var bg_hide_shader: Shader
@@ -152,6 +170,10 @@ var bgm_player: AudioStreamPlayer
 var _bgm_tween: Tween
 ## コマ単位の効果音。ポップアップのSEと食い合わないよう別に持つ
 var _line_sfx: AudioStreamPlayer
+## セリフの音。拍ごとに鳴らす
+var _voice_sfx: AudioStreamPlayer
+## 次に鳴らしてよい時刻。これで連射を防ぐ
+var _voice_next_at := 0.0
 ## 後ろのゲーム画面を隠す暗幕。_bg より奥に置く
 var _backdrop: ColorRect
 var _bg: TextureRect
@@ -440,6 +462,7 @@ func _play_line(line: CutsceneLine, is_last := false) -> void:
 		var next_break := 0
 		_text_label.visible_characters = 0
 		var shown := 0.0
+		var voiced_upto := 0
 		while shown < float(total):
 			if _advance:
 				_advance = false
@@ -449,6 +472,11 @@ func _play_line(line: CutsceneLine, is_last := false) -> void:
 			await get_tree().process_frame
 			shown += get_process_delta_time() / maxf(type_speed, 0.001)
 			_text_label.visible_characters = mini(int(shown), total)
+			# 新しく出た文字に拍の頭があれば声を鳴らす
+			if _text_label.visible_characters > voiced_upto:
+				_speak(_text_label.get_parsed_text(), voiced_upto,
+					_text_label.visible_characters, line.speaker)
+				voiced_upto = _text_label.visible_characters
 			while next_break < breaks.size() and _text_label.visible_characters > breaks[next_break]:
 				next_break += 1
 				_rotate_speaker(line.speaking)
@@ -607,6 +635,37 @@ func _update_blink(rect: TextureRect, delta: float) -> void:
 
 
 ## 口パク。喋っている間だけ開閉を繰り返し、黙っているときは閉じたままにする
+## 拍として数えない文字。小書き文字・長音符・記号・空白。
+## 「しゅっぱつ」なら「しゅ」「ぱ」「つ」の3回だけ鳴る
+const VOICE_SKIP := "ぁぃぅぇぉっゃゅょァィゥェォッャュョーｰー" 	+ "、。，．・…‥！？!?「」『』（）()　 
+	"
+
+
+## 新しく出た文字のうち拍の頭があれば、一度だけ声を鳴らす。
+##
+## 位置は BBCode を除いた本文（get_parsed_text）で数える。
+## visible_characters もその基準なので、タグを拍として数えずに済む
+func _speak(parsed: String, from: int, to: int, speaker: String) -> void:
+	if _voice_sfx == null or voice_stream == null or speaker == "":
+		return          # 地の文（話者なし）では鳴らさない
+	var now := Time.get_ticks_msec() * 0.001
+	if now < _voice_next_at:
+		return
+	var has_mora := false
+	for i in range(from, mini(to, parsed.length())):
+		if not VOICE_SKIP.contains(parsed[i]):
+			has_mora = true
+			break
+	if not has_mora:
+		return
+	_voice_next_at = now + voice_min_interval
+	var base: float = voice_pitch.get(speaker, 1.0)
+	_voice_sfx.pitch_scale = maxf(0.01,
+		base * (1.0 + randf_range(-voice_pitch_jitter, voice_pitch_jitter)))
+	# 頭の無音を飛ばした位置から鳴らす
+	_voice_sfx.play(voice_start)
+
+
 func _update_mouth(rect: TextureRect) -> void:
 	if rect == null or rect.texture == null:
 		return
@@ -1096,6 +1155,15 @@ func _build_popup() -> void:
 	_line_sfx.bus = "SE"
 	_line_sfx.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_line_sfx)
+
+	_voice_sfx = AudioStreamPlayer.new()
+	_voice_sfx.name = "VoiceSfx"
+	_voice_sfx.bus = "SE"
+	_voice_sfx.process_mode = Node.PROCESS_MODE_ALWAYS
+	# 同時に1つだけ。次の拍が前の音を切るので、長い音源でも短いブリップになる
+	_voice_sfx.max_polyphony = 1
+	_voice_sfx.stream = voice_stream
+	add_child(_voice_sfx)
 
 
 ## 白フチ＋影の枠。色で種別を分ける
