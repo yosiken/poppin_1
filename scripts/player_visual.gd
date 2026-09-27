@@ -81,8 +81,11 @@ class_name PlayerVisual
 
 ## ゴールで踊っている間、ボールを頭の上へどれだけ浮かせるか。
 ## ボールの上半径に対する倍率で、1.0 ならボールの下端が頭にちょうど触れる高さ。
-## 0 にすると頭にめり込むので、少し余裕を持たせてある
-@export_range(0.0, 6.0, 0.1) var dance_ball_lift := 1.6
+##
+## 上げすぎるとキャラクターを写している枠（SubViewport）の外へ出て消える。
+## 枠は踊っている間 clip_view_zoom 倍まで広がるが、それでも足りなければ
+## この値を下げるか clip_view_zoom を上げること
+@export_range(0.0, 6.0, 0.1) var dance_ball_lift := 0.8
 
 @export_group("Animation")
 ## 再生するアニメーション名。空ならモデルが持つ最初のアニメーションを使う。
@@ -811,6 +814,11 @@ func play_clip(clip_name: StringName = &"") -> bool:
 	_clip_playing = true
 	_clip_zoom = maxf(visual_stats.clip_view_zoom, 1.0)
 	_apply_visual_stats()
+	# 次のステージへ移るまで踊り続ける。取り込みのときにも LOOP_LINEAR を
+	# 入れているが、供給元を差し替えたときに落ちないよう再生の直前でも確かめる
+	var anim := _clip_player.get_animation(clip)
+	if anim and anim.loop_mode != Animation.LOOP_LINEAR:
+		anim.loop_mode = Animation.LOOP_LINEAR
 	_clip_player.play(clip)
 	return true
 
