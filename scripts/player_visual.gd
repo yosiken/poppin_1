@@ -105,9 +105,11 @@ class_name PlayerVisual
 ## 先頭へ戻るまでに残す秒数。
 ##
 ## ループは「最後のキー → 先頭のキー」を尺の余りぶんかけて補間する作りなので、
-## 末尾に静止した区間があるとそこで止まって見える。詰めたうえで、
-## ここで指定した秒数だけ戻りの補間に使う。0 にすると先頭へ瞬間的に戻る
-@export_range(0.0, 1.0, 0.05) var clip_loop_blend := 0.15
+## 末尾に静止した区間があるとそこで止まって見える。静止したキーを消したうえで、
+## ここで指定した秒数を戻りの補間に使う。
+## 長いほど繋ぎは滑らかになるが、その間は動きが緩むので止まって見えやすい。
+## 0 にすると先頭の姿勢へ瞬間的に戻る
+@export_range(0.0, 1.0, 0.01) var clip_loop_blend := 0.05
 
 ## 全身アニメーションの中身と再生位置をコンソールへ出す。
 ## ループの継ぎ目で止まって見えるときの切り分け用。
@@ -1049,11 +1051,21 @@ func _trim_still_tail(anim: Animation) -> void:
 			if absf(a.dot(b)) < 0.99999:
 				motion_end = maxf(motion_end, anim.track_get_key_time(t, i))
 				break
-	if motion_end <= 0.0:
-		return
-	var trimmed := minf(motion_end + clip_loop_blend, anim.length)
-	if trimmed >= anim.length - 0.001:
+	if motion_end <= 0.0 or motion_end >= anim.length - 0.001:
 		return          # 末尾に無駄が無い。そのまま
-	print("[PlayerVisual] 末尾 %.2f秒は静止していたので詰めました (%.2f秒 → %.2f秒)"
-		% [anim.length - trimmed, anim.length, trimmed])
-	anim.length = trimmed
+
+	# 尺を縮めるだけでは足りない。キーを残したまま尺の外へ出すと、
+	# Godot は「尺を過ぎたキー」として扱い、終盤でそちらへ向かって
+	# 補間し続ける。つまり静止した姿勢が画面に出たままになる。
+	# 動かなくなったあとのキーは消す
+	var removed := 0
+	for t in anim.get_track_count():
+		for i in range(anim.track_get_key_count(t) - 1, -1, -1):
+			if anim.track_get_key_time(t, i) > motion_end + 0.0001:
+				anim.track_remove_key(t, i)
+				removed += 1
+	var before := anim.length
+	anim.length = motion_end + clip_loop_blend
+	print("[PlayerVisual] 末尾 %.3f秒は静止していたので詰めました "
+		% (before - motion_end)
+		+ "(尺 %.3f → %.3f秒 / キー %d本を削除)" % [before, anim.length, removed])
