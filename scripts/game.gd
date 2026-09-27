@@ -150,6 +150,10 @@ var _fall_count := 0
 var _total_falls := 0
 ## 全ステージ合計のクリアタイム（オンラインランキングの total 用）
 var _total_clear_time := 0.0
+## F3の強制クリアを使ったか。使った回のスコアはオンラインへ送らない。
+## _stage 用（そのステージ）と _run 用（以降の合計）で分ける
+var _debug_cleared := false
+var _debug_run := false
 
 ## リプレイ記録（そのステージの1位を更新した時だけスコアに添えて送信する。
 ## 何フレームに1回記録するか。小さいほど滑らかだが容量が増える）
@@ -688,6 +692,8 @@ func reset_score() -> void:
 	_total_falls = 0
 	_fall_count = 0
 	_total_clear_time = 0.0
+	_debug_cleared = false
+	_debug_run = false
 
 
 # ═══════════════════════════════ デバッグ
@@ -701,7 +707,9 @@ func clear_stage() -> void:
 	if goal == null:
 		push_warning("Game: このステージにはゴールがありません")
 		return
-	print("[Game] デバッグ: ステージ %d を強制クリア" % (_index + 1))
+	print("[Game] デバッグ: ステージ %d を強制クリア（スコアは送信しない）" % (_index + 1))
+	_debug_cleared = true
+	_debug_run = true
 	goal.force_reach(player)
 
 
@@ -721,10 +729,14 @@ func _on_goal_reached(clear_time: float) -> void:
 	var is_last := _index >= stages.size() - 1
 	var is_test_end := test_play_mode and _index + 1 >= test_play_stage_count
 	_total_clear_time += clear_time
+	# 強制クリアした回は自力のタイムではないのでランキングへ送らない。
+	# 合計も、一度でも使った走行は最後まで送らない
 	if not Settings.test_mode:
-		_submit_stage_score(_index, clear_time, _fall_count)
-		if is_last:
+		if not _debug_cleared:
+			_submit_stage_score(_index, clear_time, _fall_count)
+		if is_last and not _debug_run:
 			_submit_total_score(_total_clear_time, _total_falls)
+	_debug_cleared = false
 	_show_clear(_total_clear_time if is_last else clear_time, is_last, is_test_end)
 	await _wait_after_goal()
 	if not _advancing:                    # 待機中に手動で切り替えられていたら何もしない
@@ -791,25 +803,16 @@ func _resolve_memory_items() -> Array[Texture2D]:
 
 
 ## ステージ単体のスコアを "stage01"〜"stage10" のリーダーボードへ送る。
-## スコアはクリアタイム（秒）。落下回数は metadata に添える。
-## そのステージの現在の1位より速ければ、リプレイを添えて送信する。
-## 及ばなければリプレイ無しで送る（1位の座を守っている記録だけが
-## 結果的にリプレイを持ち続ける。await していても呼び出し側は
-## 待たずに進む＝ゲーム進行を止めない）
+## スコアはクリアタイム（秒）。落下回数とリプレイは metadata に添える。
+##
+## 以前は送信前に get_scores で1位のタイムを問い合わせ、上回ったときだけ
+## リプレイを添えていた。しかし通信の往復が2回になり、応答が返るたびに
+## メインスレッドが 100ms 以上止まる。ちょうどゴールのダンス中に重なって
+## 「アニメが数フレーム止まる」症状になっていたため、問い合わせをやめて
+## 常にリプレイを添える（往復1回）。リプレイは60秒ぶんで約26KB
 func _submit_stage_score(index: int, clear_time: float, fall_count: int) -> void:
 	var board := "stage%02d" % (index + 1)
-	var metadata := {"falls": fall_count}
-
-	var current: Dictionary = await SilentWolf.Scores.get_scores(1, board).sw_get_scores_complete
-	var is_new_best := true
-	if current.get("success", false):
-		var scores: Array = current.get("scores", [])
-		if not scores.is_empty():
-			is_new_best = clear_time < float(scores[0].get("score", INF))
-
-	if is_new_best:
-		metadata["replay"] = _build_replay_payload()
-
+	var metadata := {"falls": fall_count, "replay": _build_replay_payload()}
 	SilentWolf.Scores.save_score(Settings.player_name, clear_time, board, metadata)
 
 
@@ -818,10 +821,18 @@ func _submit_total_score(total_time: float, total_falls: int) -> void:
 	SilentWolf.Scores.save_score(Settings.player_name, total_time, "total", {"falls": total_falls})
 
 
-## クリアSEが鳴り終わるまでイベントを始めないための待ち
+## クリアSEと勝利モーションが終わるまでイベントを始めないための待ち
 func _wait_after_goal() -> void:
 	var elapsed := 0.0
-	while elapsed < next_stage_delay:
+	# 勝利モーションが1周しきるまでは場面を変えない。
+	# next_stage_delay がモーションよりわずかに短いと、踊り終わる直前で
+	# 切り替えが始まり「1周した直後に固まった」ように見える。
+	# 尺は決め打ちせずクリップから取る（素材を差し替えても追従する）
+	var wait := next_stage_delay
+	var visual := _player_visual()
+	if visual:
+		wait = maxf(wait, visual.clip_length())
+	while elapsed < wait:
 		await get_tree().process_frame
 		elapsed += get_process_delta_time()
 	# まだ鳴っていれば上限まで待つ

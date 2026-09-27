@@ -861,6 +861,14 @@ func is_clip_playing() -> bool:
 	return _clip_playing
 
 
+## 再生中のクリップの尺 (秒)。再生していなければ 0。
+## 「踊り終わるまで場面を変えない」といった待ち合わせに使う
+func clip_length() -> float:
+	if not _clip_playing or _clip_player == null:
+		return 0.0
+	return _clip_player.current_animation_length
+
+
 ## 再生を止めて、始める前の姿勢へ戻す。
 ## 揺れの基準も取り直す（アニメーションが書いた値を基準にすると角度が流れていく）
 func stop_clip() -> void:
