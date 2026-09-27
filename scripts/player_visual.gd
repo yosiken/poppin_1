@@ -111,12 +111,6 @@ class_name PlayerVisual
 ## 0 にすると先頭の姿勢へ瞬間的に戻る
 @export_range(0.0, 1.0, 0.01) var clip_loop_blend := 0.05
 
-## 全身アニメーションの中身と再生位置をコンソールへ出す。
-## ループの継ぎ目で止まって見えるときの切り分け用。
-## 「位置が進んでいない」が出れば AnimationPlayer 側、
-## 出ないのに止まって見えるなら素材のキー側が原因
-@export var clip_debug := false
-
 @export_group("Toon")
 ## この名前のマテリアルはトゥーンを掛けず、陰影なし(unlit)で描く。
 ## ライトの向きで暗くなってほしくない部分（白目やハイライトなど）に使う
@@ -177,9 +171,6 @@ var _ball_bone_idx := -1
 var _ball_base_scale := Vector3.ONE
 var _ball_base_pos := Vector3.ZERO     ## 踊りで頭の上へ動かす前の位置（戻す用）
 var _saved_process_mode := Node.PROCESS_MODE_INHERIT   ## 踊る前の設定（戻す用）
-var _dbg_prev_at := -1.0               ## clip_debug 用。前フレームの再生位置
-var _dbg_last_report := 0.0            ## clip_debug 用。前回まとめて出した時刻
-var _dbg_stall_frames := 0             ## clip_debug 用。位置が進まなかったフレーム数
 var _ball_top_y := 0.0                 ## ボーン原点からボール上端までの高さ
 var _char_base_y := 0.0                ## キャラクター側スケルトンの基準の高さ
 var _squash := 1.0
@@ -230,8 +221,6 @@ func _process(_delta: float) -> void:
 	_update_secondary(_delta)
 	if _clip_playing:
 		_park_ball_above_head()
-		if clip_debug:
-			_debug_clip_position()
 
 
 # ═══════════════════════════════ 向き
@@ -838,9 +827,6 @@ func play_clip(clip_name: StringName = &"") -> bool:
 	_saved_process_mode = process_mode
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_clip_playing = true
-	_dbg_prev_at = -1.0
-	_dbg_last_report = 0.0
-	_dbg_stall_frames = 0
 	_clip_zoom = maxf(visual_stats.clip_view_zoom, 1.0)
 	_apply_visual_stats()
 	# 次のステージへ移るまで踊り続ける。取り込みのときにも LOOP_LINEAR を
@@ -948,8 +934,6 @@ func _setup_clips() -> void:
 			continue
 		lib.add_animation(clip, converted)
 		_clip_names.append(clip)
-		if clip_debug:
-			_debug_clip_info(clip, src_anim.get_animation(clip), converted)
 	src.free()
 	if _clip_names.is_empty():
 		return
@@ -1007,52 +991,6 @@ func _retarget_clip(src: Animation, src_root: Node) -> Animation:
 				(src.track_get_key_value(t, k) as Quaternion) * fix)
 	_trim_still_tail(out)
 	return out
-
-
-## 取り込んだ全身アニメーションの中身を出す。
-## 素材側とこちらで尺やキー数が食い違っていないかを見るため、両方出す
-func _debug_clip_info(clip_name: String, src: Animation, out: Animation) -> void:
-	print("[PlayerVisual] '%s'" % clip_name)
-	for label in ["素材", "変換後"]:
-		var a: Animation = src if label == "素材" else out
-		var last_key := 0.0
-		var keys := 0
-		for t in a.get_track_count():
-			var n := a.track_get_key_count(t)
-			keys += n
-			if n > 0:
-				last_key = maxf(last_key, a.track_get_key_time(t, n - 1))
-		print("  %s: 尺 %.3f秒 / 最終キー %.3f秒 / 余り %.3f秒 / トラック %d / キー %d / loop %d"
-			% [label, a.length, last_key, a.length - last_key,
-				a.get_track_count(), keys, a.loop_mode])
-
-
-## 踊っている間の様子を 0.5 秒ごとに一行ずつ出す。
-##
-## 見るのは3つ。どれが止まっているかで原因が分かれる。
-##   再生位置が進まない        … AnimationPlayer が回っていない
-##   再生位置は進むが fps が低い … ゲーム全体が引っかかっている（描画や重い処理）
-##   どちらも正常なのに止まって見える … 素材のキーか、載せ替えの取りこぼし
-func _debug_clip_position() -> void:
-	if _clip_player == null:
-		return
-	var at := _clip_player.current_animation_position
-	if _dbg_prev_at >= 0.0:
-		if at < _dbg_prev_at:
-			print("[PlayerVisual] ループ: %.3f → %.3f (尺 %.3f)"
-				% [_dbg_prev_at, at, _clip_player.current_animation_length])
-		elif is_equal_approx(at, _dbg_prev_at):
-			_dbg_stall_frames += 1
-	_dbg_prev_at = at
-
-	var now := Time.get_ticks_msec() * 0.001
-	if now - _dbg_last_report < 0.5:
-		return
-	_dbg_last_report = now
-	print("[PlayerVisual] 位置 %.3f / 尺 %.3f / fps %d / 進まなかったフレーム %d"
-		% [at, _clip_player.current_animation_length,
-			Engine.get_frames_per_second(), _dbg_stall_frames])
-	_dbg_stall_frames = 0
 
 
 ## 末尾で動きが止まっている区間を詰める。
