@@ -178,6 +178,8 @@ var _ball_base_scale := Vector3.ONE
 var _ball_base_pos := Vector3.ZERO     ## 踊りで頭の上へ動かす前の位置（戻す用）
 var _saved_process_mode := Node.PROCESS_MODE_INHERIT   ## 踊る前の設定（戻す用）
 var _dbg_prev_at := -1.0               ## clip_debug 用。前フレームの再生位置
+var _dbg_last_report := 0.0            ## clip_debug 用。前回まとめて出した時刻
+var _dbg_stall_frames := 0             ## clip_debug 用。位置が進まなかったフレーム数
 var _ball_top_y := 0.0                 ## ボーン原点からボール上端までの高さ
 var _char_base_y := 0.0                ## キャラクター側スケルトンの基準の高さ
 var _squash := 1.0
@@ -837,6 +839,8 @@ func play_clip(clip_name: StringName = &"") -> bool:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_clip_playing = true
 	_dbg_prev_at = -1.0
+	_dbg_last_report = 0.0
+	_dbg_stall_frames = 0
 	_clip_zoom = maxf(visual_stats.clip_view_zoom, 1.0)
 	_apply_visual_stats()
 	# 次のステージへ移るまで踊り続ける。取り込みのときにも LOOP_LINEAR を
@@ -1015,8 +1019,12 @@ func _debug_clip_info(clip_name: String, src: Animation, out: Animation) -> void
 				a.get_track_count(), keys, a.loop_mode])
 
 
-## 再生位置が毎フレーム進んでいるかを見る。
-## 止まって見える原因が AnimationPlayer 側か素材側かを切り分ける
+## 踊っている間の様子を 0.5 秒ごとに一行ずつ出す。
+##
+## 見るのは3つ。どれが止まっているかで原因が分かれる。
+##   再生位置が進まない        … AnimationPlayer が回っていない
+##   再生位置は進むが fps が低い … ゲーム全体が引っかかっている（描画や重い処理）
+##   どちらも正常なのに止まって見える … 素材のキーか、載せ替えの取りこぼし
 func _debug_clip_position() -> void:
 	if _clip_player == null:
 		return
@@ -1026,8 +1034,17 @@ func _debug_clip_position() -> void:
 			print("[PlayerVisual] ループ: %.3f → %.3f (尺 %.3f)"
 				% [_dbg_prev_at, at, _clip_player.current_animation_length])
 		elif is_equal_approx(at, _dbg_prev_at):
-			print("[PlayerVisual] 再生位置が進んでいない: %.3f秒" % at)
+			_dbg_stall_frames += 1
 	_dbg_prev_at = at
+
+	var now := Time.get_ticks_msec() * 0.001
+	if now - _dbg_last_report < 0.5:
+		return
+	_dbg_last_report = now
+	print("[PlayerVisual] 位置 %.3f / 尺 %.3f / fps %d / 進まなかったフレーム %d"
+		% [at, _clip_player.current_animation_length,
+			Engine.get_frames_per_second(), _dbg_stall_frames])
+	_dbg_stall_frames = 0
 
 
 ## 末尾で動きが止まっている区間を詰める。
