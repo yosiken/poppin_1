@@ -1,0 +1,17 @@
+[remap]
+
+importer="effekseer.effect"
+type="Resource"
+uid="uid://cjbeud17m2b20"
+path="res://.godot/imported/smoke.efkefc-2f07670c12ae84c78241092a7ff08889.res"
+
+[deps]
+
+source_file="res://resources/effects/smoke.efkefc"
+dest_files=["res://.godot/imported/smoke.efkefc-2f07670c12ae84c78241092a7ff08889.res"]
+
+[params]
+
+scale=100.0
+data_type=0
+compress=true

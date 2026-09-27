@@ -1,0 +1,49 @@
+# 改行コードの取り決め。
+#
+# Windows と mac が混在しているので、リポジトリ側も作業コピーも LF に揃える。
+# これが無いと core.autocrlf の設定しだいで、中身を変えていない .tres や .tscn に
+# 差分が出て、片方の環境だけが巻き込まれる。
+#
+# 導入時点でリポジトリ側のテキストは全て LF なので、既存ファイルの中身は変わらない。
+
+* text=auto eol=lf
+
+# ── Godot / スクリプト
+*.gd          text eol=lf
+*.tscn        text eol=lf
+*.tres        text eol=lf
+*.import      text eol=lf
+*.uid         text eol=lf
+*.godot       text eol=lf
+*.cfg         text eol=lf
+*.gdshader    text eol=lf
+*.gdextension text eol=lf
+
+# ── その他のテキスト
+*.py          text eol=lf
+*.md          text eol=lf
+*.txt         text eol=lf
+*.json        text eol=lf
+
+# ── バイナリ。text=auto の自動判定に任せず明示する。
+#    取り違えると中身が壊れ、しかも壊れたことに気づきにくい
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.webp   binary
+*.psd    binary
+*.blend  binary
+*.blend1 binary
+*.fbx    binary
+*.mp3    binary
+*.ogg    binary
+*.wav    binary
+*.m4a    binary
+*.ttf    binary
+*.otf    binary
+*.res    binary
+*.wasm   binary
+*.dll    binary
+*.zip    binary
+*.bin    binary
+*.efkefc binary
