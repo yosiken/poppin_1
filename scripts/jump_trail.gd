@@ -103,9 +103,15 @@ func _apply_gradient(is_super: bool) -> void:
 
 
 ## 先端（＝キャラ側）を太く、末尾を細くする。
+##
+## 既にカーブが設定されていれば作り直さない。@tool なのでエディタでも
+## ここが走り、毎回新しい Curve を代入すると、シーンを保存するたびに
+## サブリソースのIDだけが変わった中身のない差分が出てしまう。
 ## Line2D の幅カーブはオフセット0が最初に打った点＝一番古い側なので、
 ## 0で細く、1で太くする
 func _build_taper() -> void:
+	if width_curve:
+		return          # 既にあるものは尊重する（インスペクタで形を変えられる）
 	var curve := Curve.new()
 	curve.add_point(Vector2(0.0, 0.0))
 	curve.add_point(Vector2(1.0, 1.0))
