@@ -105,9 +105,11 @@ class_name PlayerVisual
 ## 先頭へ戻るまでに残す秒数。
 ##
 ## ループは「最後のキー → 先頭のキー」を尺の余りぶんかけて補間する作りなので、
-## 末尾に静止した区間があるとそこで止まって見える。詰めたうえで、
-## ここで指定した秒数だけ戻りの補間に使う。0 にすると先頭へ瞬間的に戻る
-@export_range(0.0, 1.0, 0.05) var clip_loop_blend := 0.15
+## 末尾に静止した区間があるとそこで止まって見える。静止したキーを消したうえで、
+## ここで指定した秒数を戻りの補間に使う。
+## 長いほど繋ぎは滑らかになるが、その間は動きが緩むので止まって見えやすい。
+## 0 にすると先頭の姿勢へ瞬間的に戻る
+@export_range(0.0, 1.0, 0.01) var clip_loop_blend := 0.05
 
 ## 全身アニメーションの中身と再生位置をコンソールへ出す。
 ## ループの継ぎ目で止まって見えるときの切り分け用。
@@ -176,6 +178,8 @@ var _ball_base_scale := Vector3.ONE
 var _ball_base_pos := Vector3.ZERO     ## 踊りで頭の上へ動かす前の位置（戻す用）
 var _saved_process_mode := Node.PROCESS_MODE_INHERIT   ## 踊る前の設定（戻す用）
 var _dbg_prev_at := -1.0               ## clip_debug 用。前フレームの再生位置
+var _dbg_last_report := 0.0            ## clip_debug 用。前回まとめて出した時刻
+var _dbg_stall_frames := 0             ## clip_debug 用。位置が進まなかったフレーム数
 var _ball_top_y := 0.0                 ## ボーン原点からボール上端までの高さ
 var _char_base_y := 0.0                ## キャラクター側スケルトンの基準の高さ
 var _squash := 1.0
@@ -835,6 +839,8 @@ func play_clip(clip_name: StringName = &"") -> bool:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_clip_playing = true
 	_dbg_prev_at = -1.0
+	_dbg_last_report = 0.0
+	_dbg_stall_frames = 0
 	_clip_zoom = maxf(visual_stats.clip_view_zoom, 1.0)
 	_apply_visual_stats()
 	# 次のステージへ移るまで踊り続ける。取り込みのときにも LOOP_LINEAR を
@@ -1013,8 +1019,12 @@ func _debug_clip_info(clip_name: String, src: Animation, out: Animation) -> void
 				a.get_track_count(), keys, a.loop_mode])
 
 
-## 再生位置が毎フレーム進んでいるかを見る。
-## 止まって見える原因が AnimationPlayer 側か素材側かを切り分ける
+## 踊っている間の様子を 0.5 秒ごとに一行ずつ出す。
+##
+## 見るのは3つ。どれが止まっているかで原因が分かれる。
+##   再生位置が進まない        … AnimationPlayer が回っていない
+##   再生位置は進むが fps が低い … ゲーム全体が引っかかっている（描画や重い処理）
+##   どちらも正常なのに止まって見える … 素材のキーか、載せ替えの取りこぼし
 func _debug_clip_position() -> void:
 	if _clip_player == null:
 		return
@@ -1024,8 +1034,17 @@ func _debug_clip_position() -> void:
 			print("[PlayerVisual] ループ: %.3f → %.3f (尺 %.3f)"
 				% [_dbg_prev_at, at, _clip_player.current_animation_length])
 		elif is_equal_approx(at, _dbg_prev_at):
-			print("[PlayerVisual] 再生位置が進んでいない: %.3f秒" % at)
+			_dbg_stall_frames += 1
 	_dbg_prev_at = at
+
+	var now := Time.get_ticks_msec() * 0.001
+	if now - _dbg_last_report < 0.5:
+		return
+	_dbg_last_report = now
+	print("[PlayerVisual] 位置 %.3f / 尺 %.3f / fps %d / 進まなかったフレーム %d"
+		% [at, _clip_player.current_animation_length,
+			Engine.get_frames_per_second(), _dbg_stall_frames])
+	_dbg_stall_frames = 0
 
 
 ## 末尾で動きが止まっている区間を詰める。
@@ -1049,11 +1068,21 @@ func _trim_still_tail(anim: Animation) -> void:
 			if absf(a.dot(b)) < 0.99999:
 				motion_end = maxf(motion_end, anim.track_get_key_time(t, i))
 				break
-	if motion_end <= 0.0:
-		return
-	var trimmed := minf(motion_end + clip_loop_blend, anim.length)
-	if trimmed >= anim.length - 0.001:
+	if motion_end <= 0.0 or motion_end >= anim.length - 0.001:
 		return          # 末尾に無駄が無い。そのまま
-	print("[PlayerVisual] 末尾 %.2f秒は静止していたので詰めました (%.2f秒 → %.2f秒)"
-		% [anim.length - trimmed, anim.length, trimmed])
-	anim.length = trimmed
+
+	# 尺を縮めるだけでは足りない。キーを残したまま尺の外へ出すと、
+	# Godot は「尺を過ぎたキー」として扱い、終盤でそちらへ向かって
+	# 補間し続ける。つまり静止した姿勢が画面に出たままになる。
+	# 動かなくなったあとのキーは消す
+	var removed := 0
+	for t in anim.get_track_count():
+		for i in range(anim.track_get_key_count(t) - 1, -1, -1):
+			if anim.track_get_key_time(t, i) > motion_end + 0.0001:
+				anim.track_remove_key(t, i)
+				removed += 1
+	var before := anim.length
+	anim.length = motion_end + clip_loop_blend
+	print("[PlayerVisual] 末尾 %.3f秒は静止していたので詰めました "
+		% (before - motion_end)
+		+ "(尺 %.3f → %.3f秒 / キー %d本を削除)" % [before, anim.length, removed])
