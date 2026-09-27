@@ -79,6 +79,11 @@ class_name PlayerVisual
 ## ボールを描画するか。タイトル画面のようにキャラクターだけ見せたいときは false
 @export var show_ball := true
 
+## ゴールで踊っている間、ボールを頭の上へどれだけ浮かせるか。
+## ボールの上半径に対する倍率で、1.0 ならボールの下端が頭にちょうど触れる高さ。
+## 0 にすると頭にめり込むので、少し余裕を持たせてある
+@export_range(0.0, 6.0, 0.1) var dance_ball_lift := 1.6
+
 @export_group("Animation")
 ## 再生するアニメーション名。空ならモデルが持つ最初のアニメーションを使う。
 ## モデルにアニメーションが無い場合は pose が使われる
@@ -151,6 +156,7 @@ var _secondary_pos_base: Dictionary[int, Vector3] = {}
 var _ball_skeleton: Skeleton3D         ## ボール用（ボーン1本）のスケルトン
 var _ball_bone_idx := -1
 var _ball_base_scale := Vector3.ONE
+var _ball_base_pos := Vector3.ZERO     ## 踊りで頭の上へ動かす前の位置（戻す用）
 var _ball_top_y := 0.0                 ## ボーン原点からボール上端までの高さ
 var _char_base_y := 0.0                ## キャラクター側スケルトンの基準の高さ
 var _squash := 1.0
@@ -199,6 +205,8 @@ func _process(_delta: float) -> void:
 	# 頭が動いた結果に遅れて付いてくるので、体の処理より後に回す。
 	# クリップ再生中は頭ボーンの動きから揺らすので、プレイヤーが居なくても走らせる
 	_update_secondary(_delta)
+	if _clip_playing:
+		_park_ball_above_head()
 
 
 # ═══════════════════════════════ 向き
@@ -232,6 +240,7 @@ func _resolve_skeletons() -> void:
 			_ball_skeleton = skel
 			_ball_bone_idx = 0          # ボールは根ボーン1本で動かす
 			_ball_base_scale = skel.get_bone_pose_scale(0)
+			_ball_base_pos = skel.position
 			skel.visible = show_ball
 		elif _skeleton == null:
 			_skeleton = skel
@@ -263,6 +272,10 @@ func _ball_mesh_of(skel: Skeleton3D) -> MeshInstance3D:
 func _update_squash(delta: float) -> void:
 	if _ball_skeleton == null or delta <= 0.0:
 		return
+	if _clip_playing:
+		# 踊っている間のボールは頭の上に預けてある。
+		# 跳ねてもいないのに潰すと、浮いたまま潰れた妙な形になる
+		return
 
 	if _player and _player.is_grounded():
 		# 接地した瞬間に潰しきる。通常のバウンドではここは1フレームしか通らない
@@ -291,6 +304,48 @@ func _update_squash(delta: float) -> void:
 	if _skeleton:
 		_skeleton.position.y = _char_base_y + _v(&"body_offset_y") \
 			+ _ball_top_y * (_squash - 1.0) * _v(&"body_follow_ball")
+
+
+## 踊っている間、ボールを頭の真上へ置く。
+##
+## 踊りはレスト姿勢（直立）から流すので、またがる前提の位置にあるボールには
+## 脚が埋まってしまう。かといって消すとボールが無いキャラになるので、
+## 頭の上へ預けて「降りて踊っている」ことにする。
+## 頭は毎フレーム動くので、_process から呼んで追従させる
+func _park_ball_above_head() -> void:
+	if _ball_skeleton == null or _skeleton == null:
+		return
+	var head := _head_bone()
+	if head < 0:
+		return
+	var parent := _ball_skeleton.get_parent() as Node3D
+	if parent == null:
+		return
+	# 2つのスケルトンは親が違うことがあるので、一度グローバルへ出してから戻す
+	var head_global: Vector3 = (_skeleton.global_transform
+		* _skeleton.get_bone_global_pose(head)).origin
+	var up: Vector3 = parent.global_transform.basis.y.normalized()
+	var target: Vector3 = parent.global_transform.affine_inverse() * (
+		head_global + up * _ball_top_y * dance_ball_lift)
+	# position はノードの原点。ボールはボーンのレスト位置に居るので、その分を引く
+	var rest: Vector3 = _ball_skeleton.get_bone_global_rest(_ball_bone_idx).origin
+	_ball_skeleton.position = target - _ball_skeleton.basis * rest
+
+
+## 頭のボーン番号。髪の根元の親を頭とみなす。
+## 髪を設定していないモデルのために、名前でも探す
+func _head_bone() -> int:
+	if _skeleton == null:
+		return -1
+	_build_hair_chain()
+	if not _hair_chain.is_empty():
+		var parent := _skeleton.get_bone_parent(_hair_chain[0])
+		if parent >= 0:
+			return parent
+	for i in _skeleton.get_bone_count():
+		if String(_skeleton.get_bone_name(i)).to_lower().begins_with("head"):
+			return i
+	return -1
 
 
 # ═══════════════════════════════ 手足の振れ
@@ -744,9 +799,13 @@ func play_clip(clip_name: StringName = &"") -> bool:
 	# レスト姿勢のままなので、こちらもその状態に揃える
 	_skeleton.reset_bone_poses()
 	# レスト姿勢は「直立」なので、またがる姿勢の前提で置いてあるボールに
-	# 脚が丸ごと埋まってしまう。踊っている間はボールを隠して地面に降りたことにする
+	# 脚が丸ごと埋まってしまう。踊っている間はボールを頭の上へ預けて、
+	# 地面に降りて踊っていることにする
 	if _ball_skeleton:
-		_ball_skeleton.visible = false
+		_ball_skeleton.visible = show_ball
+		# 跳ねていないので伸縮は戻す。潰れたまま浮いていると妙に見える
+		_ball_skeleton.set_bone_pose_scale(_ball_bone_idx, _ball_base_scale)
+		_park_ball_above_head()
 	# 土台が変わるので、揺れの基準と溜まった角度は捨てる
 	_reset_secondary_state()
 	_clip_playing = true
@@ -777,6 +836,7 @@ func stop_clip() -> void:
 		_clip_player.stop()
 	if _ball_skeleton:
 		_ball_skeleton.visible = show_ball
+		_ball_skeleton.position = _ball_base_pos
 	if _clip_root:
 		_clip_root.quaternion = _clip_root_rest
 	if _skeleton:
