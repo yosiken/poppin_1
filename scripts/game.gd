@@ -444,7 +444,8 @@ func load_stage(index: int, manual := true) -> void:
 	# 差し替えの瞬間が見えないよう、冒頭イベントの暗幕を先に下ろしておく。
 	# ステージが見えるのは会話が終わって暗幕が上がるときになる
 	if has_intro and cutscene:
-		await cutscene.cover_now()
+		# 待たずにその場で覆う。1フレームでも空けるとステージが覗く
+		cutscene.cover_now()
 		await cutscene.play(_stage.intro)
 		if gen != _load_gen:
 			return          # 待っている間に別のステージへ切り替わった
@@ -757,9 +758,10 @@ func _on_goal_reached(clear_time: float) -> void:
 	# そのステージが完全に終わった時点なので、区切りとして分かりやすい
 	_write_save(_index + 1)
 
-	# 差し替えの瞬間が見えないよう、先に画面を覆ってから次のステージへ移る
+	# 差し替えの瞬間が見えないよう、先に画面を覆ってから次のステージへ移る。
+	# ここから冒頭イベントがツリーを止めるまで、間にフレームを挟まないこと
 	if cutscene:
-		await cutscene.cover_now()
+		cutscene.cover_now()
 	load_stage(_index + 1)
 
 

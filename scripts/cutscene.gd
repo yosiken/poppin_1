@@ -297,20 +297,40 @@ func play(data: CutsceneData) -> void:
 
 ## 会話を始める前に、暗幕だけを先に下ろしておく。
 ##
-## 時間経過の暗転から会話へ、画面を一度も明るくせずに渡すために使う。
-## これを挟まずに明けると、会話が始まって暗幕が下りるまでの一瞬だけ
-## 次のステージが見えてしまう。
+## ステージの差し替えを隠すために使う。呼んだそのフレームから黒くなるので、
+## 呼び出し側は「覆う → 差し替える → play()」の間にフレームを挟まないこと。
+## 挟むとその1フレームだけステージが素通しで見える。
 ##
 ## 前のイベントの絵が残っていることがある（clear_on_finish が false のとき）ので、
-## いったん片付けてから出す。片付けはフェードを切って一瞬で終わらせる
+## 一緒に片付ける
 func cover_now() -> void:
 	if _backdrop == null or not cover_game:
 		return
-	var saved := fade_time
-	fade_time = 0.0
-	await _clear_all()
-	fade_time = saved
-	# _clear_all() が暗幕を外しにかかっているので、止めてから塗り直す
+	# その場で全部反映する。await を1つでも挟むと、そのフレームだけ
+	# ステージが素通しで見える（ステージ差し替えの瞬間が覗く）。
+	# _clear_all() は必ず1フレーム待つので、ここでは使えない
+
+	# 前のイベントの絵が残っていることがある。Tween を止めて直接消す
+	_window.visible = false
+	_hide_popup()
+	_current = null
+	if _note_box:
+		_note_box.visible = false
+	for r in [_left, _right, _bg]:
+		if r == null:
+			continue
+		_kill_rect_tweens(r)
+		r.texture = null
+		r.modulate = Color(1.0, 1.0, 1.0, 0.0)
+	_base_left = null
+	_base_right = null
+	if _bg_mat:
+		_kill_bg_hide_tween()
+		_bg_mat.set_shader_parameter("hide", 0.0)
+		_set_bg_pattern(bg_pattern)
+	_stop_shake()
+	_clear_veil()
+
 	if _backdrop_tween and _backdrop_tween.is_valid():
 		_backdrop_tween.kill()
 	_backdrop.color = Color(backdrop_color, backdrop_color.a)
@@ -712,6 +732,18 @@ func _fade_alpha(rect: TextureRect, to: float, time: float) -> Tween:
 	var tw := _tween(rect, "modulate:a", to, time)
 	_fade_tweens[rect] = tw
 	return tw
+
+
+## その絵に対して動いている Tween（出し入れと暗転）を止める
+func _kill_rect_tweens(rect: TextureRect) -> void:
+	var fade: Tween = _fade_tweens.get(rect)
+	if fade and fade.is_valid():
+		fade.kill()
+	_fade_tweens.erase(rect)
+	var dim: Tween = _dim_tweens.get(rect)
+	if dim and dim.is_valid():
+		dim.kill()
+	_dim_tweens.erase(rect)
 
 
 ## pause 中でも進む Tween を作る
