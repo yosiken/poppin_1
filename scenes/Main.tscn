@@ -147,3 +147,7 @@ start_visible = false
 [node name="Cutscene" type="CanvasLayer" parent="." unique_id=923868755]
 script = ExtResource("36_hq6as")
 portrait_offset_right = Vector2(0, 80)
+voice_pitch = Dictionary[String, float]({
+"OB": 0.8,
+"カニエナガ": 0.5
+})
