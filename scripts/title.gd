@@ -3,10 +3,14 @@ extends Control
 ##
 ## 仮のタイトル画面。
 ##
-## メニュー: NEW GAME / CONTINUE / オプション / スコアランキング
+## メニュー: TUTORIAL / NEW GAME / CONTINUE / オプション / スコアランキング /
+##           スタッフクレジット
 ##
 ## CONTINUE はセーブ (SaveGame) があるときだけ押せる。
-## NEW GAME はセーブを消すので、消す前に確認を挟む
+## NEW GAME はセーブを消すので、消す前に確認を挟む。
+## TUTORIAL は「操作を覚える面から始める NEW GAME」で、チュートリアル面を
+## クリアするとそのまま本編のステージ1へ繋がる。本編を最初から始める点は
+## NEW GAME と同じなので、同じ確認を挟む
 ## オプション: BGMボリューム / SEボリューム / プレイヤー名
 ##
 ## Settings.test_mode（オープニング等のデモ短縮・スコア送信抑制）は開発用の
@@ -17,6 +21,10 @@ extends Control
 ## カットシーンをスキップできる（cutscene.gd）のでそちらを使うこと
 
 const MAIN_SCENE := "res://scenes/Main.tscn"
+## タイトルから見せるスタッフクレジット。Main.tscn の Game にも同じものを
+## 割り当ててあり、ED のあとに出るものと中身は同じ。
+## 押されるまで読まない（背景画像と曲を抱えているので、タイトルの起動を重くしない）
+const CREDITS_PATH := "res://resources/credits.tres"
 const REPLAY_SCENE := "res://scenes/ReplayViewer.tscn"
 const PANEL_COLOR := Color(0.06, 0.07, 0.11, 0.92)
 const BORDER_COLOR := Color(0.55, 0.65, 0.85, 0.7)
@@ -59,6 +67,8 @@ var _ranking_page_label: Label
 var _ranking_board_index := 0
 ## 再読み込みのすれ違い防止。ページ送り連打時に古い結果で上書きしない
 var _ranking_load_gen := 0
+## クレジットの画面。初回に押されたときだけ作る
+var _credits: Credits
 
 
 func _ready() -> void:
@@ -106,6 +116,7 @@ func _build_ui() -> void:
 	_menu.add_theme_constant_override("separation", 20)
 	add_child(_menu)
 
+	_add_menu_button("TUTORIAL", _start_tutorial)
 	_add_menu_button("NEW GAME", _new_game)
 	var cont := _add_menu_button("CONTINUE", _continue_game)
 	if SaveGame.has_save():
@@ -116,6 +127,7 @@ func _build_ui() -> void:
 		cont.focus_mode = Control.FOCUS_NONE
 	_add_menu_button("OPTIONS", _show_options)
 	_add_menu_button("RANKING", _show_ranking)
+	_add_menu_button("CREDITS", _show_credits)
 
 	# ボタン群と名前欄はひとまとまりに見えないよう間を空ける
 	var gap := Control.new()
@@ -374,17 +386,34 @@ func _add_back_row(box: VBoxContainer, callback: Callable) -> void:
 
 # ═══════════════════════════════ 画面遷移
 
+## 操作を覚えるところから始める。チュートリアル面をクリアすると、
+## そのまま OP を挟んで本編のステージ1へ繋がる。
+## 本編を最初から始めることに変わりはないので、NEW GAME と同じ確認を挟む
+func _start_tutorial() -> void:
+	_confirm_erase_save("TUTORIAL",
+		"セーブ（%s）を消して、チュートリアルから始めます。\nよろしいですか？",
+		func() -> void: _start_new(true))
+
+
 ## 最初から始める。セーブがあれば消してよいか訊いてから
 func _new_game() -> void:
+	_confirm_erase_save("NEW GAME",
+		"セーブ（%s）を消して最初から始めます。\nよろしいですか？",
+		func() -> void: _start_new(false))
+
+
+## セーブがあるときだけ確認を出す。無ければそのまま始める。
+## text は %s にセーブの要約が入る書式
+func _confirm_erase_save(title_text: String, text: String, on_ok: Callable) -> void:
 	if not SaveGame.has_save():
-		_start_new()
+		on_ok.call()
 		return
 	var dlg := ConfirmationDialog.new()
-	dlg.title = "NEW GAME"
-	dlg.dialog_text = "セーブ（%s）を消して最初から始めます。\nよろしいですか？" % SaveGame.summary()
+	dlg.title = title_text
+	dlg.dialog_text = text % SaveGame.summary()
 	dlg.ok_button_text = "はじめる"
 	dlg.cancel_button_text = "やめる"
-	dlg.confirmed.connect(_start_new)
+	dlg.confirmed.connect(on_ok)
 	# 決定でも取り消しでも、閉じたら片付ける
 	dlg.canceled.connect(dlg.queue_free)
 	dlg.close_requested.connect(dlg.queue_free)
@@ -393,9 +422,10 @@ func _new_game() -> void:
 	dlg.popup_centered()
 
 
-func _start_new() -> void:
+func _start_new(with_tutorial: bool) -> void:
 	SaveGame.erase()
 	SaveGame.continue_requested = false
+	SaveGame.tutorial_requested = with_tutorial
 	get_tree().change_scene_to_file(MAIN_SCENE)
 
 
@@ -404,6 +434,7 @@ func _continue_game() -> void:
 	if not SaveGame.has_save():
 		return
 	SaveGame.continue_requested = true
+	SaveGame.tutorial_requested = false
 	get_tree().change_scene_to_file(MAIN_SCENE)
 
 
@@ -424,6 +455,38 @@ func _show_ranking() -> void:
 	_ranking.visible = true
 	_load_ranking()
 	_grab_first_focus(_ranking)
+
+
+## スタッフクレジットをその場で流す。別の画面へは移らない。
+##
+## 再生中は Credits がツリー全体を止める（Credits 自身だけ PROCESS_MODE_ALWAYS）
+## ので、裏のメニューは操作できない。クレジットの一番下は不透明な黒なので
+## 隠す処理も要らない。Space/クリックで送り、Enter で全部飛ばせる
+func _show_credits() -> void:
+	if _credits and _credits.is_playing():
+		return
+	var data := load(CREDITS_PATH) as CreditsData
+	if data == null:
+		push_warning("Title: クレジット(%s)が読めません" % CREDITS_PATH)
+		return
+
+	var focused := get_viewport().gui_get_focus_owner()
+	_ensure_credits_ui()
+	await _credits.play(data)
+
+	# 止めている間にフォーカスが外れることがある。W/S がまた効くように戻す
+	if focused and is_instance_valid(focused) and focused.is_inside_tree():
+		focused.grab_focus()
+	else:
+		_grab_first_focus(_menu)
+
+
+func _ensure_credits_ui() -> void:
+	if _credits and is_instance_valid(_credits):
+		return
+	_credits = Credits.new()
+	_credits.name = "Credits"
+	add_child(_credits)
 
 
 ## SilentWolfの現在選択中のリーダーボード（合計 or ステージ別）を取得して表示する

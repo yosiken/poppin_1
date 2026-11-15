@@ -1,0 +1,54 @@
+[gd_resource type="Resource" script_class="CreditsData" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/credit_entry.gd" id="1_entry"]
+[ext_resource type="Script" path="res://scripts/credits_data.gd" id="2_data"]
+[ext_resource type="Texture2D" uid="uid://yqvliprk4bnt" path="res://resources/texture/creditOB.png" id="3_bg"]
+[ext_resource type="AudioStream" uid="uid://c2we01v87c53g" path="res://resources/sound/01.ogg" id="4_bgm"]
+
+[sub_resource type="Resource" id="Resource_e01"]
+script = ExtResource("1_entry")
+role = "スタッフ"
+person = ""
+hold = 2.0
+
+[sub_resource type="Resource" id="Resource_e02"]
+script = ExtResource("1_entry")
+role = "ゲームデザイン"
+person = "yoshiken"
+
+[sub_resource type="Resource" id="Resource_e03"]
+script = ExtResource("1_entry")
+role = "キャラクターイラスト・シナリオ"
+person = "きつねうどん"
+
+[sub_resource type="Resource" id="Resource_e04"]
+script = ExtResource("1_entry")
+role = "ミュージック"
+person = "xxx（仮）"
+
+[sub_resource type="Resource" id="Resource_e05"]
+script = ExtResource("1_entry")
+role = "ボイス"
+person = "OB"
+
+[sub_resource type="Resource" id="Resource_e06"]
+script = ExtResource("1_entry")
+role = "プレイテスト"
+person = "palook大槻"
+
+[sub_resource type="Resource" id="Resource_e07"]
+script = ExtResource("1_entry")
+role = "プレイテスト"
+person = "八神トオル"
+
+[resource]
+script = ExtResource("2_data")
+entries = Array[ExtResource("1_entry")]([SubResource("Resource_e01"), SubResource("Resource_e02"), SubResource("Resource_e03"), SubResource("Resource_e04"), SubResource("Resource_e05"), SubResource("Resource_e06"), SubResource("Resource_e07")])
+background = ExtResource("3_bg")
+bgm = ExtResource("4_bgm")
+hold = 2.4
+fade = 0.5
+open_fade = 1.0
+bgm_fade = 2.0
+closing = "THANK YOU FOR PLAYING!"
+closing_hold = 3.0

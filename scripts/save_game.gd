@@ -33,6 +33,10 @@ var saved_at := ""
 ## シーンをまたいで意図を渡すだけなので、ファイルには書かない
 var continue_requested := false
 
+## タイトルの TUTORIAL から入ったか。Game が起動時に見て、本編の前に
+## チュートリアル面を1つ挟む。これも合図なのでファイルには書かない
+var tutorial_requested := false
+
 var _has_save := false
 
 

@@ -15,6 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://dqy34e440bof" path="res://resources/sound/goal1.mp3" id="16_goal"]
 [ext_resource type="Resource" uid="uid://csjq6yaucuosl" path="res://resources/cutscene/opening.tres" id="17_op"]
 [ext_resource type="Resource" uid="uid://chj2dx3pijim5" path="res://resources/cutscene/ending.tres" id="18_ed"]
+[ext_resource type="Resource" path="res://resources/credits.tres" id="18_credits"]
 [ext_resource type="Script" uid="uid://dqgdirupf7s26" path="res://scripts/design_grid.gd" id="19_grid"]
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="21_bg"]
 [ext_resource type="AudioStream" uid="uid://bdwrqq6652bkc" path="res://resources/sound/bgm/bgm01.ogg" id="22_bgm1"]
@@ -25,6 +26,7 @@
 [ext_resource type="AudioStream" uid="uid://b6rdsnglml54g" path="res://resources/sound/s_jump.mp3" id="24_sjump"]
 [ext_resource type="AudioStream" uid="uid://d2niaoo6qoreq" path="res://resources/sound/slip.mp3" id="25_slip"]
 [ext_resource type="Script" uid="uid://dduappju5fruw" path="res://scripts/cutscene.gd" id="36_hq6as"]
+[ext_resource type="PackedScene" path="res://scenes/stages/StageTutorial.tscn" id="st_tut"]
 [ext_resource type="PackedScene" uid="uid://dmxypaq2h05nx" path="res://scenes/stages/Stage01.tscn" id="st01"]
 [ext_resource type="PackedScene" uid="uid://em4oh00jbg7u" path="res://scenes/stages/Stage02.tscn" id="st02"]
 [ext_resource type="PackedScene" uid="uid://eij48jxwuvvp" path="res://scenes/stages/Stage03.tscn" id="st03"]
@@ -46,8 +48,10 @@ colors = PackedColorArray(0.8235294, 0, 0.2627451, 0, 1, 1, 1, 1)
 [node name="Main" type="Node2D" unique_id=377847871]
 script = ExtResource("14_game")
 stages = Array[PackedScene]([ExtResource("st01"), ExtResource("st02"), ExtResource("st03"), ExtResource("st04"), ExtResource("st05"), ExtResource("st06"), ExtResource("st07"), ExtResource("st08"), ExtResource("st09"), ExtResource("st10")])
+tutorial = ExtResource("st_tut")
 opening = ExtResource("17_op")
 ending = ExtResource("18_ed")
+credits = ExtResource("18_credits")
 stage_bgm = Array[AudioStream]([ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2")])
 show_cutscene_notes = true
 player = NodePath("Player")

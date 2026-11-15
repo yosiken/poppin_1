@@ -63,12 +63,27 @@ signal player_fell(from_position: Vector2)
 @export var opening: CutsceneData
 ## 全ステージクリア後に再生するイベント（ED）
 @export var ending: CutsceneData
+## ED のあとに出すスタッフクレジット。null なら出さない
+@export var credits: CreditsData
 ## ステージセレクトで飛んだときも intro を再生するか
 @export var play_intro_on_select := false
 
 ## 記憶コレクションに並べる「10個の大好物」。ステージ1〜10の順。
 ## 空のままならゴールと同じ絵（foods.png のコマと goal.png）を読む
 @export var memory_items: Array[Texture2D] = []
+
+@export_group("Tutorial")
+## タイトルの TUTORIAL から始めたときに、本編の前に遊ぶ面。
+##
+## stages には入れない。入れるとステージ番号が1つずつずれ、ランキングの
+## リーダーボード名（stage01〜stage10）・記憶コレクションの10個・セーブの
+## stage_index が全部連動して狂うため。番号を持たない別枠として扱う。
+##
+## クリアすると OP を挟んで本編のステージ1へ進む。
+## タイムと落下回数は出すだけで、ランキングには送らない
+@export var tutorial: PackedScene
+## チュートリアル面で鳴らす曲。未設定なら無音で始まる
+@export var tutorial_bgm: AudioStream
 
 @export_group("BGM")
 ## ステージBGM。stages と同じ順番・同じ長さで、各ステージに鳴らす曲を直接指定する
@@ -130,6 +145,8 @@ var _pause_overlay: CanvasLayer
 ## ポーズメニューの一行メッセージ。セーブした結果を出す
 var _pause_note: Label
 var _select: PanelContainer
+## スタッフクレジットの画面。初めて出すときに作る
+var _credits_ui: Credits
 ## イベントセレクト（F6）。最初に開いたときに組み立てる
 var _event_panel: PanelContainer
 var _event_progress: Label
@@ -138,6 +155,15 @@ var _events: Array[Dictionary] = []
 ## 全イベントの通し再生中。ESC で降ろす
 var _playing_all := false
 var _advancing := false
+## チュートリアル面を遊んでいる最中。このときは _index が -1 になる。
+## スコア送信・セーブ・記憶コレクションを全て止めるための目印
+var _in_tutorial := false
+## チュートリアル面で今どの区画(TutorialSection)を遊んでいるか。0 始まり
+var _tutorial_index := 0
+## チュートリアルの操作説明とメッセージボックス。チュートリアルに入ってから作る
+var _tutorial_ui: TutorialUI
+## 今出している操作説明。場所で切り替わるので、変わったときだけ差し替える
+var _hint_text := ""
 var _respawning := false
 ## 読み込みの世代。演出の待機中に別のステージへ切り替えられたら、
 ## 古い側の続きを止めるために使う
@@ -225,6 +251,14 @@ func _ready() -> void:
 		debug_shortcuts = false
 	var resumed := _apply_save()
 	var skip_demo := Settings.test_mode or skip_cutscenes
+	# タイトルの TUTORIAL から入ったとき。OP はチュートリアルをクリアしてから出す。
+	# skip_cutscenes でも飛ばさない。チュートリアルは会話デモではなく面そのもので、
+	# 押した本人が遊ぶつもりで選んでいるため
+	var want_tutorial := SaveGame.tutorial_requested and not resumed
+	SaveGame.tutorial_requested = false     # 一度きりの合図
+	if want_tutorial:
+		load_tutorial()
+		return
 	# 続きから始めるときは OP を出さない。もう見ているため
 	if opening and not skip_demo and not resumed:
 		await cutscene.play(opening)
@@ -254,6 +288,10 @@ func _apply_save() -> bool:
 func _write_save(next_stage: int) -> bool:
 	if Settings.test_mode or test_play_mode:
 		return false
+	# チュートリアルは本編の進行ではない。ここで書くと「ステージ0から再開」と
+	# いう存在しない進行になるので何もしない
+	if _in_tutorial:
+		return false
 	var acquired := memory.acquired_indices() if memory else PackedInt32Array()
 	SaveGame.write(next_stage, _total_clear_time, _total_falls, acquired)
 	return true
@@ -262,6 +300,7 @@ func _write_save(next_stage: int) -> bool:
 func _physics_process(_delta: float) -> void:
 	_update_checkpoint()
 	_check_fall()
+	_update_tutorial_hint()
 	_record_replay_frame()
 
 
@@ -330,6 +369,10 @@ func _check_fall() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# チュートリアルのメッセージボックスが出ている間は、選択以外を受け付けない。
+	# ESC でポーズが開いたり R でやり直しが走ったりすると、選択が置き去りになる
+	if _tutorial_ui and _tutorial_ui.is_open():
+		return
 	if event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if _playing_all:
@@ -341,7 +384,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		if _playing_all:
 			return                    # 通し再生中にステージを触らない
 		get_viewport().set_input_as_handled()
-		load_stage(_index)
+		if _in_tutorial and _stage is TutorialStage:
+			# 面ごと読み直さず、今の区画だけやり直す
+			start_tutorial_section(_tutorial_index)
+		elif _in_tutorial:
+			load_tutorial()
+		else:
+			load_stage(_index)
 		return
 	if not debug_shortcuts:
 		return
@@ -365,6 +414,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			# 1〜9 でステージ1〜9、0 で10番目。
 			# Shift を足すと同じ番号の復帰地点へ飛ぶ（Shift+0 は開始位置）
 			var idx := 9 if key == KEY_0 else key - KEY_1
+			if _in_tutorial and _stage is TutorialStage 					and not (event as InputEventKey).shift_pressed:
+				# チュートリアル中は番号＝区画。1〜6 で好きな区画から試せる
+				if idx < (_stage as TutorialStage).section_count():
+					start_tutorial_section(idx)
+					get_viewport().set_input_as_handled()
+				return
 			if (event as InputEventKey).shift_pressed:
 				_warp_to_point(-1 if key == KEY_0 else idx)
 				get_viewport().set_input_as_handled()
@@ -398,7 +453,25 @@ func load_stage(index: int, manual := true) -> void:
 		push_warning("Game: ステージ番号が範囲外です: %d" % index)
 		_uncover()
 		return
+	_in_tutorial = false
+	await _swap_stage(stages[index], index, manual)
 
+
+## チュートリアル面を読み込む。番号を持たないので _index は -1 のまま。
+## tutorial が未設定なら、黙って本編の最初のステージへ落とす
+func load_tutorial(manual := true, section := 0) -> void:
+	if tutorial == null:
+		push_warning("Game: tutorial が未設定です。本編の最初のステージから始めます")
+		load_stage(start_index, manual)
+		return
+	_in_tutorial = true
+	_tutorial_index = maxi(section, 0)
+	await _swap_stage(tutorial, -1, manual)
+
+
+## ステージの差し替え本体。index は stages 内の番号で、
+## チュートリアル面のように番号を持たないものは -1 を渡す
+func _swap_stage(scene: PackedScene, index: int, manual: bool) -> void:
 	_clear_overlay_hide()
 	_advancing = false
 	_load_gen += 1
@@ -410,37 +483,64 @@ func load_stage(index: int, manual := true) -> void:
 		stage_host.remove_child(_stage)   # 同フレームで次を足すので即座に外す
 		_stage = null
 
-	_stage = (stages[index].instantiate()) as Stage
+	_stage = (scene.instantiate()) as Stage
 	if _stage == null:
-		push_error("Game: ステージ %d のルートが Stage ではありません" % index)
+		push_error("Game: %s のルートが Stage ではありません" % scene.resource_path)
 		_uncover()
 		return
 	# ツリーに入れる前に開始位置へ移す。前のステージのゴール前に立ったままだと、
 	# ステージによってはそこが次のステージのゴール判定の中に入っていて、
 	# 始まった瞬間にクリアになりうる（ステージ1と2のゴールは世界座標で重なっている）
+	#
+	# チュートリアル面は区画を先に決める。開始位置もカメラ範囲も復帰地点も
+	# 「今の区画のもの」を返すようになっているため、ここより後では遅い
+	var tut := _stage as TutorialStage
+	if tut:
+		if not tut.activate(_tutorial_index):
+			_tutorial_index = 0
+			tut.activate(0)
 	_reset_player()
 	stage_host.add_child(_stage)
 
 	for h in _stage.get_hazards():
 		h.touched.connect(_on_hazard_touched)
 
-	var goal := _stage.get_goal()
-	if goal:
-		goal.built_in_overlay = false     # クリア演出はこちらで出す
-		goal.reached.connect(_on_goal_reached)
+	if tut:
+		# チュートリアル面はゴールを持たない。区画ごとの判定アイテムを拾う
+		for sec in tut.get_sections():
+			sec.cleared.connect(_on_tutorial_cleared)
+		if tut.section_count() == 0:
+			push_warning("Game: %s に区画(TutorialSection)がありません"
+				% _stage.get_display_name())
 	else:
-		push_warning("Game: ステージ %d にゴールがありません" % index)
+		var goal := _stage.get_goal()
+		if goal:
+			goal.built_in_overlay = false     # クリア演出はこちらで出す
+			goal.reached.connect(_on_goal_reached)
+		else:
+			push_warning("Game: %s にゴールがありません" % _stage.get_display_name())
 
 	_fall_count = 0
 	_checkpoint = -1
 	_reset_replay()
 	_points = _stage.get_recovery_points()
 	_apply_camera_bounds()
+	_apply_world_background()
 	_check_stage_bounds()
 	_refresh_select_ui()
-	_play_stage_bgm(index)
-	print("[Game] ステージ %d/%d '%s' を読み込み"
-		% [index + 1, stages.size(), _stage.get_display_name()])
+	_apply_tutorial_ui()
+	if _in_tutorial:
+		_play_track(tutorial_bgm)
+	else:
+		_play_stage_bgm(index)
+	if tut:
+		print("[Game] チュートリアル '%s' を読み込み（区画 %d/%d）"
+			% [_stage.get_display_name(), _tutorial_index + 1, tut.section_count()])
+	elif _in_tutorial:
+		print("[Game] チュートリアル '%s' を読み込み" % _stage.get_display_name())
+	else:
+		print("[Game] ステージ %d/%d '%s' を読み込み"
+			% [index + 1, stages.size(), _stage.get_display_name()])
 	stage_loaded.emit(index, _stage)
 
 	var has_intro := _stage.intro != null and not skip_cutscenes \
@@ -487,13 +587,18 @@ func _player_visual() -> PlayerVisual:
 	return player.get_node_or_null(^"Visual") as PlayerVisual
 
 
-## stage_bgm[index] の曲を鳴らす。
-## 同じ曲が既に鳴っていれば鳴らし直さない（リトライ時にぶつ切りにしない）
+## stage_bgm[index] の曲を鳴らす。番号を持たない面（チュートリアル）は
+## ここを通らず _play_track() を直接呼ぶ
 func _play_stage_bgm(index: int) -> void:
-	if bgm_player == null or index < 0 or index >= stage_bgm.size():
+	if index < 0 or index >= stage_bgm.size():
 		return
-	var track := stage_bgm[index]
-	if track == null:
+	_play_track(stage_bgm[index])
+
+
+## BGMを1曲鳴らす。既に同じ曲が鳴っていれば鳴らし直さない
+## （リトライのたびにぶつ切りにしないため）
+func _play_track(track: AudioStream) -> void:
+	if bgm_player == null or track == null:
 		return
 	if bgm_player.stream == track and bgm_player.playing:
 		return
@@ -520,7 +625,10 @@ func _resume_stage_bgm(index: int, gen: int) -> void:
 			return
 	if bgm_player.playing:
 		return          # イベントが鳴らしたまま引き渡した曲。そのまま続ける
-	_play_stage_bgm(index)
+	if _in_tutorial:
+		_play_track(tutorial_bgm)
+	else:
+		_play_stage_bgm(index)
 
 
 func _apply_camera_bounds() -> void:
@@ -546,6 +654,10 @@ func _apply_camera_bounds() -> void:
 ## 端がカメラに入らなくなる。どちらも起きやすいので毎回見る
 func _check_stage_bounds() -> void:
 	if _stage == null:
+		return
+	if _stage is TutorialStage:
+		# 区画ごとに範囲が違うので、まとめて見ても意味が無い。区画ごとに見る
+		_check_tutorial_bounds(_stage as TutorialStage)
 		return
 	var bounds := _stage.camera_bounds
 	if bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
@@ -574,11 +686,50 @@ func _check_stage_bounds() -> void:
 		+ "はみ出した先はカメラが追わないので画面に入りません")
 
 
+## 区画ごとに、開始位置・判定アイテム・地形がその区画の中に収まっているかを見る。
+## 仮データのまま座標を動かすと、気づかないうちに隣の区画へはみ出しやすい
+func _check_tutorial_bounds(tut: TutorialStage) -> void:
+	var sections := tut.get_sections()
+	for i in sections.size():
+		var sec := sections[i]
+		var cell := tut.section_bounds(i)
+		if cell.size.x <= 0.0:
+			continue
+		var label := "%s(%d)" % [sec.name, i + 1]
+		var death_line := cell.end.y + fall_margin
+		var spawn := sec.get_spawn_position()
+		if not cell.has_point(spawn):
+			print("[Game] 警告: %s の開始位置 %s が区画 x %.0f..%.0f / y %.0f..%.0f の外です"
+				% [label, str(spawn), cell.position.x, cell.end.x, cell.position.y, cell.end.y])
+		elif spawn.y > death_line:
+			print("[Game] 警告: %s の開始位置が落下死の線より下です" % label)
+		var item := sec.get_item()
+		if item == null:
+			print("[Game] 警告: %s にクリア判定アイテムがありません" % label)
+		elif not cell.has_point(item.global_position):
+			print("[Game] 警告: %s の判定アイテム %s が区画の外です"
+				% [label, str(item.global_position)])
+		for j in sec.get_recovery_points().size():
+			var py := sec.get_recovery_points()[j].global_position.y
+			if py > death_line:
+				print("[Game] 警告: %s の復帰地点 %d が落下死の線より下です" % [label, j + 1])
+		var terrain := _terrain_rect_of(sec)
+		if terrain.size != Vector2.ZERO and not cell.grow(BOUNDS_SLACK).encloses(terrain):
+			print("[Game] 警告: %s の地形 x %.0f..%.0f / y %.0f..%.0f が "
+				% [label, terrain.position.x, terrain.end.x, terrain.position.y, terrain.end.y]
+				+ "区画 x %.0f..%.0f / y %.0f..%.0f からはみ出しています"
+				% [cell.position.x, cell.end.x, cell.position.y, cell.end.y])
+
+
 ## 地形が実際に占めている範囲。回転しているパーツも含めて頂点から求める
 func _terrain_rect() -> Rect2:
+	return _terrain_rect_of(_stage)
+
+
+func _terrain_rect_of(root: Node) -> Rect2:
 	var rect := Rect2()
 	var first := true
-	for node in _stage.find_children("*", "CollisionPolygon2D", true, false):
+	for node in root.find_children("*", "CollisionPolygon2D", true, false):
 		var poly := node as CollisionPolygon2D
 		if poly == null or poly.polygon.size() < 2:
 			continue
@@ -606,7 +757,7 @@ func _show_stage_title(gen: int) -> void:
 	add_child(layer)
 
 	var label := Label.new()
-	label.text = "STAGE %d" % (_index + 1)
+	label.text = _stage_title_text()
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -621,6 +772,21 @@ func _show_stage_title(gen: int) -> void:
 	# paused=true を復元して固まる。見出しの後は必ず遊べる状態にする
 	if gen == _load_gen:
 		get_tree().paused = false
+
+
+## 見出しに出す文言。チュートリアルは番号を持たないので区画の進みを出す
+func _stage_title_text() -> String:
+	var tut := _stage as TutorialStage
+	if tut:
+		var sec := tut.get_active_section()
+		var head := "TUTORIAL %d/%d" % [_tutorial_index + 1, tut.section_count()]
+		if sec and sec.get_display_title() != "":
+			return head + "
+" + sec.get_display_title()
+		return head
+	if _in_tutorial:
+		return "TUTORIAL"
+	return "STAGE %d" % (_index + 1)
 
 
 ## 死亡して復帰地点へ戻す。落下床と場外の両方から呼ぶ
@@ -703,6 +869,17 @@ func reset_score() -> void:
 func clear_stage() -> void:
 	if _stage == null or player == null or _advancing:
 		return
+	var tut := _stage as TutorialStage
+	if tut:
+		var sec := tut.get_active_section()
+		var item := sec.get_item() if sec else null
+		if item == null:
+			push_warning("Game: この区画にはクリア判定アイテムがありません")
+			return
+		print("[Game] デバッグ: チュートリアル %d/%d を強制クリア"
+			% [_tutorial_index + 1, tut.section_count()])
+		item.force_take(player)
+		return
 	var goal := _stage.get_goal()
 	if goal == null:
 		push_warning("Game: このステージにはゴールがありません")
@@ -726,6 +903,9 @@ func _on_goal_reached(clear_time: float) -> void:
 	var visual := _player_visual()
 	if visual:
 		visual.play_goal_clip()          # 勝利モーション。次のステージへ移るまで踊り続ける
+	if _in_tutorial:
+		await _finish_tutorial(clear_time)
+		return
 	var is_last := _index >= stages.size() - 1
 	var is_test_end := test_play_mode and _index + 1 >= test_play_stage_count
 	_total_clear_time += clear_time
@@ -762,6 +942,8 @@ func _on_goal_reached(clear_time: float) -> void:
 			SaveGame.erase()
 		if ending and not skip_cutscenes:
 			await cutscene.play(ending)
+		if credits and not skip_cutscenes:
+			await play_credits()
 		all_cleared.emit()
 		_show_clear(_total_clear_time, true)
 		return
@@ -775,6 +957,182 @@ func _on_goal_reached(clear_time: float) -> void:
 	if cutscene:
 		cutscene.cover_now()
 	load_stage(_index + 1)
+
+
+## チュートリアル面をクリアしたあと、本編へ送り出す。
+##
+## ここでは記憶コレクションもセーブもスコア送信もしない。
+## チュートリアルは本編の1面目ではないので、10個の記憶にも通算記録にも入らない。
+## 本編のセーブは、ステージ1を終えたときに通常どおり書かれる
+## clear_time に 0 以上を渡すと、ゴール付きの面と同じクリア表示を挟む。
+## 区画式のチュートリアルでは最後の区画のメッセージがその役を果たすので渡さない
+func _finish_tutorial(clear_time := -1.0) -> void:
+	# F3 で飛ばした場合の印は、本編へ持ち越さないようここで落とす
+	_debug_cleared = false
+	_advancing = true
+	if _tutorial_ui:
+		_tutorial_ui.close()
+		_tutorial_ui.hide_hint()
+	if clear_time >= 0.0:
+		_show_clear(clear_time, false)
+		await _wait_after_goal()
+		if not _advancing:                # 待機中に手動で切り替えられていたら何もしない
+			return
+		_clear_overlay_hide()
+
+	var outro := _stage.outro if _stage else null
+	if outro and not skip_cutscenes:
+		await cutscene.play(outro)
+
+	_in_tutorial = false
+	# ここから本編。差し替えの瞬間が見えないよう先に覆っておく
+	if cutscene:
+		cutscene.cover_now()
+	if opening and not skip_cutscenes:
+		await cutscene.play(opening)
+	load_stage(start_index)
+
+
+# ═══════════════════════════════ チュートリアルの区画進行
+
+## 区画をひとつ始める。面は読み直さないので、暗転もBGMの切れ目も入らない。
+## やり直し・次へ・デバッグの区画送りはすべてここを通る
+func start_tutorial_section(index: int, with_title := true) -> void:
+	var tut := _stage as TutorialStage
+	if tut == null:
+		return
+	if not tut.activate(index):
+		return
+	_tutorial_index = index
+	_advancing = false
+	_fall_count = 0
+	_checkpoint = -1
+	_points = tut.get_recovery_points()
+	_reset_replay()
+	_reset_player()
+	_apply_camera_bounds()
+	_apply_tutorial_ui()
+	var sec := tut.get_active_section()
+	print("[Game] チュートリアル %d/%d '%s' を開始"
+		% [index + 1, tut.section_count(), sec.get_display_title() if sec else "?"])
+	if with_title:
+		await _show_stage_title(_load_gen)
+
+
+## 判定アイテムに触れた。メッセージを出し、やり直すか次へ進むかを選ばせる
+func _on_tutorial_cleared(section: TutorialSection) -> void:
+	var tut := _stage as TutorialStage
+	if tut == null or _advancing:
+		return
+	var index := section.get_order()
+	if index != _tutorial_index:
+		return                        # 別の区画のアイテム。有効化の取りこぼし対策
+	_advancing = true
+
+	if sfx_goal:
+		sfx_goal.play()
+	# プレイヤーを止める。ツリーは止めないので勝利モーションはそのまま動く
+	if player:
+		player.velocity = Vector2.ZERO
+		player.set_physics_process(false)
+	var visual := _player_visual()
+	if visual:
+		visual.play_goal_clip()
+
+	var last := index >= tut.section_count() - 1
+	_ensure_tutorial_ui()
+	_tutorial_ui.hide_hint()
+	_tutorial_ui.open(
+		"チュートリアル %d/%d  %s" % [index + 1, tut.section_count(), section.get_display_title()],
+		section.message if section.message != "" else "クリア！",
+		"本編をはじめる" if last else "次へ進む")
+	var retry: bool = await _tutorial_ui.answered
+	if _stage != tut:
+		return                        # 選んでいる間に面が差し替わった
+	_advancing = false
+	if retry:
+		await start_tutorial_section(index)
+	elif last:
+		await _finish_tutorial()
+	else:
+		await start_tutorial_section(index + 1)
+
+
+## スタッフクレジットを最後まで流す。
+## ED のあとと、イベントセレクト(F6)の CREDITS から呼ぶ
+func play_credits() -> void:
+	if credits == null:
+		push_warning("Game: クレジット(CreditsData)が割り当てられていません")
+		return
+	_ensure_credits_ui()
+	# ステージBGMが残っていると、クレジットの曲と重なる
+	if bgm_player and bgm_player.playing:
+		bgm_player.stop()
+	print("[Game] クレジット %d 人ぶんを再生" % credits.entries.size())
+	await _credits_ui.play(credits)
+
+
+## 共通背景(Background)を出すか隠すか。
+## 自前の背景を持つ面（チュートリアルのマトリックス雨）では隠す。
+## 隠さないと、負の層に置いた背景の上に共通背景がそのまま描かれて見えない
+func _apply_world_background() -> void:
+	var bg := get_node_or_null(^"Background") as Node2D
+	if bg == null:
+		return
+	bg.visible = not (_stage and _stage.hide_world_background)
+
+
+func _ensure_credits_ui() -> void:
+	if _credits_ui and is_instance_valid(_credits_ui):
+		return
+	_credits_ui = Credits.new()
+	_credits_ui.name = "Credits"
+	add_child(_credits_ui)
+
+
+func _ensure_tutorial_ui() -> void:
+	if _tutorial_ui and is_instance_valid(_tutorial_ui):
+		return
+	_tutorial_ui = TutorialUI.new()
+	_tutorial_ui.name = "TutorialUI"
+	add_child(_tutorial_ui)
+
+
+## 今の状態に合わせて操作説明を出し直す。チュートリアル以外では消す
+func _apply_tutorial_ui() -> void:
+	var tut := _stage as TutorialStage
+	if tut == null:
+		if _tutorial_ui:
+			_tutorial_ui.close()
+			_tutorial_ui.hide_hint()
+		_hint_text = ""
+		return
+	_ensure_tutorial_ui()
+	_tutorial_ui.close()
+	_hint_text = ""
+	_update_tutorial_hint(true)
+
+
+## プレイヤーの居る場所に応じて、画面上部の説明を切り替える。
+## 区画の中に置いた TutorialHint の範囲に入っていればその文章、
+## どこにも入っていなければ区画の既定の説明。
+##
+## 入った/出たの通知ではなく毎フレームの位置で決める。範囲が重なっていても
+## 順番に左右されず、落下復帰やデバッグワープで飛んでも必ず正しいものになる
+func _update_tutorial_hint(force := false) -> void:
+	if _tutorial_ui == null or _advancing:
+		return                        # メッセージ中は説明を出さない
+	var tut := _stage as TutorialStage
+	if tut == null or player == null:
+		return
+	var sec := tut.get_active_section()
+	if sec == null:
+		return
+	var text := sec.get_hint_at(player.global_position)
+	if text == _hint_text and not force:
+		return
+	_hint_text = text
+	_tutorial_ui.show_hint(text)
 
 
 ## 記憶コレクションに並べる絵を決める。割り当てがあればそれを、
@@ -864,6 +1222,14 @@ func _show_clear(clear_time: float, is_last: bool, test_end := false) -> void:
 
 	if test_end:
 		_add_label(box, "THANKS FOR PLAYTESTING!", 46, Color(1.0, 0.92, 0.4))
+		return
+
+	if _in_tutorial:
+		# 番号を持たない面なので「STAGE 0 CLEAR」にはしない。
+		# ランキングも無いので出さない
+		_add_label(box, "TUTORIAL CLEAR", 52, Color(1.0, 0.92, 0.4))
+		_add_label(box, "TIME  %.2f    FALLS  %d" % [clear_time, _fall_count],
+			28, Color(0.9, 0.94, 1.0))
 		return
 
 	if is_last:
@@ -1053,6 +1419,12 @@ func _build_event_ui() -> void:
 	all.pressed.connect(_play_all_events)
 	box.add_child(all)
 
+	if credits:
+		var cr := Button.new()
+		cr.text = "▶ CREDITS (%d)  クレジット" % credits.entries.size()
+		cr.pressed.connect(_play_credits_debug)
+		box.add_child(cr)
+
 	# 通し再生中はパネルを隠すので、進み具合は別の帯で出す
 	var progress_box := PanelContainer.new()
 	progress_box.set_anchors_preset(Control.PRESET_CENTER_TOP)
@@ -1085,6 +1457,16 @@ func _play_event(index: int) -> void:
 		(_events[index]["data"] as CutsceneData).resource_path])
 	await cutscene.play(_events[index]["data"])
 	_event_panel.visible = true
+
+
+## クレジットだけを確認する（F6 → CREDITS）
+func _play_credits_debug() -> void:
+	if _event_panel == null:
+		return
+	_event_panel.visible = false
+	await play_credits()
+	if _event_panel and is_instance_valid(_event_panel):
+		_event_panel.visible = true
 
 
 ## OP → 各面の前後 → ED を順に流す。ESC で降りる
@@ -1183,6 +1565,8 @@ func _add_pause_button(parent: Node, text: String, callback: Callable) -> Button
 func _save_from_pause() -> void:
 	if _write_save(_index):
 		_set_pause_note("SAVED  —  STAGE %d の頭から再開できます" % (_index + 1))
+	elif _in_tutorial:
+		_set_pause_note("チュートリアルは保存しません（クリアすると本編が始まります）")
 	else:
 		_set_pause_note("テスト用の設定が入っているので保存しません")
 

@@ -1,0 +1,615 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/tutorial_stage.gd" id="1_tstage"]
+[ext_resource type="Script" path="res://scripts/tutorial_section.gd" id="2_tsec"]
+[ext_resource type="Script" path="res://scripts/tutorial_item.gd" id="3_titem"]
+[ext_resource type="Script" path="res://scripts/tutorial_hint.gd" id="6_thint"]
+[ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="4_terrain"]
+[ext_resource type="Script" uid="uid://dgqq7nscbsglg" path="res://scripts/hazard.gd" id="5_hazard"]
+[ext_resource type="Script" path="res://scripts/matrix_parallax.gd" id="7_mtxpara"]
+[ext_resource type="Shader" path="res://resources/shader/matrix_rain.gdshader" id="8_mtxsh"]
+[ext_resource type="Texture2D" path="res://resources/texture/matrix_glyphs.png" id="9_mtxatlas"]
+
+[sub_resource type="ShaderMaterial" id="MatrixRain"]
+shader = ExtResource("8_mtxsh")
+shader_parameter/glyph_atlas = ExtResource("9_mtxatlas")
+shader_parameter/bg_color = Color(0, 0.104575, 0, 1)
+shader_parameter/brightness = 0.75
+shader_parameter/density = 1.0
+shader_parameter/rain_rows = 42.0
+shader_parameter/glyph_fill = 0.98
+shader_parameter/trail_length = 42.0
+shader_parameter/float_alpha = 0.22
+shader_parameter/parallax_strength = 0.07
+
+[node name="StageTutorial" type="Node2D"]
+script = ExtResource("1_tstage")
+display_name = "チュートリアル"
+hide_world_background = true
+
+[node name="MatrixBg" type="CanvasLayer" parent="."]
+layer = -100
+
+[node name="Rain" type="ColorRect" parent="MatrixBg"]
+material = SubResource("MatrixRain")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("7_mtxpara")
+follow_camera = true
+camera_span = 1000.0
+camera_span_y = 54.0
+mouse_weight = 0.15
+key_speed = 0.0
+
+[node name="CameraBounds" type="Polygon2D" parent="."]
+visible = false
+color = Color(1, 0.85, 0.3, 0.15)
+polygon = PackedVector2Array(0, 0, 7500, 0, 7500, 3000, 0, 3000)
+
+[node name="Spawn" type="Marker2D" parent="."]
+position = Vector2(300, 1050)
+
+[node name="Tutorials" type="Node2D" parent="."]
+
+[node name="Tutorial1" type="Node2D" parent="Tutorials"]
+position = Vector2(0, 0)
+script = ExtResource("2_tsec")
+title = "基本操作"
+hint = "← →  /  A D で傾ける   ※ボタンを押さなくても勝手に跳ねる"
+message = "これが基本。\nポッピンは放っておいても跳ね続ける。← → で傾けた方へ進む。\nボタンで跳ぶのではなく、傾きで行き先を決める乗り物。"
+
+[node name="Spawn" type="Marker2D" parent="Tutorials/Tutorial1"]
+position = Vector2(300, 1050)
+
+[node name="Item" type="Area2D" parent="Tutorials/Tutorial1"]
+position = Vector2(2240, 900)
+script = ExtResource("3_titem")
+
+[node name="Hints" type="Node2D" parent="Tutorials/Tutorial1"]
+
+[node name="Hint1" type="Node2D" parent="Tutorials/Tutorial1/Hints"]
+position = Vector2(1575, 750)
+script = ExtResource("6_thint")
+text = "坂は傾けたまま登れる   傾けるのをやめると止まる"
+size = Vector2(750, 1500)
+
+[node name="Hint2" type="Node2D" parent="Tutorials/Tutorial1/Hints"]
+position = Vector2(2225, 750)
+script = ExtResource("6_thint")
+text = "金色の玉に触れるとチュートリアル合格"
+size = Vector2(550, 1500)
+
+[node name="RecoveryPoints" type="Node2D" parent="Tutorials/Tutorial1"]
+
+[node name="Point1" type="Marker2D" parent="Tutorials/Tutorial1/RecoveryPoints"]
+position = Vector2(300, 1050)
+
+[node name="Point2" type="Marker2D" parent="Tutorials/Tutorial1/RecoveryPoints"]
+position = Vector2(1300, 1050)
+
+[node name="Terrain" type="StaticBody2D" parent="Tutorials/Tutorial1"]
+
+[node name="Floor" type="CollisionPolygon2D" parent="Tutorials/Tutorial1/Terrain"]
+polygon = PackedVector2Array(80, 1150, 1400, 1150, 1400, 1300, 80, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Ramp" type="CollisionPolygon2D" parent="Tutorials/Tutorial1/Terrain"]
+polygon = PackedVector2Array(1400, 1150, 1800, 1000, 1800, 1300, 1400, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Shelf" type="CollisionPolygon2D" parent="Tutorials/Tutorial1/Terrain"]
+polygon = PackedVector2Array(1800, 1000, 2420, 1000, 2420, 1300, 1800, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="WallLeft" type="CollisionPolygon2D" parent="Tutorials/Tutorial1/Terrain"]
+polygon = PackedVector2Array(0, 150, 80, 150, 80, 1300, 0, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="WallRight" type="CollisionPolygon2D" parent="Tutorials/Tutorial1/Terrain"]
+polygon = PackedVector2Array(2420, 150, 2500, 150, 2500, 1300, 2420, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Hazards" type="Area2D" parent="Tutorials/Tutorial1"]
+script = ExtResource("5_hazard")
+
+[node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial1/Hazards"]
+polygon = PackedVector2Array(0, 1380, 2500, 1380, 2500, 1480, 0, 1480)
+script = ExtResource("4_terrain")
+fill_color = Color(0.62, 0.16, 0.19, 1)
+
+[node name="Signs" type="Node2D" parent="Tutorials/Tutorial1"]
+
+[node name="Sign" type="Label" parent="Tutorials/Tutorial1/Signs"]
+offset_left = 700
+offset_top = 780
+offset_right = 1120
+offset_bottom = 960
+text = "傾けて\n右へ"
+theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.09, 0.12, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 40
+
+[node name="Tutorial2" type="Node2D" parent="Tutorials"]
+position = Vector2(2500, 0)
+script = ExtResource("2_tsec")
+title = "ジャンプの練習"
+hint = "跳ぶ前から傾けておく   傾きが大きいほど遠くへ飛ぶ"
+message = "傾きが大きいほど遠くへ飛び、そのぶん高さは下がる。\n谷を渡るときは、跳ぶ前から傾けておくこと。"
+
+[node name="Spawn" type="Marker2D" parent="Tutorials/Tutorial2"]
+position = Vector2(300, 1050)
+
+[node name="Item" type="Area2D" parent="Tutorials/Tutorial2"]
+position = Vector2(2150, 900)
+script = ExtResource("3_titem")
+
+[node name="Hints" type="Node2D" parent="Tutorials/Tutorial2"]
+
+[node name="Hint1" type="Node2D" parent="Tutorials/Tutorial2/Hints"]
+position = Vector2(1125, 750)
+script = ExtResource("6_thint")
+text = "段の上から、傾けたまま跳んで谷を越える"
+size = Vector2(550, 1500)
+
+[node name="Hint2" type="Node2D" parent="Tutorials/Tutorial2/Hints"]
+position = Vector2(2000, 750)
+script = ExtResource("6_thint")
+text = "渡れた   そのまま玉へ"
+size = Vector2(1000, 1500)
+
+[node name="RecoveryPoints" type="Node2D" parent="Tutorials/Tutorial2"]
+
+[node name="Point1" type="Marker2D" parent="Tutorials/Tutorial2/RecoveryPoints"]
+position = Vector2(300, 1050)
+
+[node name="Point2" type="Marker2D" parent="Tutorials/Tutorial2/RecoveryPoints"]
+position = Vector2(1150, 800)
+
+[node name="Terrain" type="StaticBody2D" parent="Tutorials/Tutorial2"]
+
+[node name="Floor" type="CollisionPolygon2D" parent="Tutorials/Tutorial2/Terrain"]
+polygon = PackedVector2Array(80, 1150, 900, 1150, 900, 1300, 80, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Step" type="CollisionPolygon2D" parent="Tutorials/Tutorial2/Terrain"]
+polygon = PackedVector2Array(900, 1140, 1000, 900, 1300, 900, 1300, 1300, 900, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Landing" type="CollisionPolygon2D" parent="Tutorials/Tutorial2/Terrain"]
+polygon = PackedVector2Array(1500, 1000, 2420, 1000, 2420, 1300, 1500, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="WallLeft" type="CollisionPolygon2D" parent="Tutorials/Tutorial2/Terrain"]
+polygon = PackedVector2Array(0, 150, 80, 150, 80, 1300, 0, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="WallRight" type="CollisionPolygon2D" parent="Tutorials/Tutorial2/Terrain"]
+polygon = PackedVector2Array(2420, 150, 2500, 150, 2500, 1300, 2420, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Hazards" type="Area2D" parent="Tutorials/Tutorial2"]
+script = ExtResource("5_hazard")
+
+[node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial2/Hazards"]
+polygon = PackedVector2Array(0, 1380, 2500, 1380, 2500, 1480, 0, 1480)
+script = ExtResource("4_terrain")
+fill_color = Color(0.62, 0.16, 0.19, 1)
+
+[node name="Signs" type="Node2D" parent="Tutorials/Tutorial2"]
+
+[node name="Sign" type="Label" parent="Tutorials/Tutorial2/Signs"]
+offset_left = 1050
+offset_top = 780
+offset_right = 1470
+offset_bottom = 960
+text = "谷を\n越える"
+theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.09, 0.12, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 40
+
+[node name="Tutorial3" type="Node2D" parent="Tutorials"]
+position = Vector2(5000, 0)
+script = ExtResource("2_tsec")
+title = "押しっぱなしで連続ジャンプ"
+hint = "SPACE を押しっぱなし   着地のたびに溜まって、だんだん高く跳ぶ"
+message = "SPACE を押しっぱなしにすると、着地のたびに溜めが入って跳ねが高くなる。\n階段はこれで登る。離すと高さが戻ってしまう。"
+
+[node name="Spawn" type="Marker2D" parent="Tutorials/Tutorial3"]
+position = Vector2(250, 1050)
+
+[node name="Item" type="Area2D" parent="Tutorials/Tutorial3"]
+position = Vector2(2150, 300)
+script = ExtResource("3_titem")
+
+[node name="Hints" type="Node2D" parent="Tutorials/Tutorial3"]
+
+[node name="Hint1" type="Node2D" parent="Tutorials/Tutorial3/Hints"]
+position = Vector2(1200, 750)
+script = ExtResource("6_thint")
+text = "離さずに押し続ける   離すと高さが戻ってしまう"
+size = Vector2(1200, 1500)
+
+[node name="Hint2" type="Node2D" parent="Tutorials/Tutorial3/Hints"]
+position = Vector2(2150, 750)
+script = ExtResource("6_thint")
+text = "登りきった   玉へ"
+size = Vector2(700, 1500)
+
+[node name="RecoveryPoints" type="Node2D" parent="Tutorials/Tutorial3"]
+
+[node name="Point1" type="Marker2D" parent="Tutorials/Tutorial3/RecoveryPoints"]
+position = Vector2(250, 1050)
+
+[node name="Point2" type="Marker2D" parent="Tutorials/Tutorial3/RecoveryPoints"]
+position = Vector2(620, 900)
+
+[node name="Point3" type="Marker2D" parent="Tutorials/Tutorial3/RecoveryPoints"]
+position = Vector2(1320, 600)
+
+[node name="Point4" type="Marker2D" parent="Tutorials/Tutorial3/RecoveryPoints"]
+position = Vector2(2000, 300)
+
+[node name="Terrain" type="StaticBody2D" parent="Tutorials/Tutorial3"]
+
+[node name="Floor" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Terrain"]
+polygon = PackedVector2Array(80, 1150, 450, 1150, 450, 1300, 80, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Step1" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Terrain"]
+polygon = PackedVector2Array(450, 1144, 510, 1000, 800, 1000, 800, 1300, 450, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Step2" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Terrain"]
+polygon = PackedVector2Array(800, 994, 860, 850, 1150, 850, 1150, 1300, 800, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Step3" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Terrain"]
+polygon = PackedVector2Array(1150, 844, 1210, 700, 1500, 700, 1500, 1300, 1150, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Step4" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Terrain"]
+polygon = PackedVector2Array(1500, 694, 1560, 550, 1850, 550, 1850, 1300, 1500, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Top" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Terrain"]
+polygon = PackedVector2Array(1850, 544, 1910, 400, 2420, 400, 2420, 1300, 1850, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="WallLeft" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Terrain"]
+polygon = PackedVector2Array(0, 150, 80, 150, 80, 1300, 0, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="WallRight" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Terrain"]
+polygon = PackedVector2Array(2420, 150, 2500, 150, 2500, 1300, 2420, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Hazards" type="Area2D" parent="Tutorials/Tutorial3"]
+script = ExtResource("5_hazard")
+
+[node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Hazards"]
+polygon = PackedVector2Array(0, 1380, 2500, 1380, 2500, 1480, 0, 1480)
+script = ExtResource("4_terrain")
+fill_color = Color(0.62, 0.16, 0.19, 1)
+
+[node name="Signs" type="Node2D" parent="Tutorials/Tutorial3"]
+
+[node name="Sign" type="Label" parent="Tutorials/Tutorial3/Signs"]
+offset_left = 250
+offset_top = 820
+offset_right = 670
+offset_bottom = 1000
+text = "SPACE\n押しっぱなし"
+theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.09, 0.12, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 40
+
+[node name="Tutorial4" type="Node2D" parent="Tutorials"]
+position = Vector2(0, 1500)
+script = ExtResource("2_tsec")
+title = "溜めジャンプ"
+hint = "同じ場所で2〜3回跳ね直すと高さが戻る   高い段はそれから跳ぶ"
+message = "1回の跳ねでは 250 の段に届かない。\n同じ場所で2〜3回跳ね直して高さを作り、それから傾けて跳ぶ。"
+
+[node name="Spawn" type="Marker2D" parent="Tutorials/Tutorial4"]
+position = Vector2(300, 1050)
+
+[node name="Item" type="Area2D" parent="Tutorials/Tutorial4"]
+position = Vector2(2100, 550)
+script = ExtResource("3_titem")
+
+[node name="Hints" type="Node2D" parent="Tutorials/Tutorial4"]
+
+[node name="Hint1" type="Node2D" parent="Tutorials/Tutorial4/Hints"]
+position = Vector2(675, 750)
+script = ExtResource("6_thint")
+text = "ここで2〜3回跳ね直して高さを作り、それから右へ傾ける"
+size = Vector2(450, 1500)
+
+[node name="Hint2" type="Node2D" parent="Tutorials/Tutorial4/Hints"]
+position = Vector2(1225, 750)
+script = ExtResource("6_thint")
+text = "もう一段ある   同じように跳ね直してから"
+size = Vector2(650, 1500)
+
+[node name="Hint3" type="Node2D" parent="Tutorials/Tutorial4/Hints"]
+position = Vector2(2025, 750)
+script = ExtResource("6_thint")
+text = "登れた   玉へ"
+size = Vector2(950, 1500)
+
+[node name="RecoveryPoints" type="Node2D" parent="Tutorials/Tutorial4"]
+
+[node name="Point1" type="Marker2D" parent="Tutorials/Tutorial4/RecoveryPoints"]
+position = Vector2(300, 1050)
+
+[node name="Point2" type="Marker2D" parent="Tutorials/Tutorial4/RecoveryPoints"]
+position = Vector2(1100, 800)
+
+[node name="Terrain" type="StaticBody2D" parent="Tutorials/Tutorial4"]
+
+[node name="Floor" type="CollisionPolygon2D" parent="Tutorials/Tutorial4/Terrain"]
+polygon = PackedVector2Array(80, 1150, 800, 1150, 800, 1300, 80, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Step1" type="CollisionPolygon2D" parent="Tutorials/Tutorial4/Terrain"]
+polygon = PackedVector2Array(800, 1140, 900, 900, 1500, 900, 1500, 1300, 800, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Step2" type="CollisionPolygon2D" parent="Tutorials/Tutorial4/Terrain"]
+polygon = PackedVector2Array(1500, 890, 1600, 650, 2420, 650, 2420, 1300, 1500, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="WallLeft" type="CollisionPolygon2D" parent="Tutorials/Tutorial4/Terrain"]
+polygon = PackedVector2Array(0, 150, 80, 150, 80, 1300, 0, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="WallRight" type="CollisionPolygon2D" parent="Tutorials/Tutorial4/Terrain"]
+polygon = PackedVector2Array(2420, 150, 2500, 150, 2500, 1300, 2420, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Hazards" type="Area2D" parent="Tutorials/Tutorial4"]
+script = ExtResource("5_hazard")
+
+[node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial4/Hazards"]
+polygon = PackedVector2Array(0, 1380, 2500, 1380, 2500, 1480, 0, 1480)
+script = ExtResource("4_terrain")
+fill_color = Color(0.62, 0.16, 0.19, 1)
+
+[node name="Signs" type="Node2D" parent="Tutorials/Tutorial4"]
+
+[node name="Sign" type="Label" parent="Tutorials/Tutorial4/Signs"]
+offset_left = 500
+offset_top = 780
+offset_right = 920
+offset_bottom = 960
+text = "跳ね直して\nから"
+theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.09, 0.12, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 40
+
+[node name="Tutorial5" type="Node2D" parent="Tutorials"]
+position = Vector2(2500, 1500)
+script = ExtResource("2_tsec")
+title = "跳ぶ場所で変わる"
+hint = "坂で跳ねると斜めに飛ぶ   青い急坂は滑って登れない"
+message = "同じ操作でも、跳ぶ場所で結果が変わる。\nゆるい坂は足場になり、斜め上へ飛べる。青い急坂は滑り落ちる。\n高い棚へは、手前の平らな場所から跳ぶ。"
+
+[node name="Spawn" type="Marker2D" parent="Tutorials/Tutorial5"]
+position = Vector2(300, 1050)
+
+[node name="Item" type="Area2D" parent="Tutorials/Tutorial5"]
+position = Vector2(2240, 750)
+script = ExtResource("3_titem")
+
+[node name="Hints" type="Node2D" parent="Tutorials/Tutorial5"]
+
+[node name="Hint1" type="Node2D" parent="Tutorials/Tutorial5/Hints"]
+position = Vector2(1175, 750)
+script = ExtResource("6_thint")
+text = "ゆるい坂で跳ねると、斜め上へ飛ぶ"
+size = Vector2(550, 1500)
+
+[node name="Hint2" type="Node2D" parent="Tutorials/Tutorial5/Hints"]
+position = Vector2(1625, 750)
+script = ExtResource("6_thint")
+text = "青い急坂は滑る   足場にならない"
+size = Vector2(350, 1500)
+
+[node name="Hint3" type="Node2D" parent="Tutorials/Tutorial5/Hints"]
+position = Vector2(2150, 750)
+script = ExtResource("6_thint")
+text = "平らな所から跳んで、高い棚に乗る"
+size = Vector2(700, 1500)
+
+[node name="RecoveryPoints" type="Node2D" parent="Tutorials/Tutorial5"]
+
+[node name="Point1" type="Marker2D" parent="Tutorials/Tutorial5/RecoveryPoints"]
+position = Vector2(300, 1050)
+
+[node name="Point2" type="Marker2D" parent="Tutorials/Tutorial5/RecoveryPoints"]
+position = Vector2(1300, 980)
+
+[node name="Terrain" type="StaticBody2D" parent="Tutorials/Tutorial5"]
+
+[node name="Floor" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Terrain"]
+polygon = PackedVector2Array(80, 1150, 1000, 1150, 1000, 1300, 80, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="RampOk" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Terrain"]
+polygon = PackedVector2Array(1000, 1150, 1200, 1057, 1200, 1300, 1000, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Plateau" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Terrain"]
+polygon = PackedVector2Array(1200, 1057, 1400, 1057, 1400, 1300, 1200, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Flat" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Terrain"]
+polygon = PackedVector2Array(1400, 1150, 1900, 1150, 1900, 1300, 1400, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="RampSlip" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Terrain"]
+polygon = PackedVector2Array(1500, 1150, 1650, 1024, 1650, 1150)
+script = ExtResource("4_terrain")
+fill_color = Color(0.42, 0.62, 0.78, 1)
+
+[node name="Ledge" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Terrain"]
+polygon = PackedVector2Array(2050, 1090, 2150, 850, 2420, 850, 2420, 1300, 2050, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="WallLeft" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Terrain"]
+polygon = PackedVector2Array(0, 150, 80, 150, 80, 1300, 0, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="WallRight" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Terrain"]
+polygon = PackedVector2Array(2420, 150, 2500, 150, 2500, 1300, 2420, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Hazards" type="Area2D" parent="Tutorials/Tutorial5"]
+script = ExtResource("5_hazard")
+
+[node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Hazards"]
+polygon = PackedVector2Array(0, 1380, 2500, 1380, 2500, 1480, 0, 1480)
+script = ExtResource("4_terrain")
+fill_color = Color(0.62, 0.16, 0.19, 1)
+
+[node name="Signs" type="Node2D" parent="Tutorials/Tutorial5"]
+
+[node name="Sign" type="Label" parent="Tutorials/Tutorial5/Signs"]
+offset_left = 780
+offset_top = 780
+offset_right = 1200
+offset_bottom = 960
+text = "ゆるい坂\n急な坂"
+theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.09, 0.12, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 40
+
+[node name="Tutorial6" type="Node2D" parent="Tutorials"]
+position = Vector2(5000, 1500)
+script = ExtResource("2_tsec")
+title = "総合"
+hint = "高いところから落ちて着地すると、その勢いで高く跳ね返る"
+message = "落差で勢いをつけて高く跳ね返る。これが最後の技。\nこれでチュートリアルは終わり。本編へ進もう。"
+
+[node name="Spawn" type="Marker2D" parent="Tutorials/Tutorial6"]
+position = Vector2(300, 150)
+
+[node name="Item" type="Area2D" parent="Tutorials/Tutorial6"]
+position = Vector2(2240, 750)
+script = ExtResource("3_titem")
+
+[node name="Hints" type="Node2D" parent="Tutorials/Tutorial6"]
+
+[node name="Hint1" type="Node2D" parent="Tutorials/Tutorial6/Hints"]
+position = Vector2(350, 300)
+script = ExtResource("6_thint")
+text = "ここから落ちる   落差がそのまま跳ね返りになる"
+size = Vector2(700, 600)
+
+[node name="Hint2" type="Node2D" parent="Tutorials/Tutorial6/Hints"]
+position = Vector2(1175, 1050)
+script = ExtResource("6_thint")
+text = "落ちた勢いのまま、右へ傾けて棚へ"
+size = Vector2(1250, 900)
+
+[node name="Hint3" type="Node2D" parent="Tutorials/Tutorial6/Hints"]
+position = Vector2(2150, 800)
+script = ExtResource("6_thint")
+text = "乗れた   玉へ"
+size = Vector2(700, 800)
+
+[node name="RecoveryPoints" type="Node2D" parent="Tutorials/Tutorial6"]
+
+[node name="Point1" type="Marker2D" parent="Tutorials/Tutorial6/RecoveryPoints"]
+position = Vector2(300, 150)
+
+[node name="Point2" type="Marker2D" parent="Tutorials/Tutorial6/RecoveryPoints"]
+position = Vector2(900, 1050)
+
+[node name="Terrain" type="StaticBody2D" parent="Tutorials/Tutorial6"]
+
+[node name="Start" type="CollisionPolygon2D" parent="Tutorials/Tutorial6/Terrain"]
+polygon = PackedVector2Array(80, 250, 600, 250, 600, 370, 80, 370)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="Floor" type="CollisionPolygon2D" parent="Tutorials/Tutorial6/Terrain"]
+polygon = PackedVector2Array(600, 1150, 1700, 1150, 1700, 1300, 600, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="GoalLedge" type="CollisionPolygon2D" parent="Tutorials/Tutorial6/Terrain"]
+polygon = PackedVector2Array(1900, 850, 2420, 850, 2420, 970, 1900, 970)
+script = ExtResource("4_terrain")
+fill_color = Color(0.32, 0.5, 0.34, 1)
+
+[node name="WallLeft" type="CollisionPolygon2D" parent="Tutorials/Tutorial6/Terrain"]
+polygon = PackedVector2Array(0, 150, 80, 150, 80, 1300, 0, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="WallRight" type="CollisionPolygon2D" parent="Tutorials/Tutorial6/Terrain"]
+polygon = PackedVector2Array(2420, 150, 2500, 150, 2500, 1300, 2420, 1300)
+script = ExtResource("4_terrain")
+fill_color = Color(0.5, 0.36, 0.32, 1)
+
+[node name="Hazards" type="Area2D" parent="Tutorials/Tutorial6"]
+script = ExtResource("5_hazard")
+
+[node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial6/Hazards"]
+polygon = PackedVector2Array(0, 1380, 2500, 1380, 2500, 1480, 0, 1480)
+script = ExtResource("4_terrain")
+fill_color = Color(0.62, 0.16, 0.19, 1)
+
+[node name="Signs" type="Node2D" parent="Tutorials/Tutorial6"]
+
+[node name="Sign" type="Label" parent="Tutorials/Tutorial6/Signs"]
+offset_left = 700
+offset_top = 900
+offset_right = 1120
+offset_bottom = 1080
+text = "落差を\n使う"
+theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.09, 0.12, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 40
+
