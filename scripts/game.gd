@@ -155,6 +155,10 @@ var _events: Array[Dictionary] = []
 ## 全イベントの通し再生中。ESC で降ろす
 var _playing_all := false
 var _advancing := false
+## 全面クリアして、ALL CLEAR の画面で止まっている。
+## この間だけは _advancing が立っていてもポーズを開けるようにする
+## （タイトルへ戻る道を残すため）
+var _all_cleared := false
 ## チュートリアル面を遊んでいる最中。このときは _index が -1 になる。
 ## スコア送信・セーブ・記憶コレクションを全て止めるための目印
 var _in_tutorial := false
@@ -261,11 +265,11 @@ func _ready() -> void:
 		return
 	# 続きから始めるときは OP を出さない。もう見ているため
 	if opening and not skip_demo and not resumed:
+		_stop_stage_bgm()
 		await cutscene.play(opening)
 	load_stage(start_index, not skip_demo)
 
 
-		_stop_stage_bgm()
 ## タイトルの CONTINUE から入っていれば、セーブの続きを組み立てる。
 ## 続きから始めるなら true。NEW GAME やタイトルを経由しない起動では何もしない
 func _apply_save() -> bool:
@@ -475,6 +479,7 @@ func load_tutorial(manual := true, section := 0) -> void:
 func _swap_stage(scene: PackedScene, index: int, manual: bool) -> void:
 	_clear_overlay_hide()
 	_advancing = false
+	_all_cleared = false
 	_load_gen += 1
 	var gen := _load_gen
 	_index = index
@@ -627,11 +632,6 @@ func _start_stage_bgm(index: int) -> void:
 		_play_stage_bgm(index)
 
 
-func _apply_camera_bounds() -> void:
-	var cam := player.get_node_or_null(^"Camera2D") as Camera2D if player else null
-	if cam == null:
-		return
-	var r := _stage.camera_bounds
 ## イベントを始める前にステージBGM を止める。この先の音はイベントが持つ。
 ##
 ## イベントが1コマ目で曲を指定していれば、このフェードはそちらに打ち消されて
@@ -644,6 +644,11 @@ func _stop_stage_bgm() -> void:
 		bgm_player.stop()
 
 
+func _apply_camera_bounds() -> void:
+	var cam := player.get_node_or_null(^"Camera2D") as Camera2D if player else null
+	if cam == null:
+		return
+	var r := _stage.camera_bounds
 	if r.size.x <= 0.0 or r.size.y <= 0.0:
 		return
 	cam.limit_left = int(r.position.x)
@@ -933,12 +938,12 @@ func _on_goal_reached(clear_time: float) -> void:
 
 	var outro := _stage.outro if _stage else null
 	if outro and not skip_cutscenes:
+		_stop_stage_bgm()
 		await cutscene.play(outro)
 
 	# 記憶コレクション。毎ステージ後に必ず挟んで「あと何個で帰れるのか」を見せる。
 	# 最後のステージでは 10/10 が揃ってから ending へ繋ぐ
 	if memory and not skip_cutscenes:
-		_stop_stage_bgm()
 		await memory.acquire(_index)
 
 	if is_test_end:
@@ -950,12 +955,13 @@ func _on_goal_reached(clear_time: float) -> void:
 		if not (Settings.test_mode or test_play_mode):
 			SaveGame.erase()
 		if ending and not skip_cutscenes:
+			_stop_stage_bgm()
 			await cutscene.play(ending)
 		if credits and not skip_cutscenes:
 			await play_credits()
 		all_cleared.emit()
-		_show_clear(_total_clear_time, true)
-			_stop_stage_bgm()
+		_all_cleared = true
+		_show_clear(_total_clear_time, true, false, true)
 		return
 
 	# ここまでを自動で保存する。記憶コレクションを見せ終えた時点＝
@@ -992,21 +998,21 @@ func _finish_tutorial(clear_time := -1.0) -> void:
 
 	var outro := _stage.outro if _stage else null
 	if outro and not skip_cutscenes:
+		_stop_stage_bgm()
 		await cutscene.play(outro)
 
 	_in_tutorial = false
 	# ここから本編。差し替えの瞬間が見えないよう先に覆っておく
 	if cutscene:
 		cutscene.cover_now()
-		_stop_stage_bgm()
 	if opening and not skip_cutscenes:
+		_stop_stage_bgm()
 		await cutscene.play(opening)
 	load_stage(start_index)
 
 
 # ═══════════════════════════════ チュートリアルの区画進行
 
-		_stop_stage_bgm()
 ## 区画をひとつ始める。面は読み直さないので、暗転もBGMの切れ目も入らない。
 ## やり直し・次へ・デバッグの区画送りはすべてここを通る
 func start_tutorial_section(index: int, with_title := true) -> void:
@@ -1213,7 +1219,11 @@ func _wait_after_goal() -> void:
 
 # ═══════════════════════════════ UI
 
-func _show_clear(clear_time: float, is_last: bool, test_end := false) -> void:
+## offer_title を true にすると、ALL CLEAR に「RETURN TO TITLE」を出す。
+## ED とクレジットまで見終えた最後の1回だけ。ゴール直後の
+## ALL CLEAR に出すと、そこで押して ED を飛ばしてしまう
+func _show_clear(clear_time: float, is_last: bool, test_end := false,
+		offer_title := false) -> void:
 	_clear_overlay_hide()
 	_clear_overlay = CanvasLayer.new()
 	_clear_overlay.layer = 64
@@ -1248,7 +1258,14 @@ func _show_clear(clear_time: float, is_last: bool, test_end := false) -> void:
 		_add_label(box, "ALL CLEAR", 64, Color(1.0, 0.92, 0.4))
 		_add_label(box, "TIME  %.2f" % clear_time, 30, Color(0.9, 0.94, 1.0))
 		_add_label(box, "FALLS  %d" % _total_falls, 26, Color(0.9, 0.94, 1.0))
-		_add_label(box, "[R] RETRY  /  [F2] STAGE SELECT", 20, Color(0.65, 0.7, 0.8))
+		if offer_title:
+			# ED とクレジットまで見終えた画面。ここで行き止まりにしないよう、
+			# タイトルへ戻る道を出す。ESC のポーズからも戻れる（_all_cleared）
+			var back_btn := _add_pause_button(box, "RETURN TO TITLE", _return_to_title)
+			back_btn.call_deferred("grab_focus")
+			_add_label(box, "[R] RETRY", 20, Color(0.65, 0.7, 0.8))
+		else:
+			_add_label(box, "[R] RETRY  /  [F2] STAGE SELECT", 20, Color(0.65, 0.7, 0.8))
 	else:
 		_add_label(box, "STAGE %d CLEAR" % (_index + 1), 52, Color(1.0, 0.92, 0.4))
 		_add_label(box, "TIME  %.2f    FALLS  %d" % [clear_time, _fall_count],
@@ -1467,6 +1484,7 @@ func _play_event(index: int) -> void:
 	_event_panel.visible = false
 	print("[Game] イベント確認 %s -> %s" % [_events[index]["key"],
 		(_events[index]["data"] as CutsceneData).resource_path])
+	_stop_stage_bgm()
 	await cutscene.play(_events[index]["data"])
 	_event_panel.visible = true
 
@@ -1484,7 +1502,6 @@ func _play_credits_debug() -> void:
 ## OP → 各面の前後 → ED を順に流す。ESC で降りる
 func _play_all_events() -> void:
 	if cutscene == null or _playing_all:
-	_stop_stage_bgm()
 		return
 	_playing_all = true
 	_event_panel.visible = false
@@ -1495,6 +1512,7 @@ func _play_all_events() -> void:
 		if not _playing_all:
 			break
 		_event_progress.text = "%d/%d  %s" % [i + 1, _events.size(), _events[i]["key"]]
+		_stop_stage_bgm()
 		await cutscene.play(_events[i]["data"])
 	_playing_all = false
 	bar.visible = false
@@ -1512,10 +1530,13 @@ func _add_hint(parent: Node, text: String) -> void:
 
 # ═══════════════════════════════ ポーズメニュー
 
-		_stop_stage_bgm()
 ## ESC で開く。ツリーごと止めるので、クリアタイム（物理ステップの積算）も止まる
 func _open_pause_menu() -> void:
-	if _pause_overlay or _advancing or _respawning:
+	if _pause_overlay or _respawning:
+		return
+	# 全面クリア後は _advancing が立ったまま止まる。
+	# そこでもポーズを開けないと、タイトルへ戻る道が無くなる
+	if _advancing and not _all_cleared:
 		return
 	if cutscene and cutscene.visible:
 		return          # イベント中は送りの ESC と取り合いになるので出さない
