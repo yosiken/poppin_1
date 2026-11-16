@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="10_fiqt3"]
 [ext_resource type="Resource" uid="uid://d3b814sxk5w43" path="res://resources/cutscene/stage10_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://behsayoxv2drc" path="res://resources/cutscene/stage10_outro.tres" id="cut_outro"]
-[ext_resource type="Texture2D" uid="uid://bnq1smnkjlq34" path="res://resources/texture/goal.png" id="tex_goal"]
+[ext_resource type="Texture2D" uid="uid://dfjsfdi6egw32" path="res://resources/texture/goal_kanie.png" id="tex_goal"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m3ytp"]
 shader = ExtResource("6_nx8xt")
@@ -35,7 +35,7 @@ shader_parameter/shimmer_size = 0.035
 shader_parameter/shimmer_strength = 0.12
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
-size = Vector2(115.84525, 174.44933)
+size = Vector2(134.4, 118.299995)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nx8xt"]
 shader = ExtResource("7_c1ya3")
@@ -560,11 +560,9 @@ collision_mask = 2
 script = ExtResource("3_bfomk")
 
 [node name="Sprite" type="Sprite2D" parent="Goal" unique_id=1062924124]
-scale = Vector2(1.946979, 1.946979)
 texture = ExtResource("tex_goal")
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=1964734889]
-scale = Vector2(2.1613433, 1.6927947)
 shape = SubResource("RectangleShape2D_thbjj")
 
 [node name="RecoveryPoints" type="Node2D" parent="." unique_id=765922121]
