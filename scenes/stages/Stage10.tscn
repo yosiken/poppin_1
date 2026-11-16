@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_4rvt0"]
 [ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_bfomk"]
 [ext_resource type="Texture2D" uid="uid://c4nmubthakdc" path="res://resources/texture/BG/bg_e_01.png" id="4_8ba8c"]
+[ext_resource type="Script" uid="uid://dgqq7nscbsglg" path="res://scripts/hazard.gd" id="5_fiqt3"]
+[ext_resource type="Shader" uid="uid://cirm1mgj28v3d" path="res://resources/shader/lava_block.gdshader" id="6_nx8xt"]
 [ext_resource type="Shader" uid="uid://cwsj8xaf2qwel" path="res://resources/shader/terrain_fill.gdshader" id="7_c1ya3"]
 [ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="8_lt4wn"]
 [ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="9_soyj0"]
@@ -11,6 +13,26 @@
 [ext_resource type="Resource" uid="uid://d3b814sxk5w43" path="res://resources/cutscene/stage10_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://behsayoxv2drc" path="res://resources/cutscene/stage10_outro.tres" id="cut_outro"]
 [ext_resource type="Texture2D" uid="uid://bnq1smnkjlq34" path="res://resources/texture/goal.png" id="tex_goal"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m3ytp"]
+shader = ExtResource("6_nx8xt")
+shader_parameter/edges = PackedVector3Array(0, 1, -60, -1, 0, -800, 0, -1, -60, 1, 0, -800)
+shader_parameter/edge_count = 4
+shader_parameter/bounds = Vector4(-800, -60, 1600, 120)
+shader_parameter/noise_size = 160.0
+shader_parameter/flow_speed = 0.07
+shader_parameter/vein_width = 0.08
+shader_parameter/crust_dark = 0.2
+shader_parameter/heat = 1.0
+shader_parameter/hot_color = Color(1, 0.86, 0.45, 1)
+shader_parameter/top_heat_height = 70.0
+shader_parameter/top_heat = 1.0
+shader_parameter/line_width = 2.5
+shader_parameter/glow_width = 22.0
+shader_parameter/glow_strength = 0.22
+shader_parameter/shimmer_speed = 2.6
+shader_parameter/shimmer_size = 0.035
+shader_parameter/shimmer_strength = 0.12
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
 size = Vector2(115.84525, 174.44933)
@@ -311,6 +333,19 @@ texture = ExtResource("4_8ba8c")
 
 [node name="Spawn" type="Marker2D" parent="." unique_id=227428821]
 position = Vector2(0, 1000)
+
+[node name="Hazards" type="Area2D" parent="." unique_id=278291685]
+position = Vector2(1054, 442)
+scale = Vector2(0.86969703, 0.73698115)
+collision_mask = 2
+script = ExtResource("5_fiqt3")
+
+[node name="Deadly1" type="CollisionPolygon2D" parent="Hazards" unique_id=1767764993]
+material = SubResource("ShaderMaterial_m3ytp")
+position = Vector2(-163, 1141)
+polygon = PackedVector2Array(-800, -60, 800, -60, 800, 60, -185.43262, 60, -800, 60)
+script = ExtResource("2_4rvt0")
+fill_color = Color(0.62, 0.16, 0.19, 1)
 
 [node name="Terrain" type="StaticBody2D" parent="." unique_id=10080694]
 
