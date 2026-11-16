@@ -1384,12 +1384,25 @@ func _stop_bgm(fade: float) -> void:
 		p.volume_db = 0.0)
 
 
-## BGM の切り替え・停止がまだ動いているか。
-## イベントの直後にステージBGMへ戻してよいかを Game が判断するのに使う。
-## フェードの途中で覗くと「まだ鳴っている」に見えて、
-## 止めたつもりの曲を引き継いだものと取り違える
-func bgm_busy() -> bool:
-	return _bgm_tween != null and _bgm_tween.is_valid()
+## イベントを始める前に、鳴っているステージBGMを落とす。Game から呼ぶ。
+##
+## この先の音量はイベントが見るので、フェードもこちらで持つ。
+## 1コマ目で曲を指定しているイベントなら、このフェードは _start_bgm に
+## 打ち消されてクロスフェードになる。曲を指定していないイベントでだけ
+## 実際に消える（そのときステージBGMがイベントの下に残るのを防ぐのが狙い）
+func fade_out_bgm(fade := -1.0) -> void:
+	_stop_bgm(fade if fade >= 0.0 else bgm_fade_time)
+
+
+## 動いているフェードを捨てて、音量を 0dB に戻す。
+##
+## Game がステージBGMを鳴らす前に呼ぶ。呼ばないと、イベントの
+## 止めかけのフェードが後から効いて、鳴らし始めたステージBGMを
+## 絞って止めてしまう（プレイヤーを共用しているため）
+func release_bgm() -> void:
+	_kill_bgm_tween()
+	if bgm_player != null and is_instance_valid(bgm_player):
+		bgm_player.volume_db = 0.0
 
 
 func _kill_bgm_tween() -> void:

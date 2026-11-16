@@ -265,6 +265,7 @@ func _ready() -> void:
 	load_stage(start_index, not skip_demo)
 
 
+		_stop_stage_bgm()
 ## タイトルの CONTINUE から入っていれば、セーブの続きを組み立てる。
 ## 続きから始めるなら true。NEW GAME やタイトルを経由しない起動では何もしない
 func _apply_save() -> bool:
@@ -529,10 +530,15 @@ func _swap_stage(scene: PackedScene, index: int, manual: bool) -> void:
 	_check_stage_bounds()
 	_refresh_select_ui()
 	_apply_tutorial_ui()
-	if _in_tutorial:
-		_play_track(tutorial_bgm)
+
+	var has_intro := _stage.intro != null and not skip_cutscenes \
+		and (manual or play_intro_on_select)
+	# 冒頭イベントがあるなら、音はそちらに渡す。ステージBGM はイベントが
+	# 終わってから鳴らす（イベントの下に敷いたままにしない）
+	if has_intro and cutscene:
+		_stop_stage_bgm()
 	else:
-		_play_stage_bgm(index)
+		_start_stage_bgm(index)
 	if tut:
 		print("[Game] チュートリアル '%s' を読み込み（区画 %d/%d）"
 			% [_stage.get_display_name(), _tutorial_index + 1, tut.section_count()])
@@ -543,8 +549,6 @@ func _swap_stage(scene: PackedScene, index: int, manual: bool) -> void:
 			% [index + 1, stages.size(), _stage.get_display_name()])
 	stage_loaded.emit(index, _stage)
 
-	var has_intro := _stage.intro != null and not skip_cutscenes \
-		and (manual or play_intro_on_select)
 	# 差し替えの瞬間が見えないよう、冒頭イベントの暗幕を先に下ろしておく。
 	# ステージが見えるのは会話が終わって暗幕が上がるときになる
 	if has_intro and cutscene:
@@ -553,9 +557,8 @@ func _swap_stage(scene: PackedScene, index: int, manual: bool) -> void:
 		await cutscene.play(_stage.intro)
 		if gen != _load_gen:
 			return          # 待っている間に別のステージへ切り替わった
-		# 冒頭イベントが BGM を止めて終わることがある（台本の「ここで初めて
-		# BGMを止め」）。そのままだとステージが無音で始まるので鳴らし直す
-		_resume_stage_bgm(index, gen)
+		# イベントが曲を止め忘れていても、ステージはステージの曲で始める
+		_start_stage_bgm(index)
 	else:
 		# 会話を出さないので、覆ったままにしない
 		_uncover()
@@ -610,21 +613,14 @@ func _play_track(track: AudioStream) -> void:
 	bgm_player.play()
 
 
-## 冒頭イベントのあとでステージBGMへ戻す。
+## ステージBGM を鳴らす。イベントが何を鳴らしたまま終えていても、
+## ステージの始まりは必ずステージの曲にする。
 ##
-## ステージBGMはイベントより先に鳴らしてある（イベント中も曲が続くように）。
-## イベントが自前の曲を鳴らしたまま終えたときは、それを引き継ぐのが
-## 意図なので触らない。止めて終えたときだけステージBGMを始める
-func _resume_stage_bgm(index: int, gen: int) -> void:
-	if bgm_player == null:
-		return
-	# 止めるフェードがまだ動いていることがある。終わるのを待ってから見る
-	while cutscene and cutscene.bgm_busy():
-		await get_tree().process_frame
-		if gen != _load_gen:
-			return
-	if bgm_player.playing:
-		return          # イベントが鳴らしたまま引き渡した曲。そのまま続ける
+## 先に release_bgm() を通すのが要。イベントの止めかけのフェードが残っていると、
+## ここで鳴らした曲を後から絞って止めてしまう（プレイヤーを共用しているため）
+func _start_stage_bgm(index: int) -> void:
+	if cutscene:
+		cutscene.release_bgm()
 	if _in_tutorial:
 		_play_track(tutorial_bgm)
 	else:
@@ -636,6 +632,18 @@ func _apply_camera_bounds() -> void:
 	if cam == null:
 		return
 	var r := _stage.camera_bounds
+## イベントを始める前にステージBGM を止める。この先の音はイベントが持つ。
+##
+## イベントが1コマ目で曲を指定していれば、このフェードはそちらに打ち消されて
+## クロスフェードになるので、聞こえ方は今までと変わらない。
+## 曲を指定していないイベントでだけ、実際にステージBGM が消える
+func _stop_stage_bgm() -> void:
+	if cutscene:
+		cutscene.fade_out_bgm()
+	elif bgm_player:
+		bgm_player.stop()
+
+
 	if r.size.x <= 0.0 or r.size.y <= 0.0:
 		return
 	cam.limit_left = int(r.position.x)
@@ -930,6 +938,7 @@ func _on_goal_reached(clear_time: float) -> void:
 	# 記憶コレクション。毎ステージ後に必ず挟んで「あと何個で帰れるのか」を見せる。
 	# 最後のステージでは 10/10 が揃ってから ending へ繋ぐ
 	if memory and not skip_cutscenes:
+		_stop_stage_bgm()
 		await memory.acquire(_index)
 
 	if is_test_end:
@@ -946,6 +955,7 @@ func _on_goal_reached(clear_time: float) -> void:
 			await play_credits()
 		all_cleared.emit()
 		_show_clear(_total_clear_time, true)
+			_stop_stage_bgm()
 		return
 
 	# ここまでを自動で保存する。記憶コレクションを見せ終えた時点＝
@@ -988,6 +998,7 @@ func _finish_tutorial(clear_time := -1.0) -> void:
 	# ここから本編。差し替えの瞬間が見えないよう先に覆っておく
 	if cutscene:
 		cutscene.cover_now()
+		_stop_stage_bgm()
 	if opening and not skip_cutscenes:
 		await cutscene.play(opening)
 	load_stage(start_index)
@@ -995,6 +1006,7 @@ func _finish_tutorial(clear_time := -1.0) -> void:
 
 # ═══════════════════════════════ チュートリアルの区画進行
 
+		_stop_stage_bgm()
 ## 区画をひとつ始める。面は読み直さないので、暗転もBGMの切れ目も入らない。
 ## やり直し・次へ・デバッグの区画送りはすべてここを通る
 func start_tutorial_section(index: int, with_title := true) -> void:
@@ -1472,6 +1484,7 @@ func _play_credits_debug() -> void:
 ## OP → 各面の前後 → ED を順に流す。ESC で降りる
 func _play_all_events() -> void:
 	if cutscene == null or _playing_all:
+	_stop_stage_bgm()
 		return
 	_playing_all = true
 	_event_panel.visible = false
@@ -1499,6 +1512,7 @@ func _add_hint(parent: Node, text: String) -> void:
 
 # ═══════════════════════════════ ポーズメニュー
 
+		_stop_stage_bgm()
 ## ESC で開く。ツリーごと止めるので、クリアタイム（物理ステップの積算）も止まる
 func _open_pause_menu() -> void:
 	if _pause_overlay or _advancing or _respawning:
