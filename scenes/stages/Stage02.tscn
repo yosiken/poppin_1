@@ -15,6 +15,7 @@
 [ext_resource type="Resource" uid="uid://i0n523lr7x8g" path="res://resources/cutscene/stage02_outro.tres" id="cut_outro"]
 [ext_resource type="Script" uid="uid://dgqq7nscbsglg" path="res://scripts/hazard.gd" id="hz_script"]
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
+[ext_resource type="Shader" uid="uid://cirm1mgj28v3d" path="res://resources/shader/lava_block.gdshader" id="lava_sh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0iyhi"]
 size = Vector2(101.49671, 101.49671)
@@ -98,6 +99,12 @@ shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 723.0
+
+[sub_resource type="ShaderMaterial" id="MatLavaDeadly1"]
+shader = ExtResource("lava_sh")
+shader_parameter/edges = PackedVector3Array(-0, 1, -60, -1, 0, -800, -0, -1, -60, 1, 0, -800)
+shader_parameter/edge_count = 4
+shader_parameter/bounds = Vector4(-800, -60, 1600, 120)
 
 [node name="Stage02" type="Node2D" unique_id=1066997681]
 script = ExtResource("1_hlboq")
@@ -202,6 +209,7 @@ collision_mask = 2
 script = ExtResource("hz_script")
 
 [node name="Deadly1" type="CollisionPolygon2D" parent="Hazards" unique_id=597830771]
+material = SubResource("MatLavaDeadly1")
 position = Vector2(1500, 1150)
 polygon = PackedVector2Array(-800, -60, 800, -60, 800, 60, -800, 60)
 script = ExtResource("2_tq1ty")

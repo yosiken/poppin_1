@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=3]
+[gd_scene load_steps=56 format=3]
 
 [ext_resource type="Script" path="res://scripts/tutorial_stage.gd" id="1_tstage"]
 [ext_resource type="Script" path="res://scripts/tutorial_section.gd" id="2_tsec"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" path="res://resources/texture/matrix_glyphs.png" id="9_mtxatlas"]
 [ext_resource type="Shader" path="res://resources/shader/neon_block.gdshader" id="10_neon"]
 [ext_resource type="Shader" path="res://resources/shader/ice_block.gdshader" id="11_ice"]
+[ext_resource type="Shader" path="res://resources/shader/lava_block.gdshader" id="12_lava"]
 
 [sub_resource type="ShaderMaterial" id="MatrixRain"]
 shader = ExtResource("8_mtxsh")
@@ -55,7 +56,7 @@ shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(2420, 150, 80, 1150)
 
 [sub_resource type="ShaderMaterial" id="Mat1Pit"]
-shader = ExtResource("10_neon")
+shader = ExtResource("12_lava")
 shader_parameter/edges = PackedVector3Array(-0, 1, 1380, -1, 0, -2500, -0, -1, -1480, 1, 0, 0)
 shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(0, 1380, 2500, 100)
@@ -91,7 +92,7 @@ shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(2420, 150, 80, 1150)
 
 [sub_resource type="ShaderMaterial" id="Mat2Pit"]
-shader = ExtResource("10_neon")
+shader = ExtResource("12_lava")
 shader_parameter/edges = PackedVector3Array(-0, 1, 1380, -1, 0, -2500, -0, -1, -1480, 1, 0, 0)
 shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(0, 1380, 2500, 100)
@@ -145,7 +146,7 @@ shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(2420, 150, 80, 1150)
 
 [sub_resource type="ShaderMaterial" id="Mat3Pit"]
-shader = ExtResource("10_neon")
+shader = ExtResource("12_lava")
 shader_parameter/edges = PackedVector3Array(-0, 1, 1380, -1, 0, -2500, -0, -1, -1480, 1, 0, 0)
 shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(0, 1380, 2500, 100)
@@ -181,7 +182,7 @@ shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(2420, 150, 80, 1150)
 
 [sub_resource type="ShaderMaterial" id="Mat4Pit"]
-shader = ExtResource("10_neon")
+shader = ExtResource("12_lava")
 shader_parameter/edges = PackedVector3Array(-0, 1, 1380, -1, 0, -2500, -0, -1, -1480, 1, 0, 0)
 shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(0, 1380, 2500, 100)
@@ -235,7 +236,7 @@ shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(2420, 150, 80, 1150)
 
 [sub_resource type="ShaderMaterial" id="Mat5Pit"]
-shader = ExtResource("10_neon")
+shader = ExtResource("12_lava")
 shader_parameter/edges = PackedVector3Array(-0, 1, 1380, -1, 0, -2500, -0, -1, -1480, 1, 0, 0)
 shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(0, 1380, 2500, 100)
@@ -271,7 +272,7 @@ shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(2420, 150, 80, 1150)
 
 [sub_resource type="ShaderMaterial" id="Mat6Pit"]
-shader = ExtResource("10_neon")
+shader = ExtResource("12_lava")
 shader_parameter/edges = PackedVector3Array(-0, 1, 1380, -1, 0, -2500, -0, -1, -1480, 1, 0, 0)
 shader_parameter/edge_count = 4
 shader_parameter/bounds = Vector4(0, 1380, 2500, 100)
@@ -379,6 +380,7 @@ fill_color = Color(0.13, 0.58, 0.55, 1)
 
 [node name="Hazards" type="Area2D" parent="Tutorials/Tutorial1"]
 script = ExtResource("5_hazard")
+fill_color = Color(1, 0.25, 0.3, 1)
 
 [node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial1/Hazards"]
 material = SubResource("Mat1Pit")
@@ -469,6 +471,7 @@ fill_color = Color(0.13, 0.58, 0.55, 1)
 
 [node name="Hazards" type="Area2D" parent="Tutorials/Tutorial2"]
 script = ExtResource("5_hazard")
+fill_color = Color(1, 0.25, 0.3, 1)
 
 [node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial2/Hazards"]
 material = SubResource("Mat2Pit")
@@ -583,6 +586,7 @@ fill_color = Color(0.13, 0.58, 0.55, 1)
 
 [node name="Hazards" type="Area2D" parent="Tutorials/Tutorial3"]
 script = ExtResource("5_hazard")
+fill_color = Color(1, 0.25, 0.3, 1)
 
 [node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial3/Hazards"]
 material = SubResource("Mat3Pit")
@@ -679,6 +683,7 @@ fill_color = Color(0.13, 0.58, 0.55, 1)
 
 [node name="Hazards" type="Area2D" parent="Tutorials/Tutorial4"]
 script = ExtResource("5_hazard")
+fill_color = Color(1, 0.25, 0.3, 1)
 
 [node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial4/Hazards"]
 material = SubResource("Mat4Pit")
@@ -793,6 +798,7 @@ fill_color = Color(0.13, 0.58, 0.55, 1)
 
 [node name="Hazards" type="Area2D" parent="Tutorials/Tutorial5"]
 script = ExtResource("5_hazard")
+fill_color = Color(1, 0.25, 0.3, 1)
 
 [node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial5/Hazards"]
 material = SubResource("Mat5Pit")
@@ -889,6 +895,7 @@ fill_color = Color(0.13, 0.58, 0.55, 1)
 
 [node name="Hazards" type="Area2D" parent="Tutorials/Tutorial6"]
 script = ExtResource("5_hazard")
+fill_color = Color(1, 0.25, 0.3, 1)
 
 [node name="Pit" type="CollisionPolygon2D" parent="Tutorials/Tutorial6/Hazards"]
 material = SubResource("Mat6Pit")

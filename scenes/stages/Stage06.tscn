@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://c4nmubthakdc" path="res://resources/texture/BG/bg_e_01.png" id="13_23x76"]
 [ext_resource type="Texture2D" uid="uid://bru0r4pigeoxt" path="res://resources/texture/signboard01.png" id="14_2wft3"]
 [ext_resource type="Texture2D" uid="uid://cf5lq0u22xy8w" path="res://resources/texture/precipice.png" id="15_a3rrc"]
+[ext_resource type="Shader" uid="uid://cirm1mgj28v3d" path="res://resources/shader/lava_block.gdshader" id="lava_sh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fm5oo"]
 size = Vector2(91.91305, 91.91305)
@@ -147,6 +148,18 @@ shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 300.0
 
+[sub_resource type="ShaderMaterial" id="MatLavaDeadly2"]
+shader = ExtResource("lava_sh")
+shader_parameter/edges = PackedVector3Array(-0, 1, -1612.31, -1, 0, -38.7452, -0, -1, 1511.69, -0, -1, 1511.69, 1, 0, -1561.25)
+shader_parameter/edge_count = 5
+shader_parameter/bounds = Vector4(-1561.25, -1612.31, 1600, 100.62)
+
+[sub_resource type="ShaderMaterial" id="MatLavaDeadly1"]
+shader = ExtResource("lava_sh")
+shader_parameter/edges = PackedVector3Array(-0, 1, -60, -1, 0, -800, -0, -1, -60, 1, 0, -800)
+shader_parameter/edge_count = 4
+shader_parameter/bounds = Vector4(-800, -60, 1600, 120)
+
 [node name="Stage06" type="Node2D" unique_id=653835895]
 script = ExtResource("1_qm3fv")
 display_name = "Windy Forest"
@@ -270,13 +283,14 @@ collision_mask = 2
 script = ExtResource("5_imtab")
 
 [node name="Deadly2" type="CollisionPolygon2D" parent="Terrain/Step7/Hazards" unique_id=875616320]
+material = SubResource("MatLavaDeadly2")
 position = Vector2(-2077.5127, 3091.5)
-scale = Vector2(1, 0.8385417)
-polygon = PackedVector2Array(-1561.2544, -1922.7578, 38.74524, -1922.7578, 38.74524, -1802.7578, -1066.2654, -1802.7578, -1561.2544, -1802.7578)
+polygon = PackedVector2Array(-1561.25, -1612.31, 38.7452, -1612.31, 38.7452, -1511.69, -1066.27, -1511.69, -1561.25, -1511.69)
 script = ExtResource("4_rxrmx")
 fill_color = Color(0.62, 0.16, 0.19, 1)
 
 [node name="Deadly1" type="CollisionPolygon2D" parent="Terrain/Step7/Hazards" unique_id=232219635]
+material = SubResource("MatLavaDeadly1")
 position = Vector2(-1038.7563, 1538)
 polygon = PackedVector2Array(-800, -60, 800, -60, 800, 60, -800, 60)
 script = ExtResource("4_rxrmx")

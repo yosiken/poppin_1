@@ -42,12 +42,15 @@ RED = "Color(1, 0.25, 0.3, 1)"        # 落ちたら死ぬ床
 # どちらも形の渡し方(edges / edge_count / bounds)は同じなので、書き出し方は変わらない
 TERRAIN_SHADER = "res://resources/shader/neon_block.gdshader"
 ICE_SHADER = "res://resources/shader/ice_block.gdshader"
+LAVA_SHADER = "res://resources/shader/lava_block.gdshader"
 MAX_EDGES = 16                        # シェーダー側の配列の長さと合わせる
 
-# 板の種類。terrain の4つ目に書くと、その板だけ別のシェーダーになる
+# 板の種類。terrain の4つ目に書くと、その板だけ別のシェーダーになる。
+# 落下床(Pit)は地形とは別扱いで、いつも LAVA
 NEON = "neon"
 ICE = "ice"
-SHADER_IDS = {NEON: "10_neon", ICE: "11_ice"}
+LAVA = "lava"
+SHADER_IDS = {NEON: "10_neon", ICE: "11_ice", LAVA: "12_lava"}
 
 # uid が分かっている既存スクリプトはそのまま書く。新しいスクリプトは
 # パスだけ書いておき、uid は Godot が初回読み込み時に振る
@@ -339,11 +342,11 @@ def main():
     for i, sec in enumerate(SECTIONS):
         for pname, points, _color, kind in section_parts(sec):
             mats.append((material_id(i, pname), points, kind))
-        mats.append((material_id(i, "Pit"), pit_points(), NEON))
+        mats.append((material_id(i, "Pit"), pit_points(), LAVA))
 
-    # ext_resource(スクリプト + 背景の2つ + 地形シェーダー2つ)
+    # ext_resource(スクリプト + 背景の2つ + 地形シェーダー3つ)
     # と sub_resource(背景の材質 + 板のぶん)
-    steps = len(SCRIPTS) + 3 + 2 + len(mats) + 1
+    steps = len(SCRIPTS) + 3 + 3 + len(mats) + 1
     w("[gd_scene load_steps=%d format=3]" % steps)
     w("")
     for ident, path, uid in SCRIPTS:
@@ -355,6 +358,7 @@ def main():
     w('[ext_resource type="Texture2D" path="%s" id="9_mtxatlas"]' % BG_ATLAS)
     w('[ext_resource type="Shader" path="%s" id="10_neon"]' % TERRAIN_SHADER)
     w('[ext_resource type="Shader" path="%s" id="11_ice"]' % ICE_SHADER)
+    w('[ext_resource type="Shader" path="%s" id="12_lava"]' % LAVA_SHADER)
     w("")
     w('[sub_resource type="ShaderMaterial" id="MatrixRain"]')
     w('shader = ExtResource("8_mtxsh")')
@@ -460,6 +464,9 @@ def main():
 
         w('[node name="Hazards" type="Area2D" parent="%s"]' % base)
         w('script = ExtResource("5_hazard")')
+        # Hazard は子の TerrainPolygon の色を自分の fill_color で上書きする。
+        # 書いておかないと、Pit に指定した色ではなく既定の暗い赤になる
+        w("fill_color = %s" % RED)
         w("")
         w('[node name="Pit" type="CollisionPolygon2D" parent="%s/Hazards"]' % base)
         w('material = SubResource("%s")' % material_id(i, "Pit"))
