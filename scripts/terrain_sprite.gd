@@ -86,11 +86,57 @@ extends Polygon2D
 		_apply_material()
 
 
+@export_group("滑る面")
+## 跳ね返せない角度の面に線を引く。踏む前に「ここは滑る」と分かるようにする
+@export var slip_marks_enabled := true:
+	set(value):
+		slip_marks_enabled = value
+		_sync_slip_marks()
+
+## 線の色。チュートリアルの氷の板と同じ青にしてある
+@export var slip_color := Color(0.25, 0.72, 1.0, 1.0):
+	set(value):
+		slip_color = value
+		_sync_slip_marks()
+
+## 線の太さ (px)。ワールドの px なので、ブロックの拡大率では変わらない
+@export var slip_width := 7.0:
+	set(value):
+		slip_width = value
+		_sync_slip_marks()
+
+## これより立っている面には引かない (度)。
+## 真横に近い面は見ただけで壁だと分かるので、引いても賠やかになるだけ
+@export_range(40.0, 90.0, 1.0) var slip_max_angle := 80.0:
+	set(value):
+		slip_max_angle = value
+		_sync_slip_marks()
+
+## 滑る角度を読む元。未設定なら STATS_PATH を読む。
+## 角度をここに書いてはいけない。跳ね返しの境目(ground_normal_threshold)を
+## 後で変えたときに、線だけが嘘になる
+@export var slip_stats: PogoStats:
+	set(value):
+		slip_stats = value
+		_sync_slip_marks()
+
+
 const TERRAIN_SHADER := "res://resources/shader/terrain_fill.gdshader"
+## slip_stats が未設定のときに読む。本編はこれを使っている
+const STATS_PATH := "res://resources/pogo_stats_default.tres"
 
 
 func _ready() -> void:
 	_apply()
+	# 変形の追従はエディタだけ。ゲーム中は地形が動かない
+	set_process(Engine.is_editor_hint())
+
+
+func _process(_delta: float) -> void:
+	# エディタでブロックを動かしたり伸ばしたりしている間、線を追従させる。
+	# polygon の編集は _set で拾えるが、position や scale の変更は拾えない
+	if _marks_xform != global_transform:
+		_sync_slip_marks()
 
 
 func _set(property: StringName, _value: Variant) -> bool:
@@ -109,6 +155,7 @@ func _apply() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_apply_material()
 	_sync_outline()
+	_sync_slip_marks()
 	if texture == null:
 		return
 	var tex_size := texture.get_size()
@@ -192,3 +239,138 @@ func _copy_shape() -> void:
 	global_transform = src.global_transform
 	polygon = src.polygon.duplicate()
 	_apply()
+
+# ═══════════════════════════════ 滑る面の線
+
+var _marks: Node2D
+var _marks_xform := Transform2D()
+
+
+## 跳ね返せる面の境目を PogoStats から取る。法線のY成分で見る(-1.0 が真上)。
+## 読めなければ線を引かない。代わりの角度をここに書くと、
+## PogoStats を変えたときに線だけが古い値のまま残る
+func _slip_threshold() -> float:
+	var s := slip_stats
+	if s == null:
+		s = load(STATS_PATH) as PogoStats
+	if s == null:
+		push_warning("TerrainSprite: %s が読めないので滑る面の線は引きません" % STATS_PATH)
+		return NAN
+	return s.ground_normal_threshold
+
+
+## 形をワールド座標で取る。
+##
+## 見た目のポリゴンでなく copy_from のコリジョンから取る。
+## 見た目は裾を下に伸ばしたりしているので、そこから取ると
+## 実際には滑らない边に線が出て、嘘になる
+func _collision_points_world() -> PackedVector2Array:
+	var xform := global_transform
+	var pts := polygon
+	if not copy_from.is_empty():
+		var src := get_node_or_null(copy_from) as CollisionPolygon2D
+		if src != null:
+			xform = src.global_transform
+			pts = src.polygon
+	var out := PackedVector2Array()
+	for p in pts:
+		out.append(xform * p)
+	return out
+
+
+## 滑る面（跳ね返せない角度の上向きの面）を、ワールド座標の線分で返す。
+##
+## 角度は必ずワールド座標で見る。ノードが縦横別に拡大されていると
+## （Gfx_Block02 の scale(1.64, 1) など）、ローカルの傾きと、実際に
+## プレイヤーが当たる傾きが違う
+func _slip_segments() -> Array:
+	var threshold := _slip_threshold()
+	if is_nan(threshold):
+		return []
+	var pts := _collision_points_world()
+	var count := pts.size()
+	if count < 3:
+		return []
+
+	# 外向きの法線を出したいが、頂点の並び順はブロックごとに違う。
+	# 符号付き面積で向きを揃える
+	var area := 0.0
+	for i in count:
+		var a: Vector2 = pts[i]
+		var b: Vector2 = pts[(i + 1) % count]
+		area += a.x * b.y - b.x * a.y
+	var s := 1.0 if area > 0.0 else -1.0
+
+	# 立ちすぎた面を外す上限。法線のY成分に直して比べる
+	var steepest := -cos(deg_to_rad(slip_max_angle))
+
+	var out := []
+	for i in count:
+		var a: Vector2 = pts[i]
+		var b: Vector2 = pts[(i + 1) % count]
+		var d := b - a
+		if d.length() < 1.0:
+			continue
+		var normal := Vector2(d.y, -d.x).normalized() * s
+		# 上を向いている面のうち、跳ね返せないほど急なものだけ。
+		# normal.y <= threshold なら地面扱いで跳ねる。下向きの面は踏めない
+		if normal.y > threshold and normal.y <= steepest:
+			out.append([a, b])
+	return out
+
+
+func _ensure_marks() -> Node2D:
+	if _marks != null and is_instance_valid(_marks):
+		return _marks
+	_marks = get_node_or_null(^"SlipMarks") as Node2D
+	if _marks == null:
+		_marks = Node2D.new()
+		_marks.name = "SlipMarks"
+		add_child(_marks)
+	return _marks
+
+
+## 滑る面の線を引き直す。
+##
+## Line2D は途切れた線を引けないので、面ご1本ずつ置く。
+## 親に直に下げず SlipMarks を挡んで、そこで親の変形を打ち消す。
+## こうしないと、縦横別に拡大されたブロックで線の太さまで伸びて、
+## ブロックごとに太さが変わってしまう。
+##
+## ここで作るノードは owner を付けないので .tscn には保存されない。
+## 形を直せば次に読んだときに引き直る（Outline と同じやり方）
+func _sync_slip_marks() -> void:
+	if not is_inside_tree():
+		return
+	_marks_xform = global_transform
+	var segments: Array = _slip_segments() if slip_marks_enabled else []
+	if segments.is_empty():
+		if _marks != null and is_instance_valid(_marks):
+			_marks.visible = false
+		return
+
+	var marks := _ensure_marks()
+	marks.visible = true
+	marks.transform = _marks_xform.affine_inverse()
+
+	# 本数が合わないときだけ作り直す。毎回作り直すと、エディタで
+	# 形を触っている間、Line2D の生成と破棄が延々と続く
+	if marks.get_child_count() != segments.size():
+		for c in marks.get_children():
+			marks.remove_child(c)
+			c.queue_free()
+		for i in segments.size():
+			var line := Line2D.new()
+			line.name = "Slip%d" % i
+			line.begin_cap_mode = Line2D.LINE_CAP_ROUND
+			line.end_cap_mode = Line2D.LINE_CAP_ROUND
+			line.antialiased = true
+			marks.add_child(line)
+
+	for i in segments.size():
+		var line := marks.get_child(i) as Line2D
+		if line == null:
+			continue
+		line.width = slip_width
+		line.default_color = slip_color
+		line.points = PackedVector2Array([segments[i][0], segments[i][1]])
