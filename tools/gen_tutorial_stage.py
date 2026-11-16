@@ -11,6 +11,7 @@
 座標は区画のローカル（左上が 0,0、2500x1500）で書く。
 """
 import io
+import math
 import os
 
 OUT = os.path.join("scenes", "stages", "StageTutorial.tscn")
@@ -29,9 +30,24 @@ FLOOR_BOTTOM = 1300.0
 HAZARD_TOP = 1380.0  # 落ちたら死ぬ床。区画の中に収めてあるので隣へ落ちていかない
 HAZARD_BOTTOM = 1480.0
 
-GREEN = "Color(0.32, 0.5, 0.34, 1)"
-BROWN = "Color(0.5, 0.36, 0.32, 1)"
-BLUE = "Color(0.42, 0.62, 0.78, 1)"   # 滑る坂。足場と色を変える
+# 板は neon_block.gdshader で「面は暗く、縁が光る」形に描かれる。
+# シェーダーが色を暗くしてから縁だけ白に寄せるので、素の色は濃いめにしておく
+GREEN = "Color(0.16, 1, 0.45, 1)"
+BROWN = "Color(0.13, 0.58, 0.55, 1)"  # 区画の左右の壁。奥に引くので緑より地味に
+BLUE = "Color(0.25, 0.72, 1, 1)"      # 滑る坂。氷のシェーダーを通すので薄い水色に出る
+RED = "Color(1, 0.25, 0.3, 1)"        # 落ちたら死ぬ床
+
+# 地形の見た目。既定は「縁が光るグラデーションの板」。
+# 滑って登れない坂だけ氷にして、足場にならないことを見た目でも分かるようにする。
+# どちらも形の渡し方(edges / edge_count / bounds)は同じなので、書き出し方は変わらない
+TERRAIN_SHADER = "res://resources/shader/neon_block.gdshader"
+ICE_SHADER = "res://resources/shader/ice_block.gdshader"
+MAX_EDGES = 16                        # シェーダー側の配列の長さと合わせる
+
+# 板の種類。terrain の4つ目に書くと、その板だけ別のシェーダーになる
+NEON = "neon"
+ICE = "ice"
+SHADER_IDS = {NEON: "10_neon", ICE: "11_ice"}
 
 # uid が分かっている既存スクリプトはそのまま書く。新しいスクリプトは
 # パスだけ書いておき、uid は Godot が初回読み込み時に振る
@@ -205,7 +221,7 @@ SECTIONS = [
                         (1000, FLOOR_BOTTOM)], GREEN),
             ("Plateau", box(1200, 1057, 1400, FLOOR_BOTTOM), GREEN),
             ("Flat", floor_box(1400, 1900), GREEN),
-            ("RampSlip", [(1500, FLOOR_TOP), (1650, 1024), (1650, FLOOR_TOP)], BLUE),
+            ("RampSlip", [(1500, FLOOR_TOP), (1650, 1024), (1650, FLOOR_TOP)], BLUE, ICE),
             ("Ledge", step_box(2050, 2420, 850), GREEN),
         ],
         "sign": (780, 780, "ゆるい坂\n急な坂"),
@@ -251,17 +267,84 @@ def poly(points):
     return "PackedVector2Array(%s)" % flat
 
 
+## 形の各辺を「内向きの法線 n と原点からの距離 c」にする。
+## シェーダー側で dot(n, p) - c を取ると、その辺までの距離(px)になる
+def edge_planes(points):
+    n = len(points)
+    area = 0.0
+    for i in range(n):
+        ax, ay = points[i]
+        bx, by = points[(i + 1) % n]
+        area += ax * by - bx * ay
+    # 時計回りと反時計回りで内側の向きが逆になるので、符号で合わせる
+    s = 1.0 if area > 0.0 else -1.0
+    out = []
+    for i in range(min(n, MAX_EDGES)):
+        ax, ay = points[i]
+        bx, by = points[(i + 1) % n]
+        nx, ny = -(by - ay) * s, (bx - ax) * s
+        length = math.hypot(nx, ny)
+        if length < 1e-6:
+            continue                  # 同じ点が続いている辺は飛ばす
+        nx, ny = nx / length, ny / length
+        out.append((nx, ny, nx * ax + ny * ay))
+    return out
+
+
+def bounds_vec(points):
+    xs = [p[0] for p in points]
+    ys = [p[1] for p in points]
+    return "Vector4(%g, %g, %g, %g)" % (
+        min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys))
+
+
+def planes_array(points):
+    flat = ", ".join("%g, %g, %g" % e for e in edge_planes(points))
+    return "PackedVector3Array(%s)" % flat
+
+
+## その区画の地形。左右の壁もここで足す（区画の外へ流れていかないように）。
+## 板の種類を書き忘れたものは NEON 扱いにして、(名前, 形, 色, 種類) に揃える
+def section_parts(sec):
+    parts = [tuple(part) + (NEON,) if len(part) == 3 else tuple(part)
+             for part in sec["terrain"]]
+    parts.append(("WallLeft", box(0, WALL_TOP, WALL, WALL_BOTTOM), BROWN, NEON))
+    parts.append(("WallRight", box(CELL_W - WALL, WALL_TOP, CELL_W, WALL_BOTTOM),
+                  BROWN, NEON))
+    return parts
+
+
+## 落ちたら死ぬ床。Hazards の下に付くので地形とは別扱い
+def pit_points():
+    return box(0, HAZARD_TOP, CELL_W, HAZARD_BOTTOM)
+
+
 def esc(text):
     out = text.replace("\\", "\\\\")
     out = out.replace(chr(34), "\\" + chr(34))
     return out.replace("\n", "\\n")
 
 
+## 板1枚につきマテリアル1つ。形(辺と外接矩形)が1枚ごとに違うので共有できない
+def material_id(section_index, part_name):
+    return "Mat%d%s" % (section_index + 1, part_name)
+
+
 def main():
     out = []
     w = out.append
-    # ext_resource(スクリプト + シェーダー + アトラス) と sub_resource(材質) の数
-    w("[gd_scene load_steps=%d format=3]" % (len(SCRIPTS) + 2 + 1 + 1))
+
+    # 板ごとのマテリアル。(id, 形, 種類) を先に集める
+    mats = []
+    for i, sec in enumerate(SECTIONS):
+        for pname, points, _color, kind in section_parts(sec):
+            mats.append((material_id(i, pname), points, kind))
+        mats.append((material_id(i, "Pit"), pit_points(), NEON))
+
+    # ext_resource(スクリプト + 背景の2つ + 地形シェーダー2つ)
+    # と sub_resource(背景の材質 + 板のぶん)
+    steps = len(SCRIPTS) + 3 + 2 + len(mats) + 1
+    w("[gd_scene load_steps=%d format=3]" % steps)
     w("")
     for ident, path, uid in SCRIPTS:
         if uid:
@@ -270,6 +353,8 @@ def main():
             w('[ext_resource type="Script" path="%s" id="%s"]' % (path, ident))
     w('[ext_resource type="Shader" path="%s" id="8_mtxsh"]' % BG_SHADER)
     w('[ext_resource type="Texture2D" path="%s" id="9_mtxatlas"]' % BG_ATLAS)
+    w('[ext_resource type="Shader" path="%s" id="10_neon"]' % TERRAIN_SHADER)
+    w('[ext_resource type="Shader" path="%s" id="11_ice"]' % ICE_SHADER)
     w("")
     w('[sub_resource type="ShaderMaterial" id="MatrixRain"]')
     w('shader = ExtResource("8_mtxsh")')
@@ -277,6 +362,14 @@ def main():
     for name, value in BG_PARAMS:
         w("shader_parameter/%s = %s" % (name, value))
     w("")
+    # 板の形をシェーダーへ渡す。辺までの距離が分かるので、縁だけ光らせられる
+    for mid, points, kind in mats:
+        w('[sub_resource type="ShaderMaterial" id="%s"]' % mid)
+        w('shader = ExtResource("%s")' % SHADER_IDS[kind])
+        w("shader_parameter/edges = %s" % planes_array(points))
+        w("shader_parameter/edge_count = %d" % len(edge_planes(points)))
+        w("shader_parameter/bounds = %s" % bounds_vec(points))
+        w("")
     w('[node name="StageTutorial" type="Node2D"]')
     w('script = ExtResource("1_tstage")')
     w('display_name = "チュートリアル"')
@@ -357,12 +450,9 @@ def main():
 
         w('[node name="Terrain" type="StaticBody2D" parent="%s"]' % base)
         w("")
-        # 区画の左右の壁。隣の区画へ流れていかないようにする
-        parts = list(sec["terrain"])
-        parts.append(("WallLeft", box(0, WALL_TOP, WALL, WALL_BOTTOM), BROWN))
-        parts.append(("WallRight", box(CELL_W - WALL, WALL_TOP, CELL_W, WALL_BOTTOM), BROWN))
-        for pname, points, color in parts:
+        for pname, points, color, _kind in section_parts(sec):
             w('[node name="%s" type="CollisionPolygon2D" parent="%s/Terrain"]' % (pname, base))
+            w('material = SubResource("%s")' % material_id(i, pname))
             w("polygon = %s" % poly(points))
             w('script = ExtResource("4_terrain")')
             w("fill_color = %s" % color)
@@ -372,9 +462,10 @@ def main():
         w('script = ExtResource("5_hazard")')
         w("")
         w('[node name="Pit" type="CollisionPolygon2D" parent="%s/Hazards"]' % base)
-        w("polygon = %s" % poly(box(0, HAZARD_TOP, CELL_W, HAZARD_BOTTOM)))
+        w('material = SubResource("%s")' % material_id(i, "Pit"))
+        w("polygon = %s" % poly(pit_points()))
         w('script = ExtResource("4_terrain")')
-        w("fill_color = Color(0.62, 0.16, 0.19, 1)")
+        w("fill_color = %s" % RED)
         w("")
 
         if sec.get("sign"):
