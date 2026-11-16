@@ -1336,6 +1336,7 @@ func _start_bgm(stream: AudioStream, fade: float) -> void:
 	var p := _ensure_bgm_player()
 	if p.stream == stream and p.playing:
 		return
+	_make_loop(stream)
 	_kill_bgm_tween()
 	if not p.playing or fade <= 0.0:
 		p.stream = stream
@@ -1352,6 +1353,18 @@ func _start_bgm(stream: AudioStream, fade: float) -> void:
 		p.stream = stream
 		p.play())
 	_bgm_tween.tween_property(p, "volume_db", 0.0, fade * 0.5)
+
+
+## 曲が尻切れにならないよう、繰り返し鳴るようにする。
+##
+## イベントは読む速さ次第でいくらでも長くなるので、曲の長さでは足りない。
+## 繰り返しは AudioStream 側の設定なので、鳴らす前に付けておけば
+## この曲は以後ずっとループする。Game._play_track も同じことをしている
+func _make_loop(stream: AudioStream) -> void:
+	if stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = true
+	elif stream is AudioStreamOggVorbis:
+		(stream as AudioStreamOggVorbis).loop = true
 
 
 ## BGM を止める。音量は 0dB に戻してから抜ける
