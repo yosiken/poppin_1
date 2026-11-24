@@ -1053,6 +1053,7 @@ func _on_tutorial_cleared(section: TutorialSection) -> void:
 	if player:
 		player.velocity = Vector2.ZERO
 		player.set_physics_process(false)
+		player.reset_tilt()           # 傾いたまま踊らないよう、まっすぐに戻す（goal.gd と同じ）
 	var visual := _player_visual()
 	if visual:
 		visual.play_goal_clip()

@@ -98,6 +98,8 @@ func _on_body_entered(body: Node2D, forced := false) -> void:
 	if player:
 		player.velocity = Vector2.ZERO
 		player.set_physics_process(false)
+		# 傾いたまま止まると、勝利モーションも斜めのまま踊り続けるのでまっすぐに戻す
+		player.reset_tilt()
 
 	reached.emit(clear_time)
 	if built_in_overlay:

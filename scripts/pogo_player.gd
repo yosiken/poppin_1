@@ -416,6 +416,13 @@ func is_grounded() -> bool:
 	return _grounded_now or _was_grounded
 
 
+## 傾きを既定（まっすぐ）に戻す。ゴールに触れて止めたときに呼ぶ。
+## 止めたあとは _process_tilt が回らないので、自動で起き上がることもない
+func reset_tilt() -> void:
+	tilt_deg = 0.0
+	_snap_hold_timer = 0.0
+
+
 func teleport(to: Vector2) -> void:
 	teleported.emit()
 	_stop(_sfx_charge)          # 溜め中にリスポーンしても音を残さない
