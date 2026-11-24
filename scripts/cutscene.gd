@@ -172,6 +172,10 @@ var _bgm_tween: Tween
 var _line_sfx: AudioStreamPlayer
 ## セリフの音。拍ごとに鳴らす
 var _voice_sfx: AudioStreamPlayer
+## コマに入れた本物の声（CutsceneLine.voice）。VOICE バスで鳴らす
+var _line_voice: AudioStreamPlayer
+## 今のコマに本物の声が入っているか。入っていれば拍の音は鳴らさない
+var _line_has_voice := false
 ## 次に鳴らしてよい時刻。これで連射を防ぐ
 var _voice_next_at := 0.0
 ## 後ろのゲーム画面を隠す暗幕。_bg より奥に置く
@@ -262,6 +266,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if key.pressed and not key.echo and is_enter:
 			_skip = true
 			_advance = true          # 待機中のループも抜けさせる
+			_stop_line_voice()       # 飛ばした場面の声を残さない
 			get_viewport().set_input_as_handled()
 			return
 
@@ -638,7 +643,8 @@ func _update_blink(rect: TextureRect, delta: float) -> void:
 ## 拍として数えない文字。小書き文字・長音符・記号・空白。
 ## 「しゅっぱつ」なら「しゅ」「ぱ」「つ」の3回だけ鳴る
 const VOICE_SKIP := "ぁぃぅぇぉっゃゅょァィゥェォッャュョーｰー" 	+ "、。，．・…‥！？!?「」『』（）()　 
-	"
+	
+"
 
 
 ## 新しく出た文字のうち拍の頭があれば、一度だけ声を鳴らす。
@@ -648,6 +654,8 @@ const VOICE_SKIP := "ぁぃぅぇぉっゃゅょァィゥェォッャュョー�
 func _speak(parsed: String, from: int, to: int, speaker: String) -> void:
 	if _voice_sfx == null or voice_stream == null or speaker == "":
 		return          # 地の文（話者なし）では鳴らさない
+	if _line_has_voice:
+		return          # 本物の声が入っているコマ。重ねると聞き取れない
 	var now := Time.get_ticks_msec() * 0.001
 	if now < _voice_next_at:
 		return
@@ -1165,6 +1173,13 @@ func _build_popup() -> void:
 	_voice_sfx.stream = voice_stream
 	add_child(_voice_sfx)
 
+	_line_voice = AudioStreamPlayer.new()
+	_line_voice.name = "LineVoice"
+	# ボイスは OPTIONS の VOICE VOLUME で調整できるように。古い bus_layout なら SE
+	_line_voice.bus = "VOICE" if AudioServer.get_bus_index("VOICE") != -1 else "SE"
+	_line_voice.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_line_voice)
+
 
 ## 白フチ＋影の枠。色で種別を分ける
 func _popup_style(kind: int) -> StyleBoxFlat:
@@ -1313,11 +1328,26 @@ func _apply_audio(line: CutsceneLine) -> void:
 	if line.sfx and _line_sfx:
 		_line_sfx.stream = line.sfx
 		_line_sfx.play()
+	# 声は前のコマのものを止めてから。送ったのに前の声が続くと、
+	# 本文と声が食い違って見える
+	_stop_line_voice()
+	_line_has_voice = line.voice != null
+	# 前のコマの「しゃべっているふうの音」が尾を引いていれば切る。声と重なる
+	if _line_has_voice and _voice_sfx and _voice_sfx.playing:
+		_voice_sfx.stop()
+	if line.voice and _line_voice:
+		_line_voice.stream = line.voice
+		_line_voice.play()
 	var fade: float = line.bgm_fade if line.bgm_fade > 0.0 else bgm_fade_time
 	if line.bgm_stop:
 		_stop_bgm(fade)
 	elif line.bgm:
 		_start_bgm(line.bgm, fade)
+
+
+func _stop_line_voice() -> void:
+	if _line_voice and _line_voice.playing:
+		_line_voice.stop()
 
 
 ## Game から渡されていなければ自前で用意する

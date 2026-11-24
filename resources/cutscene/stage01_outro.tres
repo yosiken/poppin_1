@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://c6qc77gu0wcsn" path="res://resources/texture/BG/event/BG-02.png" id="5_hbbsx"]
 [ext_resource type="Texture2D" uid="uid://c5105a4mwr8tv" path="res://resources/texture/BG/event/BG-16.png" id="7_hbbsx"]
 [ext_resource type="AudioStream" uid="uid://doyok4qq7imys" path="res://resources/sound/きらーん1.mp3" id="8_6k0rt"]
+[ext_resource type="AudioStream" uid="uid://b7k5gvw1c7dw2" path="res://resources/sound/voice/41_やったー!.ogg" id="voice_41"]
 
 [sub_resource type="Resource" id="Resource_ygqeh"]
 script = ExtResource("1_ygqeh")
@@ -77,6 +78,7 @@ speaking = 2
 shake = 20.0
 shake_time = 2.0
 sfx = ExtResource("8_6k0rt")
+voice = ExtResource("voice_41")
 
 [sub_resource type="Resource" id="Resource_8fbim"]
 script = ExtResource("1_ygqeh")

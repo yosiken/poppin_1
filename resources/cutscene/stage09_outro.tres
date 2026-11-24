@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_ejyft"]
 [ext_resource type="Texture2D" uid="uid://bipjwo4yrnqj2" path="res://resources/texture/BG/event/BG-11.png" id="5_r7c1k"]
 [ext_resource type="Texture2D" uid="uid://dxgjuvi2hkg5n" path="res://resources/texture/event/popup/POP-21.png" id="6_oj5kc"]
+[ext_resource type="AudioStream" uid="uid://cjb0mktys71b5" path="res://resources/sound/voice/20_やったー!.ogg" id="voice_20"]
+[ext_resource type="AudioStream" uid="uid://djn8tpu21jeff" path="res://resources/sound/voice/55_ふー、経験が生きたな.ogg" id="voice_55"]
 
 [sub_resource type="Resource" id="Resource_t1p1n"]
 script = ExtResource("1_t1p1n")
@@ -19,6 +21,7 @@ right = ExtResource("2_836e4")
 background = ExtResource("2_r7c1k")
 fade = 5
 bgm = ExtResource("3_oj5kc")
+voice = ExtResource("voice_20")
 
 [sub_resource type="Resource" id="Resource_836e4"]
 script = ExtResource("1_t1p1n")
@@ -33,6 +36,7 @@ speaker = "OB"
 text = "天城！　『天城越え』！　OBやりとげました"
 speaking = 2
 background = ExtResource("5_r7c1k")
+voice = ExtResource("voice_55")
 
 [sub_resource type="Resource" id="Resource_ejyft"]
 script = ExtResource("1_t1p1n")

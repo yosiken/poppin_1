@@ -27,6 +27,8 @@ const POPUP_DIR := "res://resources/texture/event/popup"
 ## BGM と効果音の置き場
 const BGM_DIR := "res://resources/sound/bgm"
 const SFX_DIR := "res://resources/sound"
+## コマの声（CutsceneLine.voice）の候補
+const VOICE_DIR := "res://resources/sound/voice"
 ## 立ち絵として並べる画像の接頭辞。キャラを足したらここに足す
 const PORTRAIT_DIR := "res://resources/texture"
 const PORTRAIT_PREFIXES: Array[String] = ["OB_", "kanie"]
@@ -68,6 +70,7 @@ var _bgm: OptionButton
 var _bgm_stop: CheckBox
 var _bgm_fade: SpinBox
 var _sfx: OptionButton
+var _voice: OptionButton
 var _slide_in: CheckBox
 var _auto_advance: SpinBox
 var _delay: SpinBox
@@ -81,6 +84,7 @@ var _backgrounds: Array[Texture2D] = []
 var _popups: Array[Texture2D] = []
 var _bgms: Array[AudioStream] = []
 var _sfxs: Array[AudioStream] = []
+var _voices: Array[AudioStream] = []
 
 var _data: CutsceneData
 var _path := ""
@@ -137,6 +141,8 @@ func _collect_textures() -> void:
 		_bgms.append(load("%s/%s" % [BGM_DIR, name]))
 	for name in _audio_names(SFX_DIR):
 		_sfxs.append(load("%s/%s" % [SFX_DIR, name]))
+	for name in _audio_names(VOICE_DIR):
+		_voices.append(load("%s/%s" % [VOICE_DIR, name]))
 
 
 func _png_names(dir_path: String) -> PackedStringArray:
@@ -279,7 +285,7 @@ func _mark(line: CutsceneLine) -> String:
 		or line.clear_left or line.clear_right or not line.slide_in \
 		or line.auto_advance > 0.0 or line.delay > 0.0 \
 		or line.popup != null \
-		or line.bgm != null or line.bgm_stop or line.sfx != null \
+		or line.bgm != null or line.bgm_stop or line.sfx != null or line.voice != null \
 		or line.bg_hide >= 0.0 or line.bg_pattern >= 0 \
 		or line.shake > 0.0 or line.fade != CutsceneLine.Fade.NONE
 	return ("＋" if line.inserted else "　") \
@@ -333,6 +339,7 @@ func _select_line(index: int) -> void:
 	_bgm_stop.button_pressed = line.bgm_stop
 	_bgm_fade.value = line.bgm_fade
 	_set_simple(_sfx, line.sfx, _sfxs)
+	_set_simple(_voice, line.voice, _voices)
 	_slide_in.button_pressed = line.slide_in
 	_auto_advance.value = line.auto_advance
 	_delay.value = line.delay
@@ -592,6 +599,14 @@ func _on_sfx_changed(index: int) -> void:
 	if _loading or line == null:
 		return
 	line.sfx = _sfxs[index - 1] if index >= 1 and index <= _sfxs.size() else null
+	_touch()
+
+
+func _on_voice_changed(index: int) -> void:
+	var line := _line()
+	if _loading or line == null:
+		return
+	line.voice = _voices[index - 1] if index >= 1 and index <= _voices.size() else null
 	_touch()
 
 
@@ -920,6 +935,11 @@ func _build_detail() -> Control:
 	_fill_simple(_sfx, _sfxs, "（鳴らさない）")
 	_sfx.item_selected.connect(_on_sfx_changed)
 	_detail.add_child(_labeled("効果音", _sfx))
+
+	_voice = OptionButton.new()
+	_fill_simple(_voice, _voices, "（声なし）")
+	_voice.item_selected.connect(_on_voice_changed)
+	_detail.add_child(_labeled("声", _voice))
 
 	_slide_in = CheckBox.new()
 	_slide_in.text = "立ち絵を外側からスライドインさせる"

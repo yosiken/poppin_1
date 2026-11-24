@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://2syy320eep00" path="res://resources/texture/BG/event/BG-03.png" id="6_uoqmy"]
 [ext_resource type="Texture2D" uid="uid://bhkpqycd6ij0b" path="res://resources/texture/BG/event/BG-25.png" id="7_xga3v"]
 [ext_resource type="AudioStream" uid="uid://dcokpa5j2ov7f" path="res://resources/sound/can_open.mp3" id="8_pdpm5"]
+[ext_resource type="AudioStream" uid="uid://cgcdwwm0x12f5" path="res://resources/sound/voice/21_いただきます.ogg" id="voice_21"]
 
 [sub_resource type="Resource" id="Resource_bkhll"]
 script = ExtResource("1_bkhll")
@@ -86,6 +87,7 @@ text = "開けたんなら飲むしか無いよね。仕方ないよね！ね！
 speaking = 2
 background = ExtResource("7_xga3v")
 fade = 5
+voice = ExtResource("voice_21")
 
 [sub_resource type="Resource" id="Resource_p5iar"]
 script = ExtResource("1_bkhll")

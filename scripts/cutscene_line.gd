@@ -115,6 +115,10 @@ enum Fade {
 @export_range(0.0, 5.0, 0.1) var bgm_fade := 0.0
 ## そのコマで一度だけ鳴らす効果音。缶を開ける音のような、絵と対になるもの
 @export var sfx: AudioStream
+## そのコマで鳴らす本物の声（resources/sound/voice）。null なら鳴らさない。
+## 入れたコマでは、文字送りの「しゃべっているふうの音」は鳴らさない（声と重なるため）。
+## 次のコマへ送ると止まる
+@export var voice: AudioStream
 
 # ─────────────────────────────── 進行
 @export_group("Timing")

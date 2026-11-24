@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dkihoxv1hbj4i" path="res://resources/texture/BG/event/BG-18.png" id="5_4h2om"]
 [ext_resource type="Texture2D" uid="uid://ccuhx8mmh0sis" path="res://resources/texture/event/popup/POP-16.png" id="6_4h2om"]
 [ext_resource type="Texture2D" uid="uid://dxpb3h7f4b1gk" path="res://resources/texture/BG/event/BG-black.png" id="7_4h2om"]
+[ext_resource type="AudioStream" uid="uid://hrbdaifijm3" path="res://resources/sound/voice/22_ふーふーふーふーふー.ogg" id="voice_22"]
 
 [sub_resource type="Resource" id="Resource_l2nqf"]
 script = ExtResource("1_l2nqf")
@@ -39,6 +40,7 @@ speaker = "OB"
 text = "……ふーふー？"
 speaking = 2
 popup = ExtResource("6_4h2om")
+voice = ExtResource("voice_22")
 
 [sub_resource type="Resource" id="Resource_4h2om"]
 script = ExtResource("1_l2nqf")

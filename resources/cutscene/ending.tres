@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://dkqugc8vwcy2m" path="res://resources/texture/event/popup/POP-04.png" id="5_0bwdq"]
 [ext_resource type="Texture2D" uid="uid://boqemklr5rl5r" path="res://resources/texture/BG/event/BG-24.png" id="6_1xhdg"]
 [ext_resource type="Texture2D" uid="uid://c76a3ibe01otw" path="res://resources/texture/BG/event/BG-27.png" id="8_bcojw"]
+[ext_resource type="AudioStream" uid="uid://dme1aleryvskc" path="res://resources/sound/voice/06_ああああああああああ.ogg" id="voice_06"]
 
 [sub_resource type="Resource" id="Resource_3jl66"]
 script = ExtResource("1_3jl66")
@@ -53,6 +54,7 @@ popup = ExtResource("5_0bwdq")
 note = "演出：OBは少し寂しそうに笑う
 演出：そしてベッドから立ち上がる
 演出：ゴンッ！"
+voice = ExtResource("voice_06")
 
 [sub_resource type="Resource" id="Resource_oc4by"]
 script = ExtResource("1_3jl66")

@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://cvdydb7e4ypt0" path="res://resources/texture/BG/event/BG-09.png" id="5_jrclr"]
 [ext_resource type="Texture2D" uid="uid://dij1082f463mb" path="res://resources/texture/event/popup/POP-18.png" id="6_jrclr"]
 [ext_resource type="AudioStream" uid="uid://doyok4qq7imys" path="res://resources/sound/きらーん1.mp3" id="7_npvkm"]
+[ext_resource type="AudioStream" uid="uid://w14tve5je6it" path="res://resources/sound/voice/44_いけいけゴーゴー!.ogg" id="voice_44"]
 
 [sub_resource type="Resource" id="Resource_mh7c8"]
 script = ExtResource("1_mh7c8")
@@ -118,6 +119,7 @@ script = ExtResource("1_mh7c8")
 speaker = "OB"
 text = "じゃあ問答無用で開ける！"
 speaking = 2
+voice = ExtResource("voice_44")
 
 [sub_resource type="Resource" id="Resource_snqu4"]
 script = ExtResource("1_mh7c8")

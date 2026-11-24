@@ -203,6 +203,7 @@ func _copy_fx(src: CutsceneLine, dst: CutsceneLine) -> void:
 	dst.bgm_stop = src.bgm_stop
 	dst.bgm_fade = src.bgm_fade
 	dst.sfx = src.sfx
+	dst.voice = src.voice
 
 
 ## 生成しただけの状態から手を入れてあるか。
@@ -212,7 +213,7 @@ func _has_fx(l: CutsceneLine) -> bool:
 		or l.clear_left or l.clear_right or not l.slide_in \
 		or l.auto_advance > 0.0 or l.delay > 0.0 \
 		or l.popup != null \
-		or l.bgm != null or l.bgm_stop or l.sfx != null \
+		or l.bgm != null or l.bgm_stop or l.sfx != null or l.voice != null \
 		or l.bg_hide >= 0.0 or l.bg_pattern >= 0 \
 		or l.shake > 0.0 or l.fade != CutsceneLine.Fade.NONE
 

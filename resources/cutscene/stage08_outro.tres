@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://drfccq38wrkuk" path="res://resources/texture/event/popup/POP-33.png" id="4_lci6h"]
 [ext_resource type="Texture2D" uid="uid://b0fvdcfjsjoq0" path="res://resources/texture/BG/event/BG-10.png" id="5_uxxq4"]
 [ext_resource type="AudioStream" uid="uid://doyok4qq7imys" path="res://resources/sound/きらーん1.mp3" id="6_1gdar"]
+[ext_resource type="AudioStream" uid="uid://c1yjx0hcc6nde" path="res://resources/sound/voice/12_私は諦めの悪い女……！.ogg" id="voice_12"]
 
 [sub_resource type="Resource" id="Resource_c8ka2"]
 script = ExtResource("1_c8ka2")
@@ -50,6 +51,7 @@ text = "お金のためならどんな回り道でもするわ"
 speaking = 2
 background = ExtResource("5_uxxq4")
 fade = 5
+voice = ExtResource("voice_12")
 
 [sub_resource type="Resource" id="Resource_1gdar"]
 script = ExtResource("1_c8ka2")

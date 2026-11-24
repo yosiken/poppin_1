@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://cb3krt826ks2q" path="res://resources/texture/event/popup/POP-11.png" id="6_qbr27"]
 [ext_resource type="Texture2D" uid="uid://crp173i7rxh13" path="res://resources/texture/OB_b.png" id="7_qbr27"]
 [ext_resource type="Texture2D" uid="uid://c4hvo4prsmriy" path="res://resources/texture/OB_e.png" id="8_l5hxo"]
+[ext_resource type="AudioStream" uid="uid://bhik7owwvl5lw" path="res://resources/sound/voice/28_なんでやねん.ogg" id="voice_28"]
 
 [sub_resource type="Resource" id="Resource_x8fab"]
 script = ExtResource("1_x8fab")
@@ -79,6 +80,7 @@ script = ExtResource("1_x8fab")
 speaker = "OB"
 text = "田中は誰やねん"
 speaking = 2
+voice = ExtResource("voice_28")
 
 [sub_resource type="Resource" id="Resource_wy0qh"]
 script = ExtResource("1_x8fab")

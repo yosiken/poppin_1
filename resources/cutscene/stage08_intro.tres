@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bixagaephfta4" path="res://resources/texture/event/popup/POP-19.png" id="6_7ifoj"]
 [ext_resource type="Texture2D" uid="uid://crp173i7rxh13" path="res://resources/texture/OB_b.png" id="7_8m0od"]
 [ext_resource type="AudioStream" uid="uid://doyok4qq7imys" path="res://resources/sound/きらーん1.mp3" id="8_y7078"]
+[ext_resource type="AudioStream" uid="uid://dunw4443pyp01" path="res://resources/sound/voice/46_わかった.ogg" id="voice_46"]
 
 [sub_resource type="Resource" id="Resource_x30e5"]
 script = ExtResource("1_fhe7r")
@@ -69,6 +70,7 @@ script = ExtResource("1_fhe7r")
 speaker = "OB"
 text = "わかった！　わかっちゃった！"
 speaking = 2
+voice = ExtResource("voice_46")
 
 [sub_resource type="Resource" id="Resource_pcmwx"]
 script = ExtResource("1_fhe7r")

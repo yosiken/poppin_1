@@ -29,6 +29,15 @@
 [ext_resource type="Texture2D" uid="uid://dy88pvspe24sj" path="res://resources/texture/BG/event/BG-04.png" id="90_art"]
 [ext_resource type="Texture2D" uid="uid://dkqugc8vwcy2m" path="res://resources/texture/event/popup/POP-04.png" id="92_art"]
 [ext_resource type="Texture2D" uid="uid://dyc04lo7p7sx8" path="res://resources/texture/event/popup/POP-05.png" id="93_art"]
+[ext_resource type="AudioStream" uid="uid://m0hgkmt144fo" path="res://resources/sound/voice/40_今日も一日お疲れ様でした.ogg" id="voice_40"]
+[ext_resource type="AudioStream" uid="uid://dqd27yn5xtg6m" path="res://resources/sound/voice/49_全然酔ってないんですけれどもね.ogg" id="voice_49"]
+[ext_resource type="AudioStream" uid="uid://dme1aleryvskc" path="res://resources/sound/voice/06_ああああああああああ.ogg" id="voice_06"]
+[ext_resource type="AudioStream" uid="uid://bsdhquo3wmelj" path="res://resources/sound/voice/60_あれれー？１.ogg" id="voice_60"]
+[ext_resource type="AudioStream" uid="uid://bqi6vm11fej8k" path="res://resources/sound/voice/25_へ！？.ogg" id="voice_25"]
+[ext_resource type="AudioStream" uid="uid://bp5ey0gcni81u" path="res://resources/sound/voice/47_どういうことだってばよ１.ogg" id="voice_47"]
+[ext_resource type="AudioStream" uid="uid://b4vo1dro5refp" path="res://resources/sound/voice/26_ええええ？.ogg" id="voice_26"]
+[ext_resource type="AudioStream" uid="uid://dilm6bd0ebhf2" path="res://resources/sound/voice/59_なんでですかね.ogg" id="voice_59"]
+[ext_resource type="AudioStream" uid="uid://b1yn5w5e8ywp0" path="res://resources/sound/voice/64_なるほどね１.ogg" id="voice_64"]
 
 [sub_resource type="Resource" id="Resource_yji8q"]
 script = ExtResource("1_yji8q")
@@ -42,6 +51,7 @@ bg_pattern = 0
 bgm = ExtResource("3_mgmiw")
 note = "演出：深夜
 演出：ゲーム配信を終え、すっかり泥酔したOBは、ふらふらしながら自宅へ帰ってきた"
+voice = ExtResource("voice_40")
 
 [sub_resource type="Resource" id="Resource_ugnev"]
 script = ExtResource("1_yji8q")
@@ -105,6 +115,7 @@ speaking = 2
 fade = 5
 sfx = ExtResource("8_juxf4")
 note = "演出：プシュッ"
+voice = ExtResource("voice_49")
 
 [sub_resource type="Resource" id="Resource_uiy8y"]
 script = ExtResource("1_yji8q")
@@ -179,6 +190,7 @@ sfx = ExtResource("15_105or")
 note = "演出：結局、もう一杯飲んでしまう
 演出：その後、寝室へ向かおうとしたOBだったが――
 演出：ゴンッ！"
+voice = ExtResource("voice_06")
 
 [sub_resource type="Resource" id="Resource_quqor"]
 script = ExtResource("1_yji8q")
@@ -250,6 +262,7 @@ note = "演出：タンスの角に小指を直撃
 演出：石畳の広場。見上げるほど高い塔
 演出：空には巨大な月が浮かび、看板には見たことのない文字
 演出：そして何より――"
+voice = ExtResource("voice_60")
 
 [sub_resource type="Resource" id="Resource_yime8"]
 script = ExtResource("1_yji8q")
@@ -268,6 +281,7 @@ speaking = 2
 right = ExtResource("13_oowkn")
 background = ExtResource("90_art")
 bgm = ExtResource("11_1jbvs")
+voice = ExtResource("voice_25")
 
 [sub_resource type="Resource" id="Resource_nviov"]
 script = ExtResource("1_yji8q")
@@ -351,6 +365,7 @@ text = "そんなことある？"
 speaking = 2
 shake = 20.0
 shake_time = 1.0
+voice = ExtResource("voice_47")
 
 [sub_resource type="Resource" id="Resource_fwxhe"]
 script = ExtResource("1_yji8q")
@@ -378,6 +393,7 @@ script = ExtResource("1_yji8q")
 speaker = "OB"
 text = "10個……？"
 speaking = 2
+voice = ExtResource("voice_26")
 
 [sub_resource type="Resource" id="Resource_ikt8q"]
 script = ExtResource("1_yji8q")
@@ -421,6 +437,7 @@ text = "えっ、なんで？"
 speaking = 2
 shake = 20.0
 shake_time = 1.0
+voice = ExtResource("voice_59")
 
 [sub_resource type="Resource" id="Resource_vfmkv"]
 script = ExtResource("1_yji8q")
@@ -435,6 +452,7 @@ speaker = "OB"
 text = "…………正論"
 speaking = 2
 background = ExtResource("90_art")
+voice = ExtResource("voice_64")
 
 [sub_resource type="Resource" id="Resource_uwg6m"]
 script = ExtResource("1_yji8q")

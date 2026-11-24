@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://dkwr2qmqo0v4e" path="res://resources/texture/BG/event/BG-20.png" id="7_74h8k"]
 [ext_resource type="AudioStream" uid="uid://dear7wwc6t464" path="res://resources/sound/ジャン！.mp3" id="8_aqoq6"]
 [ext_resource type="Texture2D" uid="uid://bujlgj1uy1kb4" path="res://resources/texture/event/popup/MISS-07.png" id="91_art"]
+[ext_resource type="AudioStream" uid="uid://bdaf84nbxoq71" path="res://resources/sound/voice/18_一旦深呼吸しますね.ogg" id="voice_18"]
+[ext_resource type="AudioStream" uid="uid://dubfrc26wm0pa" path="res://resources/sound/voice/11_まだだ、まだ慌てるような時間じゃない.ogg" id="voice_11"]
 
 [sub_resource type="Resource" id="Resource_58fq2"]
 script = ExtResource("1_58fq2")
@@ -109,6 +111,7 @@ text = "それ、たぶん歌える！"
 speaking = 2
 background = ExtResource("5_74h8k")
 fade = 5
+voice = ExtResource("voice_18")
 
 [sub_resource type="Resource" id="Resource_sukku"]
 script = ExtResource("1_58fq2")
@@ -133,6 +136,7 @@ script = ExtResource("1_58fq2")
 speaker = "OB"
 text = "山、越えられるかな？　ちょっと心配"
 speaking = 2
+voice = ExtResource("voice_11")
 
 [sub_resource type="Resource" id="Resource_gk0m5"]
 script = ExtResource("1_58fq2")

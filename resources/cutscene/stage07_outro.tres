@@ -7,6 +7,8 @@
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_l54um"]
 [ext_resource type="Texture2D" uid="uid://cvdydb7e4ypt0" path="res://resources/texture/BG/event/BG-09.png" id="5_7xgor"]
 [ext_resource type="Texture2D" uid="uid://dij1082f463mb" path="res://resources/texture/event/popup/POP-18.png" id="7_s10vh"]
+[ext_resource type="AudioStream" uid="uid://bkw6gcvc1kqnr" path="res://resources/sound/voice/58_びゃあーまずいー!.ogg" id="voice_58"]
+[ext_resource type="AudioStream" uid="uid://wgnw0bbypx7j" path="res://resources/sound/voice/07_うわぁぁぁぁ（棒読み）.ogg" id="voice_07"]
 
 [sub_resource type="Resource" id="Resource_0cpef"]
 script = ExtResource("1_0cpef")
@@ -25,6 +27,7 @@ speaker = "OB"
 text = "……"
 speaking = 2
 right = ExtResource("2_3ffe1")
+voice = ExtResource("voice_58")
 
 [sub_resource type="Resource" id="Resource_br2v1"]
 script = ExtResource("1_0cpef")
@@ -44,6 +47,7 @@ speaking = 2
 shake = 40.0
 shake_time = 2.0
 popup = ExtResource("7_s10vh")
+voice = ExtResource("voice_07")
 
 [sub_resource type="Resource" id="Resource_shg23"]
 script = ExtResource("1_0cpef")
