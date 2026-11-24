@@ -35,7 +35,7 @@ shader_parameter/shimmer_size = 0.035
 shader_parameter/shimmer_strength = 0.12
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
-size = Vector2(134.4, 118.299995)
+size = Vector2(252.00003, 118.299995)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nx8xt"]
 shader = ExtResource("7_c1ya3")
@@ -243,7 +243,7 @@ shader_parameter/mirror_tiling = false
 shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/bottom_y = 30.0
+shader_parameter/bottom_y = 332.99994
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4eh5n"]
 shader = ExtResource("7_c1ya3")
@@ -352,7 +352,7 @@ fill_color = Color(0.62, 0.16, 0.19, 1)
 [node name="Block00" type="CollisionPolygon2D" parent="Terrain" unique_id=1424827610]
 position = Vector2(388.5001, 1250)
 scale = Vector2(1.5526042, 1)
-polygon = PackedVector2Array(-600, -60, 600, -60, 600, 60, -600, 60)
+polygon = PackedVector2Array(-600, -60, 265.0385, -60, 268.2589, 60, -600, 60)
 script = ExtResource("2_4rvt0")
 
 [node name="Block01" type="CollisionPolygon2D" parent="Terrain" unique_id=771625597]
@@ -560,9 +560,12 @@ collision_mask = 2
 script = ExtResource("3_bfomk")
 
 [node name="Sprite" type="Sprite2D" parent="Goal" unique_id=1062924124]
+position = Vector2(1.6863675, 54.875027)
+scale = Vector2(1.2884613, 1.2884613)
 texture = ExtResource("tex_goal")
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=1964734889]
+position = Vector2(5, 103)
 shape = SubResource("RectangleShape2D_thbjj")
 
 [node name="RecoveryPoints" type="Node2D" parent="." unique_id=765922121]
@@ -572,9 +575,6 @@ position = Vector2(163, -199)
 
 [node name="Point2" type="Marker2D" parent="RecoveryPoints" unique_id=1191126098]
 position = Vector2(273, -1218)
-
-[node name="Point3" type="Marker2D" parent="RecoveryPoints" unique_id=1450933957]
-position = Vector2(1459, -180)
 
 [node name="Graphics" type="Node2D" parent="." unique_id=1003079152]
 
@@ -586,7 +586,7 @@ position = Vector2(388.5001, 1250)
 scale = Vector2(1.5526042, 1)
 texture = ExtResource("8_lt4wn")
 texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-600, -60, 600, -60, 600, 60, -600, 60)
+polygon = PackedVector2Array(-600, -60, 265.68262, -60, 265.68262, 60, -600, 60)
 script = ExtResource("9_soyj0")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Block00")
@@ -905,7 +905,7 @@ position = Vector2(623, 873)
 scale = Vector2(0.89531255, 1)
 texture = ExtResource("8_lt4wn")
 texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
+polygon = PackedVector2Array(-200, -30, 200, -30, 200, 332.99994, -200, 30)
 script = ExtResource("9_soyj0")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Block05")

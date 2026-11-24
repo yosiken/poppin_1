@@ -6,14 +6,15 @@
 [ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="7_lhfje"]
 [ext_resource type="Shader" uid="uid://cwsj8xaf2qwel" path="res://resources/shader/terrain_fill.gdshader" id="7_piclj"]
 [ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="8_piclj"]
-[ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="9_pc6pn"]
+[ext_resource type="Texture2D" uid="uid://buxtoxn0alnt7" path="res://resources/texture/Parts/tiles/tile_00.png" id="10_h0ha1"]
+[ext_resource type="Material" path="res://resources/waterfall_material.tres" id="12_c8ckd"]
 [ext_resource type="Texture2D" uid="uid://d0ynpj1r5se7h" path="res://resources/texture/Tutorial3.jpg" id="12_hkljq"]
 [ext_resource type="Resource" uid="uid://cl1lu8kh6q4ft" path="res://resources/cutscene/stage03_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://cojeb4xlhwjcx" path="res://resources/cutscene/stage03_outro.tres" id="cut_outro"]
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
-size = Vector2(103.03812, 106.03812)
+size = Vector2(109.53811, 109.53811)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pc6pn"]
 shader = ExtResource("7_piclj")
@@ -264,7 +265,7 @@ vframes = 3
 frame = 2
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=37095405]
-position = Vector2(-2, -9)
+position = Vector2(-1.0000553, 4.0000057)
 shape = SubResource("RectangleShape2D_thbjj")
 
 [node name="RecoveryPoints" type="Node2D" parent="." unique_id=579901931]
@@ -489,7 +490,7 @@ texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_virfu")
 position = Vector2(-380, 400)
-texture = ExtResource("9_pc6pn")
+texture = ExtResource("10_h0ha1")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-237, -951, 30, -950, 30, 950, -237, 955)
 script = ExtResource("8_piclj")
@@ -501,7 +502,7 @@ texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_xwxkh")
 position = Vector2(1580, 400)
-texture = ExtResource("9_pc6pn")
+texture = ExtResource("10_h0ha1")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-30, -950, 309, -954, 294, 950, -30, 950)
 script = ExtResource("8_piclj")
@@ -515,4 +516,10 @@ position = Vector2(2884, 764)
 [node name="Tutorial3" type="Sprite2D" parent="BackGraphics" unique_id=1526273805]
 position = Vector2(-2322, 77)
 scale = Vector2(0.3864796, 0.3864796)
+texture = ExtResource("12_hkljq")
+
+[node name="Tutorial3" type="Sprite2D" parent="BackGraphics/Tutorial3" unique_id=482409923]
+material = ExtResource("12_c8ckd")
+position = Vector2(-1665.0298, -142.31021)
+scale = Vector2(0.7598444, 2.6798682)
 texture = ExtResource("12_hkljq")

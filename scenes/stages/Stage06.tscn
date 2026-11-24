@@ -13,12 +13,51 @@
 [ext_resource type="Texture2D" uid="uid://dcgocmtek6j88" path="res://resources/texture/Parts/tiles/tile_01.png" id="11_s7e8c"]
 [ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="11_xvscd"]
 [ext_resource type="Texture2D" uid="uid://c4nmubthakdc" path="res://resources/texture/BG/bg_e_01.png" id="13_23x76"]
-[ext_resource type="Texture2D" uid="uid://bru0r4pigeoxt" path="res://resources/texture/signboard01.png" id="14_2wft3"]
 [ext_resource type="Texture2D" uid="uid://cf5lq0u22xy8w" path="res://resources/texture/precipice.png" id="15_a3rrc"]
 [ext_resource type="Shader" uid="uid://cirm1mgj28v3d" path="res://resources/shader/lava_block.gdshader" id="lava_sh"]
 
+[sub_resource type="ShaderMaterial" id="MatLavaDeadly2"]
+shader = ExtResource("lava_sh")
+shader_parameter/edges = PackedVector3Array(0, 1, -1612.31, -1, 0, -38.7452, 0, -1, 1511.69, 0, -1, 1511.69, 1, 0, -1561.25)
+shader_parameter/edge_count = 5
+shader_parameter/bounds = Vector4(-1561.25, -1612.31, 1600, 100.62)
+shader_parameter/noise_size = 160.0
+shader_parameter/flow_speed = 0.07
+shader_parameter/vein_width = 0.08
+shader_parameter/crust_dark = 0.2
+shader_parameter/heat = 1.0
+shader_parameter/hot_color = Color(1, 0.86, 0.45, 1)
+shader_parameter/top_heat_height = 70.0
+shader_parameter/top_heat = 1.0
+shader_parameter/line_width = 2.5
+shader_parameter/glow_width = 22.0
+shader_parameter/glow_strength = 0.22
+shader_parameter/shimmer_speed = 2.6
+shader_parameter/shimmer_size = 0.035
+shader_parameter/shimmer_strength = 0.12
+
+[sub_resource type="ShaderMaterial" id="MatLavaDeadly1"]
+shader = ExtResource("lava_sh")
+shader_parameter/edges = PackedVector3Array(0, 1, -60, -1, 0, -800, 0, -1, -60, 1, 0, -800)
+shader_parameter/edge_count = 4
+shader_parameter/bounds = Vector4(-800, -60, 1600, 120)
+shader_parameter/noise_size = 160.0
+shader_parameter/flow_speed = 0.07
+shader_parameter/vein_width = 0.08
+shader_parameter/crust_dark = 0.2
+shader_parameter/heat = 1.0
+shader_parameter/hot_color = Color(1, 0.86, 0.45, 1)
+shader_parameter/top_heat_height = 70.0
+shader_parameter/top_heat = 1.0
+shader_parameter/line_width = 2.5
+shader_parameter/glow_width = 22.0
+shader_parameter/glow_strength = 0.22
+shader_parameter/shimmer_speed = 2.6
+shader_parameter/shimmer_size = 0.035
+shader_parameter/shimmer_strength = 0.12
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fm5oo"]
-size = Vector2(91.91305, 91.91305)
+size = Vector2(242.95651, 207.95651)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2wft3"]
 shader = ExtResource("8_uq8sw")
@@ -148,18 +187,6 @@ shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 300.0
 
-[sub_resource type="ShaderMaterial" id="MatLavaDeadly2"]
-shader = ExtResource("lava_sh")
-shader_parameter/edges = PackedVector3Array(-0, 1, -1612.31, -1, 0, -38.7452, -0, -1, 1511.69, -0, -1, 1511.69, 1, 0, -1561.25)
-shader_parameter/edge_count = 5
-shader_parameter/bounds = Vector4(-1561.25, -1612.31, 1600, 100.62)
-
-[sub_resource type="ShaderMaterial" id="MatLavaDeadly1"]
-shader = ExtResource("lava_sh")
-shader_parameter/edges = PackedVector3Array(-0, 1, -60, -1, 0, -800, -0, -1, -60, 1, 0, -800)
-shader_parameter/edge_count = 4
-shader_parameter/bounds = Vector4(-800, -60, 1600, 120)
-
 [node name="Stage06" type="Node2D" unique_id=653835895]
 script = ExtResource("1_qm3fv")
 display_name = "Windy Forest"
@@ -234,7 +261,7 @@ script = ExtResource("4_rxrmx")
 [node name="Step15" type="CollisionPolygon2D" parent="Terrain" unique_id=1318439526]
 position = Vector2(2537.0002, 426)
 scale = Vector2(0.30522728, 0.9936781)
-polygon = PackedVector2Array(1584.7871, 512.46094, 1785.5537, 430.723, 1985.4053, 447.83115, 2134.787, 512.46094, 2134.787, 582.46094, 1584.7871, 582.46094)
+polygon = PackedVector2Array(2125.3672, 960.2921, 2326.1338, 878.5542, 2525.9854, 895.66235, 2675.3672, 960.2921, 2675.3672, 1030.2921, 2125.3672, 1030.2921)
 script = ExtResource("4_rxrmx")
 
 [node name="Step4" type="CollisionPolygon2D" parent="Terrain" unique_id=2073548431]
@@ -331,15 +358,15 @@ collision_mask = 2
 script = ExtResource("5_rq6nu")
 
 [node name="Sprite" type="Sprite2D" parent="Goal" unique_id=1699685570]
-position = Vector2(-15, -40)
-scale = Vector2(1.6413044, 1.6413044)
+position = Vector2(173.99988, -37.00001)
+scale = Vector2(2.683148, 2.683148)
 texture = ExtResource("6_uq8sw")
 hframes = 3
 vframes = 3
 frame = 5
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=1799552704]
-position = Vector2(-15, -40)
+position = Vector2(188, -27)
 shape = SubResource("RectangleShape2D_fm5oo")
 
 [node name="BackGraphics" type="Node2D" parent="." unique_id=31720718]
@@ -364,11 +391,6 @@ polygon = PackedVector2Array(-200, -75, 200, -75, 201, -168.1034, 304, 5.1724854
 script = ExtResource("10_hegly")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Intro1")
-
-[node name="Signboard01" type="Sprite2D" parent="BackGraphics" unique_id=696342095]
-position = Vector2(2485.0002, -707.00006)
-scale = Vector2(0.2914871, 0.2914871)
-texture = ExtResource("14_2wft3")
 
 [node name="Gfx_Intro4" type="Polygon2D" parent="BackGraphics" unique_id=739485397]
 texture_filter = 1
@@ -470,7 +492,7 @@ copy_from = NodePath("../../Terrain/Step1")
 texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_bh07d")
-position = Vector2(3105.0002, 966.5)
+position = Vector2(3528, 1372)
 scale = Vector2(0.30909044, 1.0428582)
 texture = ExtResource("9_s7e8c")
 texture_scale = Vector2(1.1636363, 1.1636363)

@@ -3,8 +3,10 @@
 [ext_resource type="Script" uid="uid://1iu2pnnffu6i" path="res://scripts/stage.gd" id="1_thbjj"]
 [ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_4rvt0"]
 [ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_bfomk"]
+[ext_resource type="Script" uid="uid://dgqq7nscbsglg" path="res://scripts/hazard.gd" id="7_hot2p"]
 [ext_resource type="Shader" uid="uid://cwsj8xaf2qwel" path="res://resources/shader/terrain_fill.gdshader" id="7_s6mo5"]
 [ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="8_1sk12"]
+[ext_resource type="Shader" uid="uid://cirm1mgj28v3d" path="res://resources/shader/lava_block.gdshader" id="8_8fxra"]
 [ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="9_hot2p"]
 [ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="10_8fxra"]
 [ext_resource type="Resource" uid="uid://b1k32u7b4ykbk" path="res://resources/cutscene/stage08_intro.tres" id="cut_intro"]
@@ -12,7 +14,27 @@
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
-size = Vector2(64.86666, 96.6)
+size = Vector2(151, 153)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_djk8k"]
+shader = ExtResource("8_8fxra")
+shader_parameter/edges = PackedVector3Array(0, 1, -60, -1, 0, -800, 0, -1, -60, 1, 0, -800)
+shader_parameter/edge_count = 4
+shader_parameter/bounds = Vector4(-800, -60, 1600, 120)
+shader_parameter/noise_size = 160.0
+shader_parameter/flow_speed = 0.07
+shader_parameter/vein_width = 0.08
+shader_parameter/crust_dark = 0.2
+shader_parameter/heat = 1.0
+shader_parameter/hot_color = Color(1, 0.86, 0.45, 1)
+shader_parameter/top_heat_height = 70.0
+shader_parameter/top_heat = 1.0
+shader_parameter/line_width = 2.5
+shader_parameter/glow_width = 22.0
+shader_parameter/glow_strength = 0.22
+shader_parameter/shimmer_speed = 2.6
+shader_parameter/shimmer_size = 0.035
+shader_parameter/shimmer_strength = 0.12
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_etsw6"]
 shader = ExtResource("7_s6mo5")
@@ -184,7 +206,7 @@ polygon = PackedVector2Array(-200, -30, -120, -54, -58, -101, 106, -101, 158, -3
 script = ExtResource("2_4rvt0")
 
 [node name="Block13" type="CollisionPolygon2D" parent="Terrain" unique_id=2147467429]
-position = Vector2(943, 1216)
+position = Vector2(850, 1440)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)
 script = ExtResource("2_4rvt0")
 
@@ -223,12 +245,15 @@ collision_mask = 2
 script = ExtResource("3_bfomk")
 
 [node name="Sprite" type="Sprite2D" parent="Goal" unique_id=416294]
+position = Vector2(508, -212)
+scale = Vector2(2.275, 2.275)
 texture = ExtResource("tex_goal")
 hframes = 3
 vframes = 3
 frame = 7
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=2114956362]
+position = Vector2(503, -209)
 shape = SubResource("RectangleShape2D_thbjj")
 
 [node name="RecoveryPoints" type="Node2D" parent="." unique_id=785026129]
@@ -241,6 +266,19 @@ position = Vector2(520, 163)
 
 [node name="Point3" type="Marker2D" parent="RecoveryPoints" unique_id=1925379620]
 position = Vector2(1139, -297)
+
+[node name="Hazards" type="Area2D" parent="." unique_id=359798870]
+position = Vector2(1179, 418)
+scale = Vector2(0.86969703, 0.73698115)
+collision_mask = 2
+script = ExtResource("7_hot2p")
+
+[node name="Deadly1" type="CollisionPolygon2D" parent="Hazards" unique_id=1107126358]
+material = SubResource("ShaderMaterial_djk8k")
+position = Vector2(-163, 1141)
+polygon = PackedVector2Array(-800, -60, 800, -60, 800, 60, -185.43262, 60, -800, 60)
+script = ExtResource("2_4rvt0")
+fill_color = Color(0.62, 0.16, 0.19, 1)
 
 [node name="Graphics" type="Node2D" parent="." unique_id=1368912277]
 
@@ -344,7 +382,7 @@ copy_from = NodePath("../../Terrain/Block12")
 texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_pq21c")
-position = Vector2(943, 1216)
+position = Vector2(854, 1418)
 texture = ExtResource("8_1sk12")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-200, -30, 200, -30, 200, 30, -200, 30)

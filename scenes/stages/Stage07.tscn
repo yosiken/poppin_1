@@ -14,7 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thbjj"]
-size = Vector2(56, 56)
+size = Vector2(129, 130)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lg1qa"]
 shader = ExtResource("8_f6quv")
@@ -232,6 +232,12 @@ polygon = PackedVector2Array(126, -976, 186, -976, 186, 924, 126, 924)
 script = ExtResource("2_4rvt0")
 fill_color = Color(0.5, 0.36, 0.32, 1)
 
+[node name="Block14" type="CollisionPolygon2D" parent="Terrain" unique_id=13778870]
+position = Vector2(559, -469)
+scale = Vector2(1.0078125, 1.0495689)
+polygon = PackedVector2Array(-9.426361, -31.23944, 105.67441, -43.62549, 201.92245, -14.089539, 223.75192, 36.40738, 201.92245, 53.55728, 92.77518, 39.265686, -22.325592, 13.540863)
+script = ExtResource("2_4rvt0")
+
 [node name="Block07" type="CollisionPolygon2D" parent="Terrain" unique_id=1304101769]
 position = Vector2(1580, 400)
 polygon = PackedVector2Array(-30, -950, 30, -950, 30, 950, -30, 950)
@@ -245,12 +251,15 @@ collision_mask = 2
 script = ExtResource("3_bfomk")
 
 [node name="Sprite" type="Sprite2D" parent="Goal" unique_id=22997470]
+position = Vector2(-384, -124)
+scale = Vector2(2.0875, 2.0875)
 texture = ExtResource("tex_goal")
 hframes = 3
 vframes = 3
 frame = 6
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=1139634731]
+position = Vector2(-389, -119)
 shape = SubResource("RectangleShape2D_thbjj")
 
 [node name="RecoveryPoints" type="Node2D" parent="." unique_id=1803728913]

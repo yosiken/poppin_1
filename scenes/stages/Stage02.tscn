@@ -8,17 +8,38 @@
 [ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="9_47jn6"]
 [ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="10_hut53"]
 [ext_resource type="Texture2D" uid="uid://ef420ly1sjgx" path="res://resources/texture/osake.png" id="11_oladb"]
-[ext_resource type="Texture2D" uid="uid://dx8hab0e1snrf" path="res://resources/texture/Parts/tiles/tile_09.png" id="11_sqfmg"]
 [ext_resource type="Texture2D" uid="uid://bkbc2nui8dxyt" path="res://resources/texture/Tutorial1.jpg" id="14_av5gy"]
 [ext_resource type="Texture2D" uid="uid://d2k6nrxjycqo5" path="res://resources/texture/Tutorial2.jpg" id="15_87tee"]
+[ext_resource type="Material" path="res://resources/cloud_flow_material.tres" id="16_sqfmg"]
+[ext_resource type="Script" uid="uid://de4y7g2yft0h3" path="res://scripts/cloud_polygon.gd" id="17_dt3m8"]
 [ext_resource type="Resource" uid="uid://cnckr5ah08f7a" path="res://resources/cutscene/stage02_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://i0n523lr7x8g" path="res://resources/cutscene/stage02_outro.tres" id="cut_outro"]
 [ext_resource type="Script" uid="uid://dgqq7nscbsglg" path="res://scripts/hazard.gd" id="hz_script"]
-[ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 [ext_resource type="Shader" uid="uid://cirm1mgj28v3d" path="res://resources/shader/lava_block.gdshader" id="lava_sh"]
+[ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0iyhi"]
 size = Vector2(101.49671, 101.49671)
+
+[sub_resource type="ShaderMaterial" id="MatLavaDeadly1"]
+shader = ExtResource("lava_sh")
+shader_parameter/edges = PackedVector3Array(0, 1, -60, -1, 0, -800, 0, -1, -60, 1, 0, -800)
+shader_parameter/edge_count = 4
+shader_parameter/bounds = Vector4(-800, -60, 1600, 120)
+shader_parameter/noise_size = 160.0
+shader_parameter/flow_speed = 0.07
+shader_parameter/vein_width = 0.08
+shader_parameter/crust_dark = 0.2
+shader_parameter/heat = 1.0
+shader_parameter/hot_color = Color(1, 0.86, 0.45, 1)
+shader_parameter/top_heat_height = 70.0
+shader_parameter/top_heat = 1.0
+shader_parameter/line_width = 2.5
+shader_parameter/glow_width = 22.0
+shader_parameter/glow_strength = 0.22
+shader_parameter/shimmer_speed = 2.6
+shader_parameter/shimmer_size = 0.035
+shader_parameter/shimmer_strength = 0.12
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0pjx1"]
 shader = ExtResource("8_av5gy")
@@ -35,30 +56,6 @@ shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 30.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jkpku"]
-shader = ExtResource("8_av5gy")
-shader_parameter/mirror_tiling = false
-shader_parameter/shadow_height = 24.0
-shader_parameter/shadow_strength = 0.35
-shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/bottom_y = 94.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ccff"]
-shader = ExtResource("8_av5gy")
-shader_parameter/mirror_tiling = false
-shader_parameter/shadow_height = 24.0
-shader_parameter/shadow_strength = 0.35
-shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/bottom_y = 95.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_r3gjd"]
-shader = ExtResource("8_av5gy")
-shader_parameter/mirror_tiling = false
-shader_parameter/shadow_height = 24.0
-shader_parameter/shadow_strength = 0.35
-shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/bottom_y = 102.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b47ar"]
 shader = ExtResource("8_av5gy")
@@ -100,12 +97,6 @@ shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 723.0
 
-[sub_resource type="ShaderMaterial" id="MatLavaDeadly1"]
-shader = ExtResource("lava_sh")
-shader_parameter/edges = PackedVector3Array(-0, 1, -60, -1, 0, -800, -0, -1, -60, 1, 0, -800)
-shader_parameter/edge_count = 4
-shader_parameter/bounds = Vector4(-800, -60, 1600, 120)
-
 [node name="Stage02" type="Node2D" unique_id=1066997681]
 script = ExtResource("1_hlboq")
 display_name = "とび石"
@@ -143,21 +134,6 @@ script = ExtResource("2_tq1ty")
 [node name="Block01" type="CollisionPolygon2D" parent="Terrain" unique_id=435337606]
 position = Vector2(1016, 940)
 polygon = PackedVector2Array(-160, -30, 160, -30, 160, 30, -160, 30)
-script = ExtResource("2_tq1ty")
-
-[node name="Block07" type="CollisionPolygon2D" parent="Terrain" unique_id=1638554628]
-position = Vector2(545, 354)
-polygon = PackedVector2Array(-160, -30, -70, -95, 70, -91, 160, -30, 160, 30, 100, 79, -23, 94, -160, 30)
-script = ExtResource("2_tq1ty")
-
-[node name="Block08" type="CollisionPolygon2D" parent="Terrain" unique_id=2119461324]
-position = Vector2(1449, 78)
-polygon = PackedVector2Array(-160, -30, -70, -95, 70, -91, 160, -30, 160, 30, 100, 79, -23, 94, -160, 30)
-script = ExtResource("2_tq1ty")
-
-[node name="Block09" type="CollisionPolygon2D" parent="Terrain" unique_id=1694048342]
-position = Vector2(2487, 174)
-polygon = PackedVector2Array(-160, -30, -70, -95, 70, -91, 160, -30, 160, 30, 100, 79, -23, 94, -160, 30)
 script = ExtResource("2_tq1ty")
 
 [node name="Block02" type="CollisionPolygon2D" parent="Terrain" unique_id=208797061]
@@ -246,42 +222,6 @@ script = ExtResource("9_47jn6")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Block01")
 
-[node name="Gfx_Block07" type="Polygon2D" parent="Graphics" unique_id=552792450]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_jkpku")
-position = Vector2(545, 354)
-texture = ExtResource("11_sqfmg")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-160, -30, -114, -78, -70, -95, 2, -83, 70, -91, 136, -75, 160, -30, 160, 30, 139, 64, 100, 79, -23, 94, -126, 79, -160, 30)
-script = ExtResource("9_47jn6")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Block07")
-
-[node name="Gfx_Block08" type="Polygon2D" parent="Graphics" unique_id=1267158040]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_7ccff")
-position = Vector2(1449, 78)
-texture = ExtResource("11_sqfmg")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-160, -30, -127, -82, -70, -95, 9, -105, 70, -91, 139, -80, 160, -30, 160, 30, 148, 62, 100, 79, 63, 95, -23, 94, -69, 74, -128, 60, -160, 30)
-script = ExtResource("9_47jn6")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Block08")
-
-[node name="Gfx_Block09" type="Polygon2D" parent="Graphics" unique_id=1101624067]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_r3gjd")
-position = Vector2(2487, 174)
-texture = ExtResource("11_sqfmg")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-160, -30, -122, -81, -70, -95, 11, -84, 70, -91, 117, -80, 160, -30, 160, 30, 136, 72, 100, 79, 48, 102, -23, 94, -79, 77, -135, 81, -160, 30)
-script = ExtResource("9_47jn6")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Block09")
-
 [node name="Gfx_Block02" type="Polygon2D" parent="Graphics" unique_id=1071886758]
 texture_filter = 1
 texture_repeat = 2
@@ -325,7 +265,7 @@ texture_repeat = 2
 material = SubResource("ShaderMaterial_taw78")
 position = Vector2(-230, 640)
 texture = ExtResource("10_hut53")
-texture_scale = Vector2(1.1636363, 1.1636363)
+texture_scale = Vector2(2.3272727, 2.3272727)
 polygon = PackedVector2Array(-30, -420, 30, -420, 30, 420, -30, 420)
 script = ExtResource("9_47jn6")
 tile_size = Vector2(220, 0)
@@ -337,7 +277,7 @@ texture_repeat = 2
 material = SubResource("ShaderMaterial_o7yfr")
 position = Vector2(2980, 500)
 texture = ExtResource("10_hut53")
-texture_scale = Vector2(1.1636363, 1.1636363)
+texture_scale = Vector2(2.3272727, 2.3272727)
 polygon = PackedVector2Array(-30, -600, 467, -606, 503, 718, -27, 723)
 script = ExtResource("9_47jn6")
 tile_size = Vector2(220, 0)
@@ -356,3 +296,17 @@ texture = ExtResource("14_av5gy")
 position = Vector2(333, 148)
 scale = Vector2(0.39030614, 0.39030612)
 texture = ExtResource("15_87tee")
+
+[node name="CloudPolygon" type="Polygon2D" parent="BackGraphics" unique_id=1345418802]
+material = ExtResource("16_sqfmg")
+position = Vector2(-742, -332)
+polygon = PackedVector2Array(420, 0, 409.46973, 20.805708, 378.40692, 40.56813, 328.36923, 58.296295, 261.86572, 73.10124, 182.23117, 84.240585, 93.45879, 91.15576, 2.5716733e-14, 93.5, -93.45879, 91.15576, -182.23117, 84.240585, -261.86572, 73.10124, -328.36923, 58.296295, -378.40692, 40.56813, -409.46973, 20.805708, -420, 1.1450069e-14, -394.6931, -36.463432, -355.30127, -69.25642, -336.56964, -108.64025, -297.79404, -151.14696, -200.6573, -168.65181, -86.34275, -153.11832, -6.326316e-14, -139.4, 86.34275, -153.11832, 200.6573, -168.65181, 297.79404, -151.14696, 336.56964, -108.64025, 355.30127, -69.25642, 394.6931, -36.463432)
+script = ExtResource("17_dt3m8")
+metadata/_custom_type_script = "uid://de4y7g2yft0h3"
+
+[node name="CloudPolygon" type="Polygon2D" parent="BackGraphics/CloudPolygon" unique_id=1561424298]
+material = ExtResource("16_sqfmg")
+position = Vector2(1419, 3)
+polygon = PackedVector2Array(420, 0, 409.46973, 20.805708, 378.40692, 40.56813, 328.36923, 58.296295, 261.86572, 73.10124, 182.23117, 84.240585, 93.45879, 91.15576, 2.5716733e-14, 93.5, -93.45879, 91.15576, -182.23117, 84.240585, -261.86572, 73.10124, -328.36923, 58.296295, -378.40692, 40.56813, -409.46973, 20.805708, -420, 1.1450069e-14, -394.6931, -36.463432, -355.30127, -69.25642, -336.56964, -108.64025, -297.79404, -151.14696, -200.6573, -168.65181, -86.34275, -153.11832, -6.326316e-14, -139.4, 86.34275, -153.11832, 200.6573, -168.65181, 297.79404, -151.14696, 336.56964, -108.64025, 355.30127, -69.25642, 394.6931, -36.463432)
+script = ExtResource("17_dt3m8")
+metadata/_custom_type_script = "uid://de4y7g2yft0h3"

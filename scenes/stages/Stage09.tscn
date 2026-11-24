@@ -5,6 +5,7 @@
 [ext_resource type="Resource" uid="uid://clbequ4bft763" path="res://resources/cutscene/stage09_intro.tres" id="2_u52tn"]
 [ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_bfomk"]
 [ext_resource type="Resource" uid="uid://ddj8fm104p6qq" path="res://resources/cutscene/stage09_outro.tres" id="3_k0dtr"]
+[ext_resource type="Shader" uid="uid://bc55gu483a873" path="res://resources/shader/ice_block.gdshader" id="5_2q64c"]
 [ext_resource type="Script" uid="uid://dgqq7nscbsglg" path="res://scripts/hazard.gd" id="7_k0dtr"]
 [ext_resource type="Shader" uid="uid://cwsj8xaf2qwel" path="res://resources/shader/terrain_fill.gdshader" id="8_l0qfx"]
 [ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="9_bx06a"]
@@ -13,8 +14,29 @@
 [ext_resource type="Texture2D" uid="uid://bqc74e5t6rlcs" path="res://resources/texture/signboard02.png" id="12_bx06a"]
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bx06a"]
+shader = ExtResource("5_2q64c")
+shader_parameter/edges = PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/edge_count = 0
+shader_parameter/bounds = Vector4(0, 0, 1, 1)
+shader_parameter/shard_size = 38.0
+shader_parameter/shard_stretch = 0.6
+shader_parameter/shard_contrast = 0.34
+shader_parameter/crack_width = 2.0
+shader_parameter/crack_light = 0.62
+shader_parameter/white_mix = 0.38
+shader_parameter/face_top = 0.9
+shader_parameter/face_bottom = 0.42
+shader_parameter/line_width = 2.5
+shader_parameter/line_white = 0.9
+shader_parameter/glow_width = 16.0
+shader_parameter/glow_strength = 0.5
+shader_parameter/sheen_speed = 0.35
+shader_parameter/sheen_width = 0.0075
+shader_parameter/sheen_strength = 0.18
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qmy6f"]
-size = Vector2(64.86666, 96.6)
+size = Vector2(86, 90)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_udg5p"]
 shader = ExtResource("8_l0qfx")
@@ -205,6 +227,14 @@ scale = Vector2(0.40452358, 0.40452358)
 polygon = PackedVector2Array(383.3501, -52.903076, 444.3423, -292.4652, 557.5464, -266.19458, 482.74646, -22.49524)
 script = ExtResource("2_4rvt0")
 
+[node name="Ramp11" type="CollisionPolygon2D" parent="Terrain" unique_id=1786672687]
+material = SubResource("ShaderMaterial_bx06a")
+position = Vector2(1410.0001, 216.00003)
+rotation = 1.5475807
+scale = Vector2(0.16363932, 0.16363932)
+polygon = PackedVector2Array(-56.270386, -209.13574, -58.54541, -708.5935, 93.17236, -853.60645, 294.92285, -855.0342, 399.21704, -608.10645, 366.26807, -242.1123, 174.46655, -142.65234)
+script = ExtResource("2_4rvt0")
+
 [node name="Ramp7" type="CollisionPolygon2D" parent="Terrain" unique_id=711913312]
 position = Vector2(-22, 293.99994)
 rotation = 1.3214948
@@ -270,14 +300,15 @@ collision_mask = 2
 script = ExtResource("3_bfomk")
 
 [node name="Sprite" type="Sprite2D" parent="Goal" unique_id=911081339]
-position = Vector2(-1450, -224)
+position = Vector2(-1489, -39)
+scale = Vector2(1.925, 1.925)
 texture = ExtResource("tex_goal")
 hframes = 3
 vframes = 3
 frame = 8
 
 [node name="Hit" type="CollisionShape2D" parent="Goal" unique_id=339032093]
-position = Vector2(-1450, -224)
+position = Vector2(-1485, -28)
 shape = SubResource("RectangleShape2D_qmy6f")
 
 [node name="Hazards" type="Area2D" parent="." unique_id=610439250]
@@ -285,30 +316,37 @@ collision_mask = 2
 script = ExtResource("7_k0dtr")
 
 [node name="Deadly1" type="CollisionPolygon2D" parent="Hazards" unique_id=1898899836]
-position = Vector2(1613.9578, 562.954)
-scale = Vector2(0.020588983, -0.28077042)
-polygon = PackedVector2Array(1142.7891, 82.46509, 2742.789, 82.46509, 2742.789, 202.46509, 1142.7891, 202.46509)
+position = Vector2(1581, 579)
+scale = Vector2(0.037393857, -0.5099373)
+polygon = PackedVector2Array(1288.5, -24.38379, 2032.4219, -47.064575, 2888.5, -24.38379, 3182.3438, 33.337524, 2888.5, 95.61621, 2059.164, 119.62256, 1288.5, 95.61621, 935.9844, 35.298462)
 script = ExtResource("2_4rvt0")
 fill_color = Color(0.62, 0.16, 0.19, 1)
 
 [node name="Deadly2" type="CollisionPolygon2D" parent="Hazards" unique_id=1596642476]
-position = Vector2(1411.4021, 693.454)
-scale = Vector2(0.022498634, -0.30681217)
-polygon = PackedVector2Array(711.2031, 67.11377, 2311.2031, 67.11377, 2311.2031, 187.11377, 711.2031, 187.11377)
+position = Vector2(1424.8048, 697.40826)
+scale = Vector2(0.038539615, -0.5255618)
+polygon = PackedVector2Array(-459.3164, 36.95215, 368.32813, 17.901367, 1140.6836, 36.95215, 1458.1133, 99.718506, 1140.6836, 156.95215, 316.4336, 181.53577, -459.3164, 156.95215, -799.3047, 99.718506)
+script = ExtResource("2_4rvt0")
+fill_color = Color(0.62, 0.16, 0.19, 1)
+
+[node name="Deadly6" type="CollisionPolygon2D" parent="Hazards" unique_id=302608548]
+position = Vector2(1859.0001, -554)
+scale = Vector2(0.06190211, 0.82782775)
+polygon = PackedVector2Array(-10066.535, 1784.6439, -9238.891, 1765.5931, -8466.535, 1784.6439, -8149.1055, 1847.4103, -8466.535, 1904.6439, -9290.785, 1929.2275, -10066.535, 1904.6439, -10406.523, 1847.4103)
 script = ExtResource("2_4rvt0")
 fill_color = Color(0.62, 0.16, 0.19, 1)
 
 [node name="Deadly3" type="CollisionPolygon2D" parent="Hazards" unique_id=1905491592]
-position = Vector2(1586.532, 832.67426)
-scale = Vector2(0.02783112, -0.36931208)
-polygon = PackedVector2Array(-236.03125, 21.828491, 1363.9688, 21.828491, 1363.9688, 141.82849, -236.03125, 141.82849)
+position = Vector2(1596.3684, 830.0909)
+scale = Vector2(0.04156851, -0.5516039)
+polygon = PackedVector2Array(678.1211, 45.39612, 1458.5938, 29.171143, 2278.121, 45.39612, 2565.2031, 107.12561, 2278.121, 165.39612, 1458.5938, 190.5188, 678.1211, 165.39612, 400.10156, 110.75134)
 script = ExtResource("2_4rvt0")
 fill_color = Color(0.62, 0.16, 0.19, 1)
 
 [node name="Deadly5" type="CollisionPolygon2D" parent="Hazards" unique_id=1760423951]
 position = Vector2(528, 969.00006)
 scale = Vector2(0.05187197, -0.70737416)
-polygon = PackedVector2Array(-800, -60, 800, -60, 1291.6416, 60.788208, -800, 60)
+polygon = PackedVector2Array(-800, -60, 800, -60, 983.18945, 21.2052, 192.78223, 59.37451, -713.2949, 22.618896)
 script = ExtResource("2_4rvt0")
 fill_color = Color(0.62, 0.16, 0.19, 1)
 
@@ -537,24 +575,24 @@ copy_from = NodePath("../../Terrain/Ceiling")
 position = Vector2(-68, 582)
 
 [node name="Point2" type="Marker2D" parent="RecoveryPoints" unique_id=301602886]
-position = Vector2(695, 213)
+position = Vector2(256, 320)
 
 [node name="Signboard02" type="Sprite2D" parent="." unique_id=1264132497]
-position = Vector2(1448, 656)
+position = Vector2(1838, 865)
 scale = Vector2(1.4000001, 1.4)
 texture = ExtResource("12_bx06a")
 
-[node name="Signboard02" type="Sprite2D" parent="Signboard02" unique_id=882023360]
-position = Vector2(110.09206, 105.571434)
-scale = Vector2(0.9333338, 0.93333364)
+[node name="Signboard05" type="Sprite2D" parent="." unique_id=882023360]
+position = Vector2(1828, 728)
+scale = Vector2(1.3066674, 1.3066671)
 texture = ExtResource("12_bx06a")
 
-[node name="Signboard03" type="Sprite2D" parent="Signboard02" unique_id=717581722]
-position = Vector2(-294.99994, -300.71432)
-scale = Vector2(0.53095275, 0.5309527)
+[node name="Signboard04" type="Sprite2D" parent="." unique_id=717581722]
+position = Vector2(1035, 234.99994)
+scale = Vector2(0.7433339, 0.74333376)
 texture = ExtResource("12_bx06a")
 
 [node name="Signboard03" type="Sprite2D" parent="." unique_id=599647613]
-position = Vector2(1655.9999, 522.00006)
+position = Vector2(1830, 548)
 scale = Vector2(1.4000001, 1.4)
 texture = ExtResource("12_bx06a")
