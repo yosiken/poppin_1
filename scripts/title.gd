@@ -245,6 +245,8 @@ func _build_options_panel() -> Control:
 		func(v: float) -> void: Settings.bgm_volume = v)
 	_add_slider_row(box, "SE VOLUME", Settings.se_volume,
 		func(v: float) -> void: Settings.se_volume = v)
+	_add_slider_row(box, "VOICE VOLUME", Settings.voice_volume,
+		func(v: float) -> void: Settings.voice_volume = v)
 	_add_slider_row(box, "RANKING FONT SIZE", Settings.ranking_font_size,
 		func(v: float) -> void: Settings.ranking_font_size = v, 10.0, 32.0, 1.0)
 	_add_back_row(box, func() -> void:

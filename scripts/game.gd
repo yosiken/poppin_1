@@ -44,6 +44,8 @@ signal stage_loaded(index: int, stage: Stage)
 signal all_cleared()
 ## 場外へ落ちて開始位置へ戻された。引数は落ちた地点
 signal player_fell(from_position: Vector2)
+## 新しい復帰地点に着いた。index は stage の recovery points の番号
+signal checkpoint_reached(index: int)
 
 # ─────────────────────────────── 設定
 ## 進行順に並べたステージシーン
@@ -230,6 +232,11 @@ func _ready() -> void:
 		add_child(memory)
 	if memory.items.is_empty():
 		memory.items = _resolve_memory_items()
+	# プレイ中のボイス。どこからでも Voice.say(&"場面") で鳴らせるようにここで1つ置く
+	if get_node_or_null(^"Voice") == null:
+		var voice := Voice.new()
+		voice.name = "Voice"
+		add_child(voice)
 	if bgm_player == null:
 		bgm_player = get_node_or_null(^"BgmPlayer") as AudioStreamPlayer
 	if bgm_player == null:
@@ -349,6 +356,8 @@ func _update_checkpoint() -> void:
 		if player.global_position.distance_to(_points[i].global_position) <= checkpoint_radius:
 			_checkpoint = i
 			print("[Game] 復帰地点 %d/%d に到達" % [i + 1, _points.size()])
+			checkpoint_reached.emit(i)
+			Voice.say(&"checkpoint")
 			return
 
 
@@ -761,6 +770,12 @@ func _terrain_rect_of(root: Node) -> Rect2:
 ## 待っている間はツリーを止める。止めないと、開始位置に置いたプレイヤーが
 ## 見出しの裏で落ち始めてしまう
 func _show_stage_title(gen: int) -> void:
+	# 見出しを出さない設定でも、始まりの声は掛ける。
+	# チュートリアルの最初の区画だけは「それでは始めたいと思います」
+	if _in_tutorial and _tutorial_index == 0:
+		Voice.say(&"tutorial_start")
+	else:
+		Voice.say(&"stage_start")
 	if stage_title_duration <= 0.0:
 		return
 
@@ -811,6 +826,8 @@ func _kill(from: Vector2, cause: String) -> void:
 	print("[Game] 死亡:%s (このステージ %d回目) → 復帰地点 %s へ"
 		% [cause, _fall_count, "Spawn" if _checkpoint < 0 else str(_checkpoint + 1)])
 	player_fell.emit(from)
+	# 熱い板は「あちち」、それ以外（場外）は落ちる叫び
+	Voice.say(&"hazard" if cause == "落下床" else &"fall")
 	_respawn()
 
 
@@ -852,6 +869,8 @@ func _respawn() -> void:
 	get_tree().paused = false
 	layer.queue_free()
 	_respawning = false
+	# 叫びがまだ鳴っていれば、鳴り終わってから続ける（VoiceSet の wait_turn）
+	Voice.say(&"respawn")
 
 
 # ═══════════════════════════════ スコア用の記録
@@ -913,6 +932,7 @@ func _on_goal_reached(clear_time: float) -> void:
 		bgm_player.stop()          # ステージBGMを止めて、ジングルと重ならないようにする
 	if sfx_goal:
 		sfx_goal.play()
+	Voice.say(&"goal")
 	var visual := _player_visual()
 	if visual:
 		visual.play_goal_clip()          # 勝利モーション。次のステージへ移るまで踊り続ける
@@ -983,6 +1003,8 @@ func _on_goal_reached(clear_time: float) -> void:
 ## clear_time に 0 以上を渡すと、ゴール付きの面と同じクリア表示を挟む。
 ## 区画式のチュートリアルでは最後の区画のメッセージがその役を果たすので渡さない
 func _finish_tutorial(clear_time := -1.0) -> void:
+	# 「はい、ここまでが練習でした」。ゴールの声が鳴っていれば、その後に続く
+	Voice.say(&"tutorial_end")
 	# F3 で飛ばした場合の印は、本編へ持ち越さないようここで落とす
 	_debug_cleared = false
 	_advancing = true
@@ -1049,6 +1071,7 @@ func _on_tutorial_cleared(section: TutorialSection) -> void:
 
 	if sfx_goal:
 		sfx_goal.play()
+	Voice.say(&"goal")
 	# プレイヤーを止める。ツリーは止めないので勝利モーションはそのまま動く
 	if player:
 		player.velocity = Vector2.ZERO

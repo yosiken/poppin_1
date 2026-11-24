@@ -196,6 +196,8 @@ func _refresh(except: int) -> void:
 func _reveal_slot(index: int) -> void:
 	var slot := _slots[index]
 	var frame := _frames[index]
+	# シルエットが本体に変わる瞬間に。最後の1つは「全部揃いました」
+	Voice.say(&"memory_last" if _acquired.size() >= _slots.size() else &"memory")
 	slot.pivot_offset = slot.size * 0.5
 	frame.pivot_offset = frame.size * 0.5
 

@@ -3,7 +3,7 @@ extends Node
 ## ゲーム全体の設定。オートロード（Settings）として常駐する。
 ##
 ## オプション画面から編集し、SAVE_PATH に保存する。
-## BGM/SE の音量は AudioServer の "BGM"/"SE" バスへそのまま反映する
+## BGM/SE/ボイスの音量は AudioServer の "BGM"/"SE"/"VOICE" バスへそのまま反映する
 ## （default_bus_layout.tres で用意してある）。
 ##
 ## SilentWolf（オンラインランキング）の設定もここでまとめて行う。
@@ -37,6 +37,13 @@ var se_volume := 0.8:
 	set(value):
 		se_volume = clampf(value, 0.0, 1.0)
 		_apply_bus_volume("SE", se_volume)
+		_queue_save()
+
+## プレイ中のボイス（Voice）の音量。「声だけ切りたい・上げたい」に応える
+var voice_volume := 0.8:
+	set(value):
+		voice_volume = clampf(value, 0.0, 1.0)
+		_apply_bus_volume("VOICE", voice_volume)
 		_queue_save()
 
 ## デモ（オープニング・ステージ冒頭イベント）を飛ばす開発者用の隠しスイッチ。
@@ -125,6 +132,7 @@ func save() -> void:
 	var cfg := ConfigFile.new()
 	cfg.set_value("audio", "bgm_volume", bgm_volume)
 	cfg.set_value("audio", "se_volume", se_volume)
+	cfg.set_value("audio", "voice_volume", voice_volume)
 	cfg.set_value("debug", "test_mode", test_mode)
 	cfg.set_value("profile", "player_name", player_name)
 	cfg.set_value("ui", "ranking_font_size", ranking_font_size)
@@ -140,6 +148,7 @@ func _load() -> void:
 	if cfg.load(SAVE_PATH) == OK:
 		bgm_volume = cfg.get_value("audio", "bgm_volume", bgm_volume)
 		se_volume = cfg.get_value("audio", "se_volume", se_volume)
+		voice_volume = cfg.get_value("audio", "voice_volume", voice_volume)
 		test_mode = cfg.get_value("debug", "test_mode", test_mode)
 		player_name = cfg.get_value("profile", "player_name", player_name)
 		ranking_font_size = cfg.get_value("ui", "ranking_font_size", ranking_font_size)
@@ -147,6 +156,7 @@ func _load() -> void:
 		# セーブが無くても既定音量をバスへ反映する
 		_apply_bus_volume("BGM", bgm_volume)
 		_apply_bus_volume("SE", se_volume)
+		_apply_bus_volume("VOICE", voice_volume)
 
 
 func _apply_bus_volume(bus_name: String, linear: float) -> void:

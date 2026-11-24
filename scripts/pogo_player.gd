@@ -325,9 +325,15 @@ func _resolve_ground(normal: Vector2, delta: float) -> void:
 	bounced.emit(out.length(), normal)
 	if c > 0.0:
 		# 溜めを消費して飛んだときだけ鳴らす。ただのバウンドでは鳴らさない。
-		# 発射音と掛け声は必ずセットで鳴らす。片方だけだと溜めた手応えが薄い
+		# 発射音は毎回。掛け声はボイス（Voice）があればそちらに任せる。
+		# ためジャンプは数秒おきに起きるので、声は確率で鳴らして聞き飽きないようにしている
+		# （確率は resources/voice_bank_ob.tres の jump）。
+		# Voice が居ない画面（サンプルシーンなど）では今までの1本を毎回鳴らす
 		_play(_sfx_sjump)
-		_play(_sfx_voice)
+		if Voice.available():
+			Voice.say(&"super_jump" if is_super else &"jump")
+		else:
+			_play(_sfx_voice)
 		charged_jump.emit(c, is_super)
 
 	# ── ボタンを離さず押しっぱなしにしていても、発射直後にホールド時間を満タンへ戻す。
@@ -373,6 +379,8 @@ func _resolve_wall(normal: Vector2) -> void:
 	if _slip_se_timer <= 0.0:
 		_play(_sfx_slip)
 		_slip_se_timer = slip_se_cooldown
+		# 声は効果音より長い間隔で（VoiceSet の cooldown）
+		Voice.say(&"slip")
 
 	# 壁は跳ね返さない。沿って滑らせる。
 	# めり込む方向の成分だけ軽く押し返して(wall_bounce_scale)めり込みを防ぐ。
