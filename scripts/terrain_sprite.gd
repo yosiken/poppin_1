@@ -49,6 +49,23 @@ extends Polygon2D
 
 
 @export_group("縁取り・影")
+## 枠線の見た目をまとめて決める .tres（TerrainLook）。
+##
+## 割り当てると、このノードの outline_* より**こちらが優先**される。
+## 同じ .tres を全ブロックに割り当てておけば、1か所直すだけで
+## ステージ中の線が変わる（エディタでもその場で描き直る）。
+## 空にすると、下の outline_* がそのまま使われる
+@export var outline_look: TerrainLook:
+	set(value):
+		if outline_look == value:
+			return
+		if outline_look != null and outline_look.changed.is_connected(_apply):
+			outline_look.changed.disconnect(_apply)
+		outline_look = value
+		if outline_look != null and not outline_look.changed.is_connected(_apply):
+			outline_look.changed.connect(_apply)
+		_apply()
+
 ## ポリゴンの輪郭に沿って線を描く。BGと足場の境目を見やすくする
 @export var outline_enabled := true:
 	set(value):
@@ -65,6 +82,24 @@ extends Polygon2D
 @export var outline_width := 4.0:
 	set(value):
 		outline_width = value
+		_apply()
+
+## 輪郭線を2色の縞にする。切ると outline_color 一色
+@export var outline_striped := false:
+	set(value):
+		outline_striped = value
+		_apply()
+
+## 縞のもう1色。outline_color と交互に出る
+@export var outline_color2 := Color(0.95, 0.86, 0.35, 0.9):
+	set(value):
+		outline_color2 = value
+		_apply()
+
+## 縞1本の長さ (px)。この長さで2色が入れ替わる
+@export_range(1.0, 200.0, 1.0) var outline_stripe_length := 14.0:
+	set(value):
+		outline_stripe_length = value
 		_apply()
 
 ## 下端をどれだけ暗くするか。0 で無効。地面に接している感じを出す
@@ -121,7 +156,60 @@ extends Polygon2D
 		_sync_slip_marks()
 
 
+@export_group("模様")
+## 模様の .tres（GroundPattern）。**マテリアルのようにドラッグするだけで模様になる。**
+##
+## resources/ground_pattern_grass.tres をここへ落とせば、このブロックは
+## その絵で塗られ、カメラに合わせたパララックスも入る。テクスチャを
+## 差し替えたり、下の pattern_enabled を入れたりする必要はない。
+## 割り当てているあいだは、下の pattern_* / parallax_* と mirror_tiling より
+## こちらが優先される。外すと元のテクスチャの塗りに戻る
+@export var ground_pattern: GroundPattern:
+	set(value):
+		if ground_pattern == value:
+			return
+		if ground_pattern != null and ground_pattern.changed.is_connected(_on_pattern_changed):
+			ground_pattern.changed.disconnect(_on_pattern_changed)
+		ground_pattern = value
+		if ground_pattern != null and not ground_pattern.changed.is_connected(_on_pattern_changed):
+			ground_pattern.changed.connect(_on_pattern_changed)
+		_on_pattern_changed()
+
+## テクスチャをワールド座標で敷く。ブロックの拡大率や、地形をどこで
+## 分割したかに関係なく、隣のブロックと柄が繋がる。
+## 切ると今までどおり Polygon2D の UV で貼る（tile_size が効く）
+@export var pattern_enabled := false:
+	set(value):
+		pattern_enabled = value
+		_apply()
+
+## 模様1枚ぶんを何pxで見せるか（ワールドの px）。
+## tile_size とは別物。あちらは Polygon2D の UV 側の話。
+##
+## 絵が 512px なら、1024 で「絵の1ドット = ワールド2px」。カメラの zoom が
+## 1.4 なので画面では約2.8px になり、ドットが四角く見える（ピクセルアート風）。
+## 小さくするほど絵は細かくなるが、縮小されてドットが潰れる
+@export var pattern_size := Vector2(1024.0, 1024.0):
+	set(value):
+		pattern_size = value
+		_apply_material()
+
+## カメラが動いたぶん、模様をどれだけ連れていくか。
+## 0.06 ならカメラが 100px 動いて模様が 6px ずれる。0 で動かない。
+## 地面そのものは動かないので、強くすると模様が滑って見える
+@export_range(0.0, 0.5, 0.005) var parallax_strength := 0.06:
+	set(value):
+		parallax_strength = value
+		_update_parallax_process()
+
+## 追いつく速さ。カメラは着地のたびに上下に揺れるので、
+## そのまま拾うと模様が細かく震える。鈍らせて緩やかに追わせる
+@export_range(0.5, 20.0, 0.5) var parallax_smoothing := 3.0
+
+
 const TERRAIN_SHADER := "res://resources/shader/terrain_fill.gdshader"
+## 模様で塗るほう。pattern_enabled を入れるとこちらに替わる
+const PATTERN_SHADER := "res://resources/shader/terrain_pattern.gdshader"
 ## slip_stats が未設定のときに読む。本編はこれを使っている
 const STATS_PATH := "res://resources/pogo_stats_default.tres"
 
@@ -129,14 +217,23 @@ const STATS_PATH := "res://resources/pogo_stats_default.tres"
 func _ready() -> void:
 	_apply()
 	# 変形の追従はエディタだけ。ゲーム中は地形が動かない
-	set_process(Engine.is_editor_hint())
+	set_process(Engine.is_editor_hint() or _parallax_live())
+	# 最初の1枚から正しい位置で描く。_process が回り始めるのは次のフレーム
+	# からなので、待っていると読み込み直後の数フレームが「ずれ 0」で描かれ、
+	# そのあと一気に跳んでいた。遅延呼び出しにしているのは、ステージを
+	# 読み込んだ側がこのあとカメラの範囲を設定してカメラを動かすため
+	# （game.gd の _apply_camera_bounds）。遅延呼び出しは描画の前に流れる
+	if _parallax_live() and not Engine.is_editor_hint():
+		_snap_parallax.call_deferred()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	# エディタでブロックを動かしたり伸ばしたりしている間、線を追従させる。
 	# polygon の編集は _set で拾えるが、position や scale の変更は拾えない
-	if _marks_xform != global_transform:
+	if Engine.is_editor_hint() and _marks_xform != global_transform:
 		_sync_slip_marks()
+	if _parallax_live():
+		_update_parallax(delta)
 
 
 func _set(property: StringName, _value: Variant) -> bool:
@@ -172,17 +269,116 @@ func _apply() -> void:
 	texture_scale = tex_size / want
 
 
+## .tres の値が変わった・付け替えた
+func _on_pattern_changed() -> void:
+	_parallax_warm = false
+	_apply_material()
+	_update_parallax_process()
+
+
+# 模様の値。ground_pattern があればそちら、無ければノード側
+func _pattern_on() -> bool:
+	return ground_pattern != null or pattern_enabled
+
+
+func _pattern_size() -> Vector2:
+	return ground_pattern.size if ground_pattern != null else pattern_size
+
+
+func _pattern_mirror() -> bool:
+	return ground_pattern.mirror_tiling if ground_pattern != null else mirror_tiling
+
+
+func _parallax_strength() -> float:
+	return ground_pattern.parallax_strength if ground_pattern != null else parallax_strength
+
+
+func _parallax_smoothing() -> float:
+	return ground_pattern.parallax_smoothing if ground_pattern != null else parallax_smoothing
+
+
 func _apply_material() -> void:
+	var want: String = PATTERN_SHADER if _pattern_on() else TERRAIN_SHADER
 	var mat := material as ShaderMaterial
-	if mat == null or mat.shader == null:
+	if mat == null:
 		mat = ShaderMaterial.new()
-		mat.shader = load(TERRAIN_SHADER)
 		material = mat
-	mat.set_shader_parameter(&"mirror_tiling", mirror_tiling)
+	# 手で別のシェーダー（氷の板や熱い板）を貼ってあるときは、そちらを残す。
+	# 模様と塗りの2本だけ、pattern_enabled に合わせて入れ替える
+	var now := mat.shader.resource_path if mat.shader != null else ""
+	if now == "" or now == TERRAIN_SHADER or now == PATTERN_SHADER:
+		if now != want:
+			mat.shader = load(want)
+	mat.set_shader_parameter(&"pattern_size", _pattern_size())
+	mat.set_shader_parameter(&"parallax_offset", _parallax)
+	mat.set_shader_parameter(&"mirror_tiling", _pattern_mirror())
+	# .tres の絵はノードのテクスチャとは別に渡す。ノードのテクスチャを
+	# 書き換えないので、.tres を外せば元の塗りにそのまま戻る
+	var pat_tex: Texture2D = ground_pattern.texture if ground_pattern != null else null
+	mat.set_shader_parameter(&"use_pattern_texture", pat_tex != null)
+	mat.set_shader_parameter(&"pattern_texture", pat_tex)
 	mat.set_shader_parameter(&"shadow_height", shadow_height)
 	mat.set_shader_parameter(&"shadow_strength", shadow_strength)
 	mat.set_shader_parameter(&"shadow_color", shadow_color)
 	mat.set_shader_parameter(&"bottom_y", _polygon_bottom_y())
+
+
+## 模様をずらしている量 (px)
+var _parallax := Vector2.ZERO
+## 1フレーム目だけは滑らせずに、その場所の値から始める
+var _parallax_warm := false
+## 前のフレームでカメラが見ていた場所。瞬間移動を見分けるのに使う
+var _parallax_last_center := Vector2.ZERO
+
+## カメラが1フレームでこれ以上動いたら、追いかけずにその場へ合わせる (px)。
+## 復帰地点への瞬間移動やカメラ範囲の付け直しで、模様がゆっくり
+## 滑っていくのを防ぐ。ふだんの移動は1フレーム数十px なので届かない
+const PARALLAX_SNAP_DISTANCE := 300.0
+
+
+## パララックスを動かすか。模様を切っていたり、量が 0 なら動かさない
+func _parallax_live() -> bool:
+	return _pattern_on() and _parallax_strength() > 0.0
+
+
+## パララックスの要不要が変わったら、_process の出入りをやり直す
+func _update_parallax_process() -> void:
+	if is_inside_tree():
+		set_process(Engine.is_editor_hint() or _parallax_live())
+
+
+## カメラの居る場所に合わせて模様をずらす。
+##
+## 見ている場所そのもの（get_screen_center_position）を基準にするので、
+## 同じ場所へ戻れば模様も同じところへ戻る。足した量ではないので、
+## 行ったり来たりしているうちに模様が流れていくことはない
+func _update_parallax(delta: float) -> void:
+	var mat := material as ShaderMaterial
+	if mat == null:
+		return
+	var cam := get_viewport().get_camera_2d()
+	if cam == null:
+		return
+	var center := cam.get_screen_center_position()
+	if _parallax_warm and center.distance_to(_parallax_last_center) > PARALLAX_SNAP_DISTANCE:
+		_parallax_warm = false
+	_parallax_last_center = center
+	var target := center * _parallax_strength()
+	var smoothing := _parallax_smoothing()
+	if _parallax_warm and smoothing > 0.0:
+		_parallax = _parallax.lerp(target, clampf(smoothing * delta, 0.0, 1.0))
+	else:
+		_parallax = target
+		_parallax_warm = true
+	mat.set_shader_parameter(&"parallax_offset", _parallax)
+
+
+## 追いかけずに、今カメラが見ている場所の値へ合わせる
+func _snap_parallax() -> void:
+	if not is_inside_tree() or not _parallax_live():
+		return
+	_parallax_warm = false
+	_update_parallax(0.0)
 
 
 ## ポリゴンのローカル座標での下端(最大Y)。影のグラデーションの基準にする
@@ -214,17 +410,81 @@ func _ensure_outline() -> void:
 
 ## polygon の形に沿って輪郭線を引き直す
 func _sync_outline() -> void:
-	if not outline_enabled or polygon.size() < 2:
+	if not _look_enabled() or polygon.size() < 2:
 		if _outline != null and is_instance_valid(_outline):
 			_outline.visible = false
 		return
 	_ensure_outline()
 	_outline.visible = true
-	_outline.width = outline_width
-	_outline.default_color = outline_color
+	_outline.width = _look_width()
+	if _look_striped():
+		# 色は絵のほうで持つので、線そのものは白（＝絵の色そのまま）にする
+		_outline.default_color = Color.WHITE
+		_outline.texture = _stripe_texture()
+		_outline.texture_mode = Line2D.LINE_TEXTURE_TILE
+		_outline.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		_outline.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	else:
+		_outline.default_color = _look_color()
+		_outline.texture = null
+		_outline.texture_mode = Line2D.LINE_TEXTURE_NONE
 	var pts := PackedVector2Array(polygon)
 	pts.append(polygon[0])
 	_outline.points = pts
+
+
+var _stripe_tex: ImageTexture
+var _stripe_key := ""
+
+
+## 2色の縞を1組ぶん描いた小さな絵。Line2D に貼って線の長さ方向へ繰り返させる。
+##
+## Line2D の TILE は、絵の高さを線の太さに合わせてから長さ方向へ並べる。
+## 高さを線の太さと同じ px で作っておけば、絵の幅がそのまま縞の長さになる。
+## 作り直すのは色・長さ・太さが変わったときだけ（毎フレーム作ると重い）
+func _stripe_texture() -> Texture2D:
+	var c1 := _look_color()
+	var c2 := _look_color2()
+	var seg := maxi(1, int(round(_look_stripe_length())))
+	var h := maxi(1, int(round(_look_width())))
+	var key := "%d_%d_%s_%s" % [seg, h, c1, c2]
+	if _stripe_key == key and _stripe_tex != null:
+		return _stripe_tex
+	var img := Image.create(seg * 2, h, false, Image.FORMAT_RGBA8)
+	for x in seg * 2:
+		var c := c1 if x < seg else c2
+		for y in h:
+			img.set_pixel(x, y, c)
+	_stripe_tex = ImageTexture.create_from_image(img)
+	_stripe_key = key
+	return _stripe_tex
+
+
+## ここから下は「.tres があればそちら、無ければノードの値」を返す小物。
+## _sync_outline からはこちらだけを見る
+
+func _look_enabled() -> bool:
+	return outline_look.enabled if outline_look != null else outline_enabled
+
+
+func _look_color() -> Color:
+	return outline_look.color if outline_look != null else outline_color
+
+
+func _look_color2() -> Color:
+	return outline_look.color2 if outline_look != null else outline_color2
+
+
+func _look_width() -> float:
+	return outline_look.width if outline_look != null else outline_width
+
+
+func _look_striped() -> bool:
+	return outline_look.striped if outline_look != null else outline_striped
+
+
+func _look_stripe_length() -> float:
+	return outline_look.stripe_length if outline_look != null else outline_stripe_length
 
 
 func _copy_shape() -> void:

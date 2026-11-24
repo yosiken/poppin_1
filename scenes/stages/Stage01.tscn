@@ -4,93 +4,89 @@
 [ext_resource type="Script" uid="uid://rbtayp8ewgx5" path="res://scripts/terrain_polygon.gd" id="2_0tami"]
 [ext_resource type="Script" uid="uid://c4cj0evnmqx8a" path="res://scripts/goal.gd" id="3_uam3y"]
 [ext_resource type="Shader" uid="uid://cwsj8xaf2qwel" path="res://resources/shader/terrain_fill.gdshader" id="7_qmr62"]
-[ext_resource type="Texture2D" uid="uid://b5qgrlqnitdw5" path="res://resources/texture/Parts/tiles/tile_03.png" id="7_qofvl"]
 [ext_resource type="Script" uid="uid://kgmi1i57aj1s" path="res://scripts/terrain_sprite.gd" id="8_gb36o"]
-[ext_resource type="Texture2D" uid="uid://coh0tigfup5yj" path="res://resources/texture/Parts/tiles/tile_04.png" id="9_qmr62"]
-[ext_resource type="Texture2D" uid="uid://dx8hab0e1snrf" path="res://resources/texture/Parts/tiles/tile_09.png" id="10_mx7fg"]
 [ext_resource type="Texture2D" uid="uid://bkbc2nui8dxyt" path="res://resources/texture/Tutorial1.jpg" id="12_mx7fg"]
+[ext_resource type="Texture2D" uid="uid://buxtoxn0alnt7" path="res://resources/texture/Parts/tiles/tile_00.png" id="13_s25jr"]
+[ext_resource type="Material" path="res://resources/cloud_flow_material.tres" id="15_hls5w"]
+[ext_resource type="Script" uid="uid://de4y7g2yft0h3" path="res://scripts/cloud_polygon.gd" id="16_88qi3"]
 [ext_resource type="Resource" uid="uid://b4uxbkvyq781p" path="res://resources/cutscene/stage01_intro.tres" id="cut_intro"]
 [ext_resource type="Resource" uid="uid://bsh8ibbmcgf6o" path="res://resources/cutscene/stage01_outro.tres" id="cut_outro"]
+[ext_resource type="Resource" uid="uid://dk41p153nqn0x" path="res://resources/terrain_look_default.tres" id="look_default"]
+[ext_resource type="Resource" path="res://resources/ground_pattern_grass.tres" id="pattern_grass"]
+[ext_resource type="Shader" uid="uid://c51c3ealvruk7" path="res://resources/shader/terrain_pattern.gdshader" id="sh_pattern"]
 [ext_resource type="Texture2D" uid="uid://d37rfdc7sjkry" path="res://resources/texture/foods.png" id="tex_goal"]
+[ext_resource type="Texture2D" uid="uid://cnchxmnodr5bc" path="res://resources/texture/pattern/ground_grass_pixel.png" id="tex_pattern"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qmy6f"]
 size = Vector2(96.189735, 96.189735)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hwgo4"]
-shader = ExtResource("7_qmr62")
+shader = ExtResource("sh_pattern")
+shader_parameter/pattern_size = Vector2(1024, 1024)
+shader_parameter/parallax_offset = Vector2(0, 0)
 shader_parameter/mirror_tiling = false
+shader_parameter/use_pattern_texture = true
+shader_parameter/pattern_texture = ExtResource("tex_pattern")
 shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 75.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_s25jr"]
-shader = ExtResource("7_qmr62")
-shader_parameter/mirror_tiling = false
-shader_parameter/shadow_height = 24.0
-shader_parameter/shadow_strength = 0.35
-shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/bottom_y = 246.2062
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_mcttg"]
-shader = ExtResource("7_qmr62")
-shader_parameter/mirror_tiling = false
-shader_parameter/shadow_height = 24.0
-shader_parameter/shadow_strength = 0.35
-shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/bottom_y = 263.16016
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hls5w"]
-shader = ExtResource("7_qmr62")
-shader_parameter/mirror_tiling = false
-shader_parameter/shadow_height = 24.0
-shader_parameter/shadow_strength = 0.35
-shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/bottom_y = 241.0617
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_88qi3"]
-shader = ExtResource("7_qmr62")
+shader = ExtResource("sh_pattern")
+shader_parameter/pattern_size = Vector2(1024, 1024)
+shader_parameter/parallax_offset = Vector2(0, 0)
 shader_parameter/mirror_tiling = false
+shader_parameter/use_pattern_texture = true
+shader_parameter/pattern_texture = ExtResource("tex_pattern")
 shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 327.03046
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ad123"]
-shader = ExtResource("7_qmr62")
+shader = ExtResource("sh_pattern")
+shader_parameter/pattern_size = Vector2(1024, 1024)
+shader_parameter/parallax_offset = Vector2(0, 0)
 shader_parameter/mirror_tiling = false
+shader_parameter/use_pattern_texture = true
+shader_parameter/pattern_texture = ExtResource("tex_pattern")
 shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 269.95013
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_erijc"]
-shader = ExtResource("7_qmr62")
+shader = ExtResource("sh_pattern")
+shader_parameter/pattern_size = Vector2(1024, 1024)
+shader_parameter/parallax_offset = Vector2(0, 0)
 shader_parameter/mirror_tiling = false
+shader_parameter/use_pattern_texture = true
+shader_parameter/pattern_texture = ExtResource("tex_pattern")
 shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 170.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qcskf"]
-shader = ExtResource("7_qmr62")
+shader = ExtResource("sh_pattern")
+shader_parameter/pattern_size = Vector2(1024, 1024)
+shader_parameter/parallax_offset = Vector2(0, 0)
 shader_parameter/mirror_tiling = false
+shader_parameter/use_pattern_texture = true
+shader_parameter/pattern_texture = ExtResource("tex_pattern")
 shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/bottom_y = 180.17758
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7uoni"]
-shader = ExtResource("7_qmr62")
-shader_parameter/mirror_tiling = false
-shader_parameter/shadow_height = 24.0
-shader_parameter/shadow_strength = 0.35
-shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/bottom_y = -22.49524
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2gtal"]
-shader = ExtResource("7_qmr62")
+shader = ExtResource("sh_pattern")
+shader_parameter/pattern_size = Vector2(1024, 1024)
+shader_parameter/parallax_offset = Vector2(0, 0)
 shader_parameter/mirror_tiling = false
+shader_parameter/use_pattern_texture = true
+shader_parameter/pattern_texture = ExtResource("tex_pattern")
 shader_parameter/shadow_height = 24.0
 shader_parameter/shadow_strength = 0.35
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
@@ -153,24 +149,6 @@ position = Vector2(1351, 1076)
 polygon = PackedVector2Array(-1500, -75, 1500, -75, 1500, 75, -1500, 75)
 script = ExtResource("2_0tami")
 
-[node name="Ramp" type="CollisionPolygon2D" parent="Terrain" unique_id=1495471535]
-position = Vector2(393.00006, 316)
-rotation = 0.43536407
-polygon = PackedVector2Array(-57.437744, 180.01642, 48.03607, 89.04797, 104.69568, 94.67743, 136.87439, 159.11752, 75.302246, 216.43146, -34.558228, 241.0617)
-script = ExtResource("2_0tami")
-
-[node name="Ramp8" type="CollisionPolygon2D" parent="Terrain" unique_id=285122801]
-position = Vector2(2555, 99.99991)
-rotation = 0.43536407
-polygon = PackedVector2Array(-57.437744, 180.01642, 48.03607, 89.04797, 104.69568, 94.67743, 136.87439, 159.11752, 75.302246, 216.43146, -34.558228, 241.0617)
-script = ExtResource("2_0tami")
-
-[node name="Ramp7" type="CollisionPolygon2D" parent="Terrain" unique_id=1016328269]
-position = Vector2(1169, 188.00003)
-rotation = 0.43536407
-polygon = PackedVector2Array(-69.66821, 153.72165, 48.03607, 89.04797, 123.44153, 80.44379, 136.87439, 159.11752, 21.089111, 235.03036, -34.558228, 241.0617)
-script = ExtResource("2_0tami")
-
 [node name="Ramp6" type="CollisionPolygon2D" parent="Terrain" unique_id=915898694]
 position = Vector2(2081.0002, 598.0001)
 rotation = 0.43536407
@@ -194,13 +172,6 @@ position = Vector2(1265, 959.99994)
 rotation = 3.7868886
 scale = Vector2(1.5152081, 1.5152081)
 polygon = PackedVector2Array(-220, 130, 180, -170, 219.45032, -105.726166, -149.35938, 180.17758)
-script = ExtResource("2_0tami")
-
-[node name="Ramp4" type="CollisionPolygon2D" parent="Terrain" unique_id=1822680785]
-position = Vector2(110, 98.00006)
-rotation = 1.3214948
-scale = Vector2(0.40452358, 0.40452358)
-polygon = PackedVector2Array(383.3501, -52.903076, 444.3423, -292.4652, 557.5464, -266.19458, 482.74646, -22.49524)
 script = ExtResource("2_0tami")
 
 [node name="Platform" type="CollisionPolygon2D" parent="Terrain" unique_id=1827399616]
@@ -252,51 +223,14 @@ texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_hwgo4")
 position = Vector2(1351, 1076)
-texture = ExtResource("7_qofvl")
-texture_scale = Vector2(1.1636363, 1.1636363)
+texture = ExtResource("tex_pattern")
+texture_scale = Vector2(2.3272727, 2.3272727)
 polygon = PackedVector2Array(-1500, -75, 1500, -75, 1500, 75, -1500, 75)
 script = ExtResource("8_gb36o")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Ground")
-
-[node name="Gfx_Ramp" type="Polygon2D" parent="Graphics" unique_id=1498432405]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_s25jr")
-position = Vector2(393.00006, 316)
-rotation = 0.43536407
-texture = ExtResource("10_mx7fg")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-57.437744, 180.01642, -22.814331, 126.41408, 48.03607, 89.04797, 104.69568, 94.67743, 131.24384, 120.92992, 136.87439, 159.11752, 100.35278, 184.92789, 75.302246, 216.43146, 20.772827, 246.2062, -34.558228, 241.0617)
-script = ExtResource("8_gb36o")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Ramp")
-
-[node name="Gfx_Ramp8" type="Polygon2D" parent="Graphics" unique_id=1766307878]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_mcttg")
-position = Vector2(2572, 95.99997)
-rotation = 0.43536407
-texture = ExtResource("10_mx7fg")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-57.437744, 180.01642, -23.425781, 132.21301, 48.03607, 89.04797, 81.39502, 80.14911, 104.69568, 94.67743, 129.49365, 119.53827, 136.87439, 159.11752, 113.80615, 199.62512, 75.302246, 216.43146, 55.69214, 245.40466, 3.2924805, 263.16016, -34.558228, 241.0617, -56.994873, 211.79395)
-script = ExtResource("8_gb36o")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Ramp8")
-
-[node name="Gfx_Ramp7" type="Polygon2D" parent="Graphics" unique_id=2103972662]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_hls5w")
-position = Vector2(1175, 211)
-rotation = 0.43536407
-texture = ExtResource("10_mx7fg")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(-69.66821, 153.72165, -39.28308, 107.60501, 5.9472656, 74.43538, 48.03607, 89.04797, 83.69336, 77.97708, 123.44153, 80.44379, 132.53003, 107.09711, 136.87439, 159.11752, 100.69031, 204.62268, 21.089111, 235.03036, -34.558228, 241.0617, -71.96619, 203.31717)
-script = ExtResource("8_gb36o")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Ramp7")
+outline_look = ExtResource("look_default")
+ground_pattern = ExtResource("pattern_grass")
 
 [node name="Gfx_Ramp6" type="Polygon2D" parent="Graphics" unique_id=1563521928]
 texture_filter = 1
@@ -304,12 +238,14 @@ texture_repeat = 2
 material = SubResource("ShaderMaterial_88qi3")
 position = Vector2(2081.0002, 598.0001)
 rotation = 0.43536407
-texture = ExtResource("7_qofvl")
-texture_scale = Vector2(1.1636363, 1.1636363)
+texture = ExtResource("tex_pattern")
+texture_scale = Vector2(2.3272727, 2.3272727)
 polygon = PackedVector2Array(-65.11426, 87.63635, 335.73926, -22.713745, 353.9165, 30.592773, 318.07007, 95.792725, 191.74121, 149.0376, 62.777832, 327.03046, -34.558228, 241.0617)
 script = ExtResource("8_gb36o")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Ramp6")
+outline_look = ExtResource("look_default")
+ground_pattern = ExtResource("pattern_grass")
 
 [node name="Gfx_Ramp5" type="Polygon2D" parent="Graphics" unique_id=802419059]
 texture_filter = 1
@@ -317,12 +253,14 @@ texture_repeat = 2
 material = SubResource("ShaderMaterial_ad123")
 position = Vector2(1673.0001, 776.00006)
 rotation = 0.43536407
-texture = ExtResource("7_qofvl")
-texture_scale = Vector2(1.1636363, 1.1636363)
+texture = ExtResource("tex_pattern")
+texture_scale = Vector2(2.3272727, 2.3272727)
 polygon = PackedVector2Array(-95.310425, 79.62384, 126.83508, -23.702576, 242.83423, 161.66791, -25.533203, 269.95013)
 script = ExtResource("8_gb36o")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Ramp5")
+outline_look = ExtResource("look_default")
+ground_pattern = ExtResource("pattern_grass")
 
 [node name="Gfx_Ramp2" type="Polygon2D" parent="Graphics" unique_id=235406445]
 texture_filter = 1
@@ -330,12 +268,14 @@ texture_repeat = 2
 material = SubResource("ShaderMaterial_erijc")
 position = Vector2(670, 983)
 rotation = 0.65452796
-texture = ExtResource("7_qofvl")
-texture_scale = Vector2(1.1636363, 1.1636363)
+texture = ExtResource("tex_pattern")
+texture_scale = Vector2(2.3272727, 2.3272727)
 polygon = PackedVector2Array(-203.7746, 112.25375, 168.29968, -173.26636, 220, -130, -180, 170)
 script = ExtResource("8_gb36o")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Ramp2")
+outline_look = ExtResource("look_default")
+ground_pattern = ExtResource("pattern_grass")
 
 [node name="Gfx_Ramp3" type="Polygon2D" parent="Graphics" unique_id=1699753106]
 texture_filter = 1
@@ -344,26 +284,14 @@ material = SubResource("ShaderMaterial_qcskf")
 position = Vector2(1265, 959.99994)
 rotation = -2.4962966
 scale = Vector2(1.5152081, 1.5152081)
-texture = ExtResource("7_qofvl")
-texture_scale = Vector2(1.1636363, 1.1636363)
+texture = ExtResource("tex_pattern")
+texture_scale = Vector2(2.3272727, 2.3272727)
 polygon = PackedVector2Array(-220, 130, 180, -170, 219.45032, -105.726166, -149.35938, 180.17758)
 script = ExtResource("8_gb36o")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Ramp3")
-
-[node name="Gfx_Ramp4" type="Polygon2D" parent="Graphics" unique_id=1203793417]
-texture_filter = 1
-texture_repeat = 2
-material = SubResource("ShaderMaterial_7uoni")
-position = Vector2(110, 98.00006)
-rotation = 1.3214948
-scale = Vector2(0.40452358, 0.40452358)
-texture = ExtResource("7_qofvl")
-texture_scale = Vector2(1.1636363, 1.1636363)
-polygon = PackedVector2Array(383.3501, -52.903076, 444.3423, -292.4652, 557.5464, -266.19458, 482.74646, -22.49524)
-script = ExtResource("8_gb36o")
-tile_size = Vector2(220, 0)
-copy_from = NodePath("../../Terrain/Ramp4")
+outline_look = ExtResource("look_default")
+ground_pattern = ExtResource("pattern_grass")
 
 [node name="Gfx_Platform" type="Polygon2D" parent="Graphics" unique_id=760593824]
 texture_filter = 1
@@ -371,19 +299,21 @@ texture_repeat = 2
 material = SubResource("ShaderMaterial_2gtal")
 position = Vector2(1895.9999, 849)
 scale = Vector2(0.5999951, 1)
-texture = ExtResource("7_qofvl")
-texture_scale = Vector2(1.1636363, 1.1636363)
+texture = ExtResource("tex_pattern")
+texture_scale = Vector2(2.3272727, 2.3272727)
 polygon = PackedVector2Array(-231.66846, -117, 220.00195, -116, 255.00244, 190, -265.00195, 165)
 script = ExtResource("8_gb36o")
 tile_size = Vector2(220, 0)
 copy_from = NodePath("../../Terrain/Platform")
+outline_look = ExtResource("look_default")
+ground_pattern = ExtResource("pattern_grass")
 
 [node name="Gfx_Wall" type="Polygon2D" parent="Graphics" unique_id=1390235836]
 texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_kub80")
 position = Vector2(2824, 656)
-texture = ExtResource("9_qmr62")
+texture = ExtResource("13_s25jr")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-25, -375, 293, -377, 302, 483, -24, 484)
 script = ExtResource("8_gb36o")
@@ -395,7 +325,7 @@ texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_hrnie")
 position = Vector2(-175, 658)
-texture = ExtResource("9_qmr62")
+texture = ExtResource("13_s25jr")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-320, -484, 68, -493, 64, 493, -291, 498)
 script = ExtResource("8_gb36o")
@@ -407,7 +337,7 @@ texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_sc2we")
 position = Vector2(0, 261)
-texture = ExtResource("9_qmr62")
+texture = ExtResource("13_s25jr")
 texture_scale = Vector2(1.1636363, 1.1636363)
 polygon = PackedVector2Array(-201, -91, 109, -130, 245, -52, 200, 20, -184, 83)
 script = ExtResource("8_gb36o")
@@ -422,3 +352,17 @@ position = Vector2(1414, 439)
 position = Vector2(-543.00006, 236)
 scale = Vector2(0.39795917, 0.39795917)
 texture = ExtResource("12_mx7fg")
+
+[node name="CloudPolygon" type="Polygon2D" parent="BackGraphics" unique_id=1250451781]
+material = ExtResource("15_hls5w")
+position = Vector2(-619, -156)
+polygon = PackedVector2Array(420, 0, 409.46973, 20.805708, 378.40692, 40.56813, 328.36923, 58.296295, 261.86572, 73.10124, 182.23117, 84.240585, 93.45879, 91.15576, 2.5716733e-14, 93.5, -93.45879, 91.15576, -182.23117, 84.240585, -261.86572, 73.10124, -328.36923, 58.296295, -378.40692, 40.56813, -409.46973, 20.805708, -420, 1.1450069e-14, -394.6931, -36.463432, -355.30127, -69.25642, -336.56964, -108.64025, -297.79404, -151.14696, -200.6573, -168.65181, -86.34275, -153.11832, -6.326316e-14, -139.4, 86.34275, -153.11832, 200.6573, -168.65181, 297.79404, -151.14696, 336.56964, -108.64025, 355.30127, -69.25642, 394.6931, -36.463432)
+script = ExtResource("16_88qi3")
+metadata/_custom_type_script = "uid://de4y7g2yft0h3"
+
+[node name="CloudPolygon" type="Polygon2D" parent="BackGraphics/CloudPolygon" unique_id=564229026]
+material = ExtResource("15_hls5w")
+position = Vector2(999, 1)
+polygon = PackedVector2Array(420, 0, 409.46973, 20.805708, 378.40692, 40.56813, 328.36923, 58.296295, 261.86572, 73.10124, 182.23117, 84.240585, 93.45879, 91.15576, 2.5716733e-14, 93.5, -93.45879, 91.15576, -182.23117, 84.240585, -261.86572, 73.10124, -328.36923, 58.296295, -378.40692, 40.56813, -409.46973, 20.805708, -420, 1.1450069e-14, -394.6931, -36.463432, -355.30127, -69.25642, -336.56964, -108.64025, -297.79404, -151.14696, -200.6573, -168.65181, -86.34275, -153.11832, -6.326316e-14, -139.4, 86.34275, -153.11832, 200.6573, -168.65181, 297.79404, -151.14696, 336.56964, -108.64025, 355.30127, -69.25642, 394.6931, -36.463432)
+script = ExtResource("16_88qi3")
+metadata/_custom_type_script = "uid://de4y7g2yft0h3"

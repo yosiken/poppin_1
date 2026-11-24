@@ -21,6 +21,14 @@ uniform float to_y : hint_range(0.0, 1.0) = 1.0;
 // 範囲の境目をなじませる幅 (0〜1)。0 にすると効き始めに段差が出る
 uniform float fade : hint_range(0.0, 0.5) = 0.03;
 
+// 頂点の色（modulate など）。fragment の COLOR は絵が掛かったあとなので、
+// 素の色はここで取っておく
+varying vec4 vertex_color;
+
+void vertex() {
+	vertex_color = COLOR;
+}
+
 void fragment() {
 	float texel_h = TEXTURE_PIXEL_SIZE.y;
 	float y_px = UV.y / max(texel_h, 0.000001);
@@ -31,5 +39,8 @@ void fragment() {
 
 	float offset_px = amplitude * sin(y_px / max(wavelength, 0.001) * TAU + TIME * speed);
 	vec2 uv = UV + vec2(offset_px * TEXTURE_PIXEL_SIZE.x * weight, 0.0);
-	COLOR = texture(TEXTURE, uv) * COLOR;
+	// 掛けるのは頂点の色。COLOR には組み込みがもう texture(TEXTURE, UV) を
+	// 掛けてあるので、掛けると絵が2重になる（色が濃くなり、揺れていない絵が
+	// 薄く重なる）。terrain_fill.gdshader の注も参照
+	COLOR = texture(TEXTURE, uv) * vertex_color;
 }
