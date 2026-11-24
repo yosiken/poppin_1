@@ -24,6 +24,8 @@ const DIM := Color(0.03, 0.04, 0.07, 0.45)
 const BAND := Color(0.0, 0.0, 0.02, 0.55)
 ## 帯の高さ (px)。画面の中央を上下にこれだけ覆う
 const BAND_HEIGHT := 420.0
+## 雪のシェーダー。CreditsData の「雪」が入っているときだけ敷く
+const SNOW_SHADER := "res://resources/shader/snow.gdshader"
 const ROLE_COLOR := Color(1.0, 0.86, 0.35)
 const NAME_COLOR := Color(0.96, 0.97, 1.0)
 
@@ -35,6 +37,7 @@ var _back: ColorRect
 var _bg: TextureRect
 var _dim: ColorRect
 var _band: TextureRect
+var _snow: ColorRect
 var _box: VBoxContainer
 var _role: Label
 var _name: Label
@@ -56,6 +59,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	_build()
+	get_viewport().size_changed.connect(_update_snow_aspect)
 
 
 func is_playing() -> bool:
@@ -98,8 +102,10 @@ func play(data: CreditsData) -> void:
 	_closing.modulate.a = 0.0
 	_closing.visible = false
 	_box.visible = true
+	_apply_snow(data)
 
 	_start_bgm(data.bgm)
+	_fade_snow(1.0, data.open_fade)
 	await _fade(_bg, 1.0, data.open_fade)
 	_dim.modulate.a = 1.0
 	_band.modulate.a = 1.0
@@ -119,6 +125,7 @@ func play(data: CreditsData) -> void:
 	_stop_bgm(data.bgm_fade)
 	_box.visible = false
 	_band.modulate.a = 0.0
+	_fade_snow(0.0, data.open_fade)
 	await _fade(_bg, 0.0, data.open_fade)
 	_dim.modulate.a = 0.0
 
@@ -170,6 +177,17 @@ func _fade_pair(to: float, sec: float) -> void:
 	tw.tween_property(_role, "modulate:a", to, sec)
 	tw.tween_property(_name, "modulate:a", to, sec)
 	await tw.finished
+
+
+## 雪を背景と同じ時間で明暗させる。await しないので背景のフェードと並んで動く
+func _fade_snow(to: float, sec: float) -> void:
+	if _snow == null or not _snow.visible:
+		return
+	if sec <= 0.0 or _skip:
+		_snow.modulate.a = to
+		return
+	var tw := create_tween()
+	tw.tween_property(_snow, "modulate:a", to, sec)
 
 
 func _fade(node: CanvasItem, to: float, sec: float) -> void:
@@ -304,6 +322,16 @@ func _build() -> void:
 	_band.modulate.a = 0.0
 	add_child(_band)
 
+	# 雪は帯の上・文字の下に敷く。文字の手前に降らせると名前が読みにくい。
+	# 中身は全部シェーダーが描くので、ColorRect の色は使わない
+	_snow = ColorRect.new()
+	_snow.material = _snow_material()
+	_snow.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_snow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_snow.modulate.a = 0.0
+	_snow.visible = false
+	add_child(_snow)
+
 	_box = VBoxContainer.new()
 	_box.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_box.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -331,6 +359,49 @@ func _band_texture() -> GradientTexture2D:
 	tex.fill_from = Vector2(0.0, 0.0)
 	tex.fill_to = Vector2(0.0, 1.0)
 	return tex
+
+
+## 雪のマテリアル。読めなければ null（雪なしで動く）
+func _snow_material() -> ShaderMaterial:
+	var sh := load(SNOW_SHADER) as Shader
+	if sh == null:
+		push_warning("Credits: %s が読めないので雪は出しません" % SNOW_SHADER)
+		return null
+	var mat := ShaderMaterial.new()
+	mat.shader = sh
+	return mat
+
+
+## CreditsData の設定を雪へ渡す。雪を切っているときはノードごと隠す
+func _apply_snow(data: CreditsData) -> void:
+	if _snow == null:
+		return
+	_snow.modulate.a = 0.0
+	_snow.visible = data.snow and _snow.material != null
+	if not _snow.visible:
+		return
+	var sm := _snow.material as ShaderMaterial
+	sm.set_shader_parameter(&"amount", data.snow_amount)
+	sm.set_shader_parameter(&"fall_speed", data.snow_speed)
+	sm.set_shader_parameter(&"size", data.snow_size)
+	sm.set_shader_parameter(&"flake_color", data.snow_color)
+	_update_snow_aspect()
+
+
+## 画面の縦横比をシェーダーへ渡す。渡さないと粒が横に伸びる。
+## 画面の大きさが変わるたびに呼ぶ（_ready で size_changed につないでいる）
+func _update_snow_aspect() -> void:
+	if _snow == null:
+		return
+	var sm := _snow.material as ShaderMaterial
+	if sm == null:
+		return
+	var vp_node := get_viewport()
+	if vp_node == null:
+		return
+	var vp: Vector2 = vp_node.get_visible_rect().size
+	if vp.y > 0.0:
+		sm.set_shader_parameter(&"aspect", vp.x / vp.y)
 
 
 func _add_label(font_size: int, color: Color) -> Label:

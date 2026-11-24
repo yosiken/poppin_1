@@ -31,6 +31,19 @@ extends Resource
 @export_range(0.0, 10.0, 0.1) var closing_hold := 3.0
 
 
+@export_group("雪")
+## 雪を降らせる。冬の公開に合わせたもの。切れば今までの画面に戻る
+@export var snow := true
+## 粒の多さ。1.0 が既定
+@export_range(0.0, 2.0, 0.05) var snow_amount := 1.0
+## 落ちる速さ。1.0 で画面の高さを手前の層が約5.5秒で通る
+@export_range(0.0, 3.0, 0.05) var snow_speed := 1.0
+## 粒の大きさ。1.0 が既定
+@export_range(0.2, 3.0, 0.05) var snow_size := 1.0
+## 粒の色。アルファで薄さを決める
+@export var snow_color := Color(1.0, 1.0, 1.0, 0.85)
+
+
 ## その画面を出しておく秒数
 func hold_of(entry: CreditEntry) -> float:
 	if entry and entry.hold > 0.0:
