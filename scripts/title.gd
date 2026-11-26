@@ -1,7 +1,8 @@
 class_name Title
 extends Control
 ##
-## 仮のタイトル画面。
+## メインメニュー。上にタイトルロゴ（TitleLogo.tscn。起動直後の画面と同じもの）、
+## その下にメニューを並べる。
 ##
 ## メニュー: TUTORIAL / NEW GAME / CONTINUE / オプション / スコアランキング /
 ##           スタッフクレジット
@@ -12,6 +13,11 @@ extends Control
 ## クリアするとそのまま本編のステージ1へ繋がる。本編を最初から始める点は
 ## NEW GAME と同じなので、同じ確認を挟む
 ## オプション: BGMボリューム / SEボリューム / プレイヤー名
+##
+## イベント版（プロジェクト設定 popping/event_version が true）では、起動画面
+## （TitleSplash）からメニューに入ったときに名前入力のパネルを出す。会場で遊ぶ人が
+## 入れ替わるたび、ランキングに載る名前を入れてもらうため。ゲームから戻ってきた
+## ときは出さない。
 ##
 ## Settings.test_mode（オープニング等のデモ短縮・スコア送信抑制）は開発用の
 ## 隠しスイッチとして残しているが、この画面からは操作できない。
@@ -26,6 +32,16 @@ const MAIN_SCENE := "res://scenes/Main.tscn"
 ## 押されるまで読まない（背景画像と曲を抱えているので、タイトルの起動を重くしない）
 const CREDITS_PATH := "res://resources/credits.tres"
 const REPLAY_SCENE := "res://scenes/ReplayViewer.tscn"
+## タイトルロゴ（起動直後の画面 TitleSplash と同じもの）
+const TITLE_LOGO := preload("res://scenes/TitleLogo.tscn")
+## ロゴの中心の高さと、ロゴが使ってよい高さ・横幅（画面の割合）
+const LOGO_CENTER_Y := 190.0
+const LOGO_MAX_HEIGHT := 300.0
+const LOGO_MAX_WIDTH := 0.6
+## メニューの上端。ロゴの下に来るようにする
+const MENU_TOP := 360.0
+## イベント版かどうかのプロジェクト設定（project.godot の [popping]）
+const EVENT_VERSION_SETTING := "popping/event_version"
 const PANEL_COLOR := Color(0.06, 0.07, 0.11, 0.92)
 const BORDER_COLOR := Color(0.55, 0.65, 0.85, 0.7)
 const ACCENT_COLOR := Color(1.0, 0.92, 0.4)
@@ -58,7 +74,14 @@ const RANKING_BOARDS: Array[String] = ["total", "stage01", "stage02", "stage03",
 const RANKING_LABELS: Array[String] = ["TOTAL", "STAGE 1", "STAGE 2", "STAGE 3", "STAGE 4",
 	"STAGE 5", "STAGE 6", "STAGE 7", "STAGE 8", "STAGE 9", "STAGE 10"]
 
+## 起動画面（TitleSplash）から来たとき true。メニューを開いたら false に戻す
+static var from_splash := false
+
 var _menu: VBoxContainer
+var _name_edit: LineEdit
+var _name_prompt: Control
+var _name_prompt_edit: LineEdit
+var _logo: TitleLogo
 var _options: Control
 var _ranking: Control
 var _ranking_status: Label
@@ -72,7 +95,18 @@ var _credits: Credits
 
 
 func _ready() -> void:
+	# 起動画面から来たときは、もう鳴っている曲をそのまま続ける
+	TitleMusic.ensure(get_tree())
 	_build_ui()
+	var came_from_splash := from_splash
+	from_splash = false
+	if came_from_splash and is_event_version():
+		_show_name_prompt()
+
+
+## イベント版か（最初のリリースはイベント版）
+static func is_event_version() -> bool:
+	return bool(ProjectSettings.get_setting(EVENT_VERSION_SETTING, false))
 
 
 # ═══════════════════════════════ 組み立て
@@ -85,34 +119,22 @@ func _build_ui() -> void:
 	back.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(back)
 
-	var title_label := Label.new()
-	title_label.text = "Popping"
-	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_label.add_theme_font_size_override("font_size", 72)
-	title_label.add_theme_color_override("font_color", ACCENT_COLOR)
-
-	var note := Label.new()
-	note.text = "(working title)"
-	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	note.add_theme_font_size_override("font_size", 18)
-	note.add_theme_color_override("font_color", Color(0.6, 0.65, 0.75))
-
-	var top_box := VBoxContainer.new()
-	top_box.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	top_box.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	top_box.offset_top = 110
-	top_box.add_theme_constant_override("separation", 8)
-	top_box.add_child(title_label)
-	top_box.add_child(note)
-	add_child(top_box)
+	# タイトルロゴ。起動直後の画面とは違い、落ちてこずに最初からそこにいる。
+	# 小さく出すので、跳ねる高さも控えめにして画面の上にはみ出さないようにする
+	_logo = TITLE_LOGO.instantiate() as TitleLogo
+	_logo.drop_in = false
+	_logo.jump_height = 70.0
+	add_child(_logo)
+	resized.connect(_fit_logo)
+	_fit_logo()
 
 	if SHOW_DANCER:
 		_add_dancer()
 
 	_menu = VBoxContainer.new()
-	_menu.set_anchors_preset(Control.PRESET_CENTER)
+	_menu.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_menu.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	_menu.grow_vertical = Control.GROW_DIRECTION_BOTH
+	_menu.offset_top = MENU_TOP
 	_menu.add_theme_constant_override("separation", 20)
 	add_child(_menu)
 
@@ -143,7 +165,19 @@ func _build_ui() -> void:
 	add_child(_ranking)
 	_ranking.visible = false
 
+	_name_prompt = _build_name_prompt()
+	add_child(_name_prompt)
+	_name_prompt.visible = false
+
 	_grab_first_focus(_menu)
+
+
+## ロゴを画面の上の真ん中に、決めた大きさに収めて置く
+func _fit_logo() -> void:
+	var art := TitleSplash.LOGO_ART_SIZE
+	var s := minf(size.x * LOGO_MAX_WIDTH / art.x, LOGO_MAX_HEIGHT / art.y)
+	_logo.scale = Vector2(s, s)
+	_logo.position = Vector2(size.x * 0.5, LOGO_CENTER_Y)
 
 
 ## W/Sでフォーカス移動。決定(Space/Enter)はGodot組み込みのui_acceptで
@@ -276,6 +310,7 @@ func _add_name_row(box: VBoxContainer) -> void:
 	row.add_child(label)
 
 	var edit := LineEdit.new()
+	_name_edit = edit
 	edit.text = Settings.player_name
 	edit.max_length = 16
 	edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -283,6 +318,68 @@ func _add_name_row(box: VBoxContainer) -> void:
 	edit.add_theme_font_size_override("font_size", 20)
 	edit.text_changed.connect(func(v: String) -> void: Settings.player_name = v)
 	row.add_child(edit)
+
+
+## イベント版で、起動画面から入ってきたときに出す名前入力。
+## 欄は空で始め、いまの名前を薄く見せる。空のまま決めたら、いまの名前のまま
+func _build_name_prompt() -> Control:
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.custom_minimum_size = Vector2(560, 0)
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
+	# ロゴの下、メニューのあたりに出す（中心から下へずらしたところを中心に広がる）
+	panel.offset_top = 50.0
+	panel.offset_bottom = 50.0
+	panel.add_theme_stylebox_override("panel", _panel_style())
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 18)
+	panel.add_child(box)
+
+	_add_panel_title(box, "ENTER YOUR NAME")
+
+	var note := Label.new()
+	note.text = "ランキングに載る名前を入れてね"
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	note.add_theme_font_size_override("font_size", 20)
+	note.add_theme_color_override("font_color", Color(0.8, 0.84, 0.92))
+	box.add_child(note)
+
+	var edit := LineEdit.new()
+	_name_prompt_edit = edit
+	edit.max_length = 16
+	edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	edit.custom_minimum_size = Vector2(360, 56)
+	edit.add_theme_font_size_override("font_size", 28)
+	edit.text_submitted.connect(func(_v: String) -> void: _submit_name())
+	box.add_child(edit)
+
+	var ok := Button.new()
+	ok.text = "OK"
+	ok.custom_minimum_size = Vector2(160, 48)
+	ok.add_theme_font_size_override("font_size", 24)
+	ok.pressed.connect(_submit_name)
+	box.add_child(ok)
+	return panel
+
+
+func _show_name_prompt() -> void:
+	_menu.visible = false
+	_name_prompt_edit.text = ""
+	_name_prompt_edit.placeholder_text = Settings.player_name
+	_name_prompt.visible = true
+	_name_prompt_edit.grab_focus.call_deferred()
+
+
+func _submit_name() -> void:
+	var entered := _name_prompt_edit.text.strip_edges()
+	if entered != "":
+		Settings.player_name = entered
+		Settings.save()
+	if _name_edit:
+		_name_edit.text = Settings.player_name
+	_close_panels()
 
 
 func _build_ranking_panel() -> Control:
@@ -485,12 +582,14 @@ func _start_replay(stage_index: int, replay_data: Dictionary) -> void:
 
 func _show_options() -> void:
 	_menu.visible = false
+	_logo.visible = false
 	_options.visible = true
 	_grab_first_focus(_options)
 
 
 func _show_ranking() -> void:
 	_menu.visible = false
+	_logo.visible = false
 	_ranking.visible = true
 	_load_ranking()
 	_grab_first_focus(_ranking)
@@ -618,5 +717,8 @@ func _add_ranking_row(rank: int, total: int, score: Dictionary) -> void:
 func _close_panels() -> void:
 	_options.visible = false
 	_ranking.visible = false
+	if _name_prompt:
+		_name_prompt.visible = false
 	_menu.visible = true
+	_logo.visible = true
 	_grab_first_focus(_menu)

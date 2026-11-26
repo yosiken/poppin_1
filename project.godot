@@ -11,8 +11,12 @@ config_version=5
 [application]
 
 config/name="Popping"
-run/main_scene="res://scenes/Title.tscn"
+run/main_scene="res://scenes/TitleSplash.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[audio]
+
+buses/default_bus_layout="uid://badm8vvrrs4fi"
 
 [autoload]
 
@@ -65,6 +69,10 @@ pogo_retry={
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":6,"pressure":0.0,"pressed":false,"script":null)
 ]
 }
+
+[popping]
+
+event_version=true
 
 [rendering]
 

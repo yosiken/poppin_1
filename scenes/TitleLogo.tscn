@@ -1,0 +1,46 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/title_logo.gd" id="2_logo"]
+[ext_resource type="Script" path="res://scripts/title_logo_layer.gd" id="3_layer"]
+[ext_resource type="Shader" path="res://resources/shader/beer_bubbles.gdshader" id="5_beer"]
+[ext_resource type="Texture2D" path="res://resources/title/logo/logo_backing.png" id="6_backing"]
+[ext_resource type="Texture2D" path="res://resources/title/logo/logo_liquid.png" id="7_liquid"]
+[ext_resource type="Texture2D" path="res://resources/title/logo/logo_text.png" id="8_text"]
+[ext_resource type="Texture2D" path="res://resources/title/logo/logo_deco.png" id="9_deco"]
+[ext_resource type="Texture2D" path="res://resources/title/logo/logo_frame.png" id="10_frame"]
+
+[sub_resource type="ShaderMaterial" id="beer_material"]
+shader = ExtResource("5_beer")
+
+[node name="TitleLogo" type="Node2D"]
+texture_filter = 4
+script = ExtResource("2_logo")
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Backing" type="Sprite2D" parent="Body"]
+texture = ExtResource("6_backing")
+script = ExtResource("3_layer")
+
+[node name="Liquid" type="Sprite2D" parent="Body"]
+material = SubResource("beer_material")
+texture = ExtResource("7_liquid")
+script = ExtResource("3_layer")
+depth = -1.0
+lag = 0.16
+
+[node name="Text" type="Sprite2D" parent="Body"]
+texture = ExtResource("8_text")
+script = ExtResource("3_layer")
+depth = 0.7
+lag = 0.08
+
+[node name="Deco" type="Sprite2D" parent="Body"]
+texture = ExtResource("9_deco")
+script = ExtResource("3_layer")
+depth = 1.0
+lag = 0.12
+
+[node name="Frame" type="Sprite2D" parent="Body"]
+texture = ExtResource("10_frame")
+script = ExtResource("3_layer")
