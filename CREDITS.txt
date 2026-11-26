@@ -1,0 +1,42 @@
+Popping — Third-party notices / 使用素材の表示
+====================================================================
+
+This game includes the following third-party components.
+本作には以下の第三者提供物が含まれています。
+
+
+--------------------------------------------------------------------
+Noto Sans JP  (UI font / UI フォント)
+--------------------------------------------------------------------
+Copyright 2014-2021 Adobe (http://www.adobe.com/),
+with Reserved Font Name 'Source'.
+
+Licensed under the SIL Open Font License, Version 1.1.
+SIL Open Font License 1.1 に基づいて使用しています。
+
+Full license text: see resources/font/OFL.txt (bundled)
+ライセンス全文: 同梱の resources/font/OFL.txt を参照
+https://scripts.sil.org/OFL
+
+The bundled file is a subset of the original font, reduced to the
+character ranges this game needs (ASCII, kana, JIS level 1 kanji).
+同梱しているのは、本作に必要な範囲（ASCII・かな・JIS第1水準漢字）
+だけを残したサブセットです。
+
+
+--------------------------------------------------------------------
+SilentWolf  (online leaderboard addon / オンラインランキング)
+--------------------------------------------------------------------
+https://silentwolf.com/
+
+Includes the font "Comfortaa" (SIL Open Font License 1.1).
+アドオン内でフォント "Comfortaa" (SIL OFL 1.1) を使用しています。
+
+
+--------------------------------------------------------------------
+Godot Engine
+--------------------------------------------------------------------
+https://godotengine.org/
+Licensed under the MIT License.
+Copyright (c) 2014-present Godot Engine contributors.
+Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.

@@ -1,0 +1,1935 @@
+{
+ "opening": {
+  "title": "プロローグ：OP",
+  "notes": [
+   "演出：深夜",
+   "演出：ゲーム配信を終え、すっかり泥酔したOBは、ふらふらしながら自宅へ帰ってきた",
+   "演出：そう言いながら冷蔵庫を開ける",
+   "演出：プシュッ",
+   "演出：結局、もう一杯飲んでしまう",
+   "演出：その後、寝室へ向かおうとしたOBだったが――",
+   "演出：ゴンッ！",
+   "演出：タンスの角に小指を直撃",
+   "演出：その瞬間、視界が真っ白になる",
+   "演出：気がつくと、OBは見知らぬ世界に立っていた",
+   "演出：石畳の広場。見上げるほど高い塔",
+   "演出：空には巨大な月が浮かび、看板には見たことのない文字",
+   "演出：そして何より――"
+  ],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "今日も一日お疲れ様でした〜",
+    "side": "right",
+    "show_right": true,
+    "note": "演出：深夜\n演出：ゲーム配信を終え、すっかり泥酔したOBは、ふらふらしながら自宅へ帰ってきた"
+   },
+   {
+    "speaker": "OB",
+    "text": "いやぁ……今日もいい配信だった……。もうお酒は控えよう……明日から……",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "……あっ、ビールある",
+    "side": "right",
+    "note": "演出：そう言いながら冷蔵庫を開ける"
+   },
+   {
+    "speaker": "OB",
+    "text": "……おいしい",
+    "side": "right",
+    "note": "演出：プシュッ"
+   },
+   {
+    "speaker": "OB",
+    "text": "……全然酔ってないんですけれどもね",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "いったぁぁぁぁぁぁぁ！！",
+    "side": "right",
+    "note": "演出：結局、もう一杯飲んでしまう\n演出：その後、寝室へ向かおうとしたOBだったが――\n演出：ゴンッ！"
+   },
+   {
+    "speaker": "OB",
+    "text": "……ん……？　ここ……どこ？",
+    "side": "right",
+    "note": "演出：タンスの角に小指を直撃\n演出：その瞬間、視界が真っ白になる\n演出：気がつくと、OBは見知らぬ世界に立っていた\n演出：石畳の広場。見上げるほど高い塔\n演出：空には巨大な月が浮かび、看板には見たことのない文字\n演出：そして何より――"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "やっと起きた？　何時間寝てるんだよ",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "……え？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ボクだよ、ボク。いつも肩に乗ってるでしょ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……カニエナガ？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そうだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……しゃべった？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そりゃしゃべるよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "いや、現実ではしゃべってなかったよね？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "今は異世界だからね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "異世界……？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "昨日、泥酔して帰ってきて、タンスの角に小指ぶつけたでしょ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そのショックで、ここに転生したんだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "そんなことある？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "あるんやから仕方ないやろ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "じゃあ、どうすれば帰れるの？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "OBが現実で食べたり飲んだり、愛用したりしてた『大事なもの』を10個集めるんだ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "10個……？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "全部思い出したら、現世へのゲートが開くよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……でも私、何を食べたか全然覚えてないんだけど",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そら泥酔しとったからな",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "じゃあ、どうやって探すの？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ボクがヒントを出してあげる。ただし、答えは言わないよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "えっ、なんで？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "答えを聞いてから思い出しても、思い出したうちに入らないでしょ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………正論",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "心配しなくても、見たらOBの本能が思い出すよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "本能？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "酒とカニと金に関してだけは、記憶力ええからな",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……なんか失礼じゃない？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "それじゃ、行くで！",
+    "side": "left"
+   }
+  ]
+ },
+ "stage01_intro": {
+  "title": "STAGE 1：日本酒「風の林」",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "カニエナガ",
+    "text": "まずは一つ目。ヒントを出すよ",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "ヒント？",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "奈良生まれ。透きとおった液体だよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……水？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "水であそこまで喜ぶやつおらんわ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "じゃあ何なの",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "言わないよ。見たら分かる",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "もったいぶるなぁ",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "あれ、ちょっと飲みたそうな顔してない？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "してないよ",
+    "side": "right"
+   }
+  ]
+ },
+ "stage01_outro": {
+  "title": "STAGE 1：日本酒「風の林」",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "…………！",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "お？",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "これ……お酒だ。日本酒の瓶……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ラベル、読んでみて",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……『風の林』",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "思い出したか？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "わからない。でも……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "でも？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "体が震える。これは絶対に私が好きなやつ！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "本能だけ戻ったね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "奈良の……一番好きな日本酒だった気がする",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "よし、記憶が一つ戻ったよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "これ、ちょっと飲んでいい？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "これからが本番やのに飲むな！",
+    "side": "left"
+   }
+  ]
+ },
+ "stage02_intro": {
+  "title": "STAGE 2：ビール「ハイパードライ」",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "カニエナガ",
+    "text": "次のヒントだよ",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "うん",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "キンキンに冷えてる。金色で、泡が出る",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……ジュース？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "小学生か",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "違うの？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "OBが配信終わりに、必ず一本あけてたやつだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "配信終わりに……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ゴールであの缶を開ける音を聞いたら、イヤでも思い出すよ",
+    "side": "left"
+   }
+  ]
+ },
+ "stage02_outro": {
+  "title": "STAGE 2：ビール「ハイパードライ」",
+  "notes": [
+   "演出：ビールを開ける「カシュッ！ショワアアア～」"
+  ],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "…………これだ！",
+    "side": "right",
+    "show_right": true,
+    "note": "演出：ビールを開ける「カシュッ！ショワアアア～」"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "思い出したか？",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "よ、よだれがとまらへん！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "また本能か",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "缶に書いてある……『ハイパードライ』！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そう、それ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "私が一番好きなビール……！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "二つ目、思い出したね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "どうしたの？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "開けたんなら飲むしか無いよね。仕方ないよね！ね！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "それしか考えてへんやろ！",
+    "side": "left"
+   }
+  ]
+ },
+ "stage03_intro": {
+  "title": "STAGE 3：カニ",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "カニエナガ",
+    "text": "三つ目のヒント、いくよ",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "はいはい",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "赤い。足が多い。殻がある",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……カニエナガ？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ボクちゃうわ！",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "えー",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "最後まで聞いて。湯気が立ってて、すごく高い",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "どうしたの、顔がにやけてるよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "なんか……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "なに？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "すごくほじりたい",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "もう答え言うてるようなもんやん",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "早く行こう！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "急に元気になったね……",
+    "side": "left"
+   }
+  ]
+ },
+ "stage03_outro": {
+  "title": "STAGE 3：カニ",
+  "notes": [
+   "演出：OBは無言でタラバガニを食べ続ける",
+   "演出：食べ終わる"
+  ],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "カニ！カニーーーー！",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "やっぱりそうなるよね",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "しかもタラバ！ゆでたて！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "高級品だからね。味わって食べなよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "…………",
+    "side": "left"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "…………ねえ",
+    "side": "left",
+    "note": "演出：OBは無言でタラバガニを食べ続ける"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "喋らないの？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "カニ食う時だけ無口になるんかい",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……おいしかった",
+    "side": "right",
+    "note": "演出：食べ終わる"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そこだけ喋るんかい！",
+    "side": "left"
+   }
+  ]
+ },
+ "stage04_intro": {
+  "title": "STAGE 4：ウクレレ「レッドアイ田中」",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "カニエナガ",
+    "text": "四つ目だよ",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "ヒントは？",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "赤い。小さい。弦が四本",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "弦……楽器？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "お、いい線いってる",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "ギター？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "惜しい。もっと小さい",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "うーん……こうかなー？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ちなみにそれ、名前がついてるんだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "名前？　楽器に？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "OBが付けたんだけどね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "私が……？",
+    "side": "right"
+   }
+  ]
+ },
+ "stage04_outro": {
+  "title": "STAGE 4：ウクレレ「レッドアイ田中」",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "これ……弾ける！",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "おお！",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "ウクレレだ！　私、これ使ってた！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "やっと、ちゃんとした記憶が戻ったね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "名前も思い出した。『レッドアイ田中』",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "それそれ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "赤いから……レッドアイ……なのかな",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "うん",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "田中は誰やねん",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ホンマに誰やねん！",
+    "side": "left"
+   }
+  ]
+ },
+ "stage05_intro": {
+  "title": "STAGE 5：『葬送のオバーレン』",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "カニエナガ",
+    "text": "五つ目のヒントだよ",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "うん",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "紙でできてる。めくる。絵と文字が描いてある",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……教科書？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "OBが教科書好きやったら苦労せんわ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "じゃあ漫画？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ご名答",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "何の漫画？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そこまでは言わないよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "ケチ！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "まあ、見つけたら思い出すよ",
+    "side": "left"
+   }
+  ]
+ },
+ "stage05_outro": {
+  "title": "STAGE 5：『葬送のオバーレン』",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "あっ、これ！　『葬送のオバーレン』！",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "思い出した？",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "これ読んでた！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "よし！",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……ん？　オバーレン？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "なに？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "似た名前の有名な漫画、なかったっけ",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "あるけど、こっちはオバーレンだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "そっか",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "おもしろい！！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "もう読んどる！",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "むふー！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "乗ってきたね！",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "ちょっと伸び伸びタイム〜",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "くつろいどる場合か！",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "この世界って漫画まであるんだね",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "何でもありの異世界だからね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……ということは",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "なに？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "私、本当にゲームの世界に転生したんだ……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "今さらかい！",
+    "side": "left"
+   }
+  ]
+ },
+ "stage06_intro": {
+  "title": "STAGE 6：『ファイナルファンタジア6』",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "カニエナガ",
+    "text": "六つ目だよ",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "ヒント",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "四角い。それで、ふーふー吹くやつ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "ふーふーふーふーふー",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "今吹かんでええねん",
+    "side": "left"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "テレビに挿したら、世界が広がるんだ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "どうしたの？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "なんか……胸がざわざわする",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そりゃそうだよ。OBの配信の出世作だからね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "出世作……？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "行ったら思い出すよ",
+    "side": "left"
+   }
+  ]
+ },
+ "stage06_outro": {
+  "title": "STAGE 6：『ファイナルファンタジア6』",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "…………そうだ",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "思い出した？",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "スーパーハミコンの……『ファイナルファンタジア6』",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そう",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "私、これでゲーム配信してた",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そうだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "ゲームしてみんなに見てもらって",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "うん",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "コメントでめっちゃ求婚されたんだよ",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "うん",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……帰りたい",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "…………",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "現実でまた求婚されたい",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "もう後半だよ。必ず帰れるから",
+    "side": "left"
+   }
+  ]
+ },
+ "stage07_intro": {
+  "title": "STAGE 7：宝箱",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "カニエナガ",
+    "text": "七つ目のヒントだよ",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "はい！",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "四角い。重い。鍵がかかってる",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ちょっと",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "宝ほしい！宝！たから！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "なんでそこだけ即答やねん！",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "むふー！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "一回落ち着いて！　言っとくけど、この世界にはミミックもいるからね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "ミミック？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "噛みついてくるから、気をつけてね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "なに？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "でも宝箱なんだよね？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そうだけど",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "じゃあ問答無用で開ける！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "どうなっても知らんで",
+    "side": "left"
+   }
+  ]
+ },
+ "stage07_outro": {
+  "title": "STAGE 7：宝箱",
+  "notes": [
+   "演出：宝箱がミミックだった。OBが噛みつかれる"
+  ],
+  "rows": [
+   {
+    "speaker": "ミミック",
+    "text": "ガブガブ",
+    "side": "none",
+    "note": "演出：宝箱がミミックだった。OBが噛みつかれる"
+   },
+   {
+    "speaker": "OB",
+    "text": "びゃあー！　まずいー！",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "だから言うたやろ！",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "うわぁぁぁぁ",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "……なんで棒読みなの",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "暗いよー！怖いよー！でも…お宝ほしいよー！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "この期に及んで、まだ宝が欲しいの？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "奥の方に…宝が見えるような気がするの",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "それはノドチンコやろ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "ゲヘ……やっぱり宝箱はやめられまへんなー",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "OBは一生治らないね",
+    "side": "left"
+   }
+  ]
+ },
+ "stage08_intro": {
+  "title": "STAGE 8：現金",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "カニエナガ",
+    "text": "八つ目だよ",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "何？",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "紙だよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "また漫画？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "違うよ。一枚あったら、お酒もカニも買える紙",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "！！！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ちょっと",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "わかった！　わかっちゃった！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "言わないで。ゴールまで言わないで",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "かねやかねやー！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "もう言うとるやん！",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "早く行こう！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "その顔やめて！　目が＄になってるよ",
+    "side": "left"
+   }
+  ]
+ },
+ "stage08_outro": {
+  "title": "STAGE 8：現金",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "お金ーーー！　現金！",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "やっぱり当たってたね",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "思い出した",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "何を？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "お金のためならどんな回り道でもするわ",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "私は諦めの悪い女……！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そのバイタリティーがあれば大丈夫だね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "現実に戻って金集めるんだ！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "まあ……",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "なに？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "まあ…モチベは大事だもんね",
+    "side": "left"
+   }
+  ]
+ },
+ "stage09_intro": {
+  "title": "STAGE 9：カラオケ「天城越え」",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "カニエナガ",
+    "text": "だいぶ来たね",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "次は？",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ヒント、いくよ。握るもの",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "握る……おにぎり？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "食いもんから離れろ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "じゃあ何",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "それを握ると、OBの十八番を歌いたくなるはずだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "歌！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "曲名は言わないよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "えー",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ヒントだけね。……山を越える歌だよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "山……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "越えられる？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "それ、たぶん歌える！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そこは自信あるんだね",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "でも……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "なに？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "山、越えられるかな？　ちょっと心配",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "歌の話だよね？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……まだだ、まだ慌てるような時間じゃない",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "一旦深呼吸しますね",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "すぅー……はぁー……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "歌う前から本気やな",
+    "side": "left"
+   }
+  ]
+ },
+ "stage09_outro": {
+  "title": "STAGE 9：カラオケ「天城越え」",
+  "notes": [
+   "演出：カニエナガは答えない"
+  ],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "越えたー！",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "何をや！",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "天城！　『天城越え』！　OBやりとげました",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ほんまに山越えたんかい！",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "ふー、経験が生きたな",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "何の経験なの……",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "歌も歌ったし、山も越えた",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "もうええわ……",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "これであと一つ？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そうだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "カニエナガ、やっと帰れるよー！　宴会する？　飲み会する？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "気ぃ早いわ！　まだ一個残っとるやろ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "最後は何？",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "……カニエナガ？",
+    "side": "right",
+    "note": "演出：カニエナガは答えない"
+   }
+  ]
+ },
+ "stage10_intro": {
+  "title": "STAGE 10：最後のアイテム「カニエナガ」",
+  "notes": [],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "最後のアイテムは？",
+    "side": "right",
+    "show_right": true
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "…………",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "どうしたの？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "……今回は、ヒントも一つだけだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "えっ",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "OBが現実で、一番そばに置いてたもの",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "一番そばに……？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "思い出せない？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……わからない",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "…………",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "ねえ、なんで今回はそんなに静かなの",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "さあ、最後のステージだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "一緒に行こう！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "当たり前や！",
+    "side": "left"
+   }
+  ]
+ },
+ "stage10_outro": {
+  "title": "STAGE 10：最後のアイテム「カニエナガ」",
+  "notes": [
+   "演出：最後のアイテムが、光の中に浮かび上がる",
+   "演出：10個のアイテムがすべて揃う",
+   "演出：OBがカニエナガを見る",
+   "演出：目の前に光のゲートが開く"
+  ],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "…………え",
+    "side": "right",
+    "show_right": true,
+    "note": "演出：最後のアイテムが、光の中に浮かび上がる"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "…………",
+    "side": "left",
+    "show_left": true
+   },
+   {
+    "speaker": "OB",
+    "text": "これ……カニエナガ？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そうだよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "なんで……？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "OBが現実で一番そばに置いてたもの。ずっと肩に乗ってたでしょ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "じゃあ、ここにいるカニエナガは……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "ボクは異世界の偶像なんだ。本物が待ってるよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "カニエナガ……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "これで全部だね",
+    "side": "left",
+    "note": "演出：10個のアイテムがすべて揃う"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "どうしたの？",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "全部思い出した",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そっか",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "お酒も、カニも、ゲームも……",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "うん",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "配信も",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "うん",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "そして……",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "いつも肩に乗ってた、カニエナガのことも",
+    "side": "right",
+    "note": "演出：OBがカニエナガを見る"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "…………",
+    "side": "left"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "……ゲートが開いたよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "やっと帰れる……帰れるよ、カニエナガ！",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "…………うん",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "せっかくカニエナガと話せるようになったのに",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "なんか帰りたくなくなってきちゃった",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "そんなこと言わないで",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "だって…",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "現実には、OBを待ってる人がいるよ",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……オビラーたち？",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "せや。みんなOBと重婚したがっとるんや",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "そっか",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "行っておいで",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "……うん",
+    "side": "right"
+   },
+   {
+    "speaker": "OB",
+    "text": "こっちのカニエナガも一緒に行けない？",
+    "side": "right",
+    "note": "演出：目の前に光のゲートが開く"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "………",
+    "side": "left"
+   },
+   {
+    "speaker": "OB",
+    "text": "………",
+    "side": "right"
+   },
+   {
+    "speaker": "カニエナガ",
+    "text": "……元気でな。もう小指ぶつけるなよ",
+    "side": "left"
+   }
+  ]
+ },
+ "ending": {
+  "title": "ED：エピローグ",
+  "notes": [
+   "演出：光に包まれるOB",
+   "演出：目を覚ます",
+   "演出：自分の部屋",
+   "演出：ベッドの上",
+   "演出：肩にはいつもの小さなシマエナガ",
+   "演出：肩のシマエナガは「チュン」と鳴くだけ",
+   "演出：OBは少し寂しそうに笑う",
+   "演出：そしてベッドから立ち上がる",
+   "演出：ゴンッ！",
+   "演出：画面暗転",
+   "演出：しばらくして、",
+   "演出：間。………",
+   "演出：THE END"
+  ],
+  "rows": [
+   {
+    "speaker": "OB",
+    "text": "…………ん？",
+    "side": "right",
+    "show_right": true,
+    "note": "演出：光に包まれるOB"
+   },
+   {
+    "speaker": "OB",
+    "text": "……夢だったの？",
+    "side": "right",
+    "note": "演出：目を覚ます\n演出：自分の部屋\n演出：ベッドの上\n演出：肩にはいつもの小さなシマエナガ"
+   },
+   {
+    "speaker": "OB",
+    "text": "……そっか",
+    "side": "right",
+    "note": "演出：肩のシマエナガは「チュン」と鳴くだけ"
+   },
+   {
+    "speaker": "OB",
+    "text": "いったぁぁぁぁぁ！！",
+    "side": "right",
+    "note": "演出：OBは少し寂しそうに笑う\n演出：そしてベッドから立ち上がる\n演出：ゴンッ！"
+   },
+   {
+    "speaker": "OB",
+    "text": "もう二度とお酒飲まない……",
+    "side": "right",
+    "note": "演出：画面暗転\n演出：しばらくして、"
+   },
+   {
+    "speaker": "OB",
+    "text": "…………いや、飲むわ",
+    "side": "right",
+    "note": "演出：間。………"
+   },
+   {
+    "speaker": "オビラーたち",
+    "text": "大丈夫？結婚する？",
+    "side": "none",
+    "note": "演出：THE END"
+   }
+  ]
+ }
+}

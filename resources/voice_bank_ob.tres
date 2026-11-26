@@ -1,0 +1,177 @@
+[gd_resource type="Resource" script_class="VoiceBank" load_steps=60 format=3]
+
+[ext_resource type="Script" path="res://scripts/voice_bank.gd" id="bank_script"]
+[ext_resource type="Script" path="res://scripts/voice_set.gd" id="set_script"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/01_とぉ.ogg" id="v01"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/02_よいしょ.ogg" id="v02"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/03_ほい.ogg" id="v03"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/04_よっ.ogg" id="v04"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/05_せーの！.ogg" id="v05"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/08_「タスケテ」.ogg" id="v08"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/09_したへまいりまーす.ogg" id="v09"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/10_という夢を見たのさ！.ogg" id="v10"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/14_ムリムリムリムリムリムリ.ogg" id="v14"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/15_ツルツル.ogg" id="v15"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/16_受験生の方.ogg" id="v16"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/20_やったー!.ogg" id="v20"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/21_いただきます.ogg" id="v21"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/24_とう!.ogg" id="v24"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/26_ええええ？.ogg" id="v26"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/27_どわー!.ogg" id="v27"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/28_なんでやねん.ogg" id="v28"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/29_ムリムリムリ.ogg" id="v29"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/30_ほっぽふ！.ogg" id="v30"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/32_思い出しました.ogg" id="v32"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/33_そうそう、これこれ.ogg" id="v33"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/34_あーーー！.ogg" id="v34"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/35_これで全部揃いました.ogg" id="v35"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/36_全部揃いました.ogg" id="v36"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/41_やったー!.ogg" id="v41"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/42_いくぞー!１.ogg" id="v42"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/43_いくぞー!２.ogg" id="v43"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/44_いけいけゴーゴー!.ogg" id="v44"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/46_わかった.ogg" id="v46"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/47_どういうことだってばよ１.ogg" id="v47"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/48_どういうことだってばよ２.ogg" id="v48"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/51_こうです.ogg" id="v51"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/52_あちち.ogg" id="v52"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/56_わっ!うわっ!.ogg" id="v56"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/59_なんでですかね.ogg" id="v59"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/60_あれれー？１.ogg" id="v60"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/61_あれれー？２.ogg" id="v61"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/62_おやおや１.ogg" id="v62"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/63_おやおや２.ogg" id="v63"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/64_なるほどね１.ogg" id="v64"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/65_なるほどね２.ogg" id="v65"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/13_はい、ここまでが練習でした.ogg" id="v13"]
+[ext_resource type="AudioStream" path="res://resources/sound/voice/45_それでは始めたいと思います.ogg" id="v45"]
+[ext_resource type="AudioStream" uid="uid://djdn2a7fvw66v" path="res://resources/sound/voice/50-無題.ogg" id="v50"]
+
+[sub_resource type="Resource" id="set_jump"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v01"), ExtResource("v02"), ExtResource("v03"), ExtResource("v04"), ExtResource("v05"), ExtResource("v24")])
+chance = 0.3
+cooldown = 2.0
+priority = 1
+wait_turn = false
+normal_chance = 0.0
+
+[sub_resource type="Resource" id="set_super_jump"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v42"), ExtResource("v43"), ExtResource("v44")])
+chance = 1.0
+cooldown = 0.0
+priority = 2
+wait_turn = false
+
+[sub_resource type="Resource" id="set_fall"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v08"), ExtResource("v09"), ExtResource("v26"), ExtResource("v27"), ExtResource("v34"), ExtResource("v56")])
+chance = 1.0
+cooldown = 0.0
+priority = 3
+wait_turn = false
+normal_chance = 0.25
+normal_cooldown = 20.0
+
+[sub_resource type="Resource" id="set_hazard"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v52")])
+chance = 1.0
+cooldown = 0.0
+priority = 3
+wait_turn = false
+normal_chance = 0.4
+normal_cooldown = 20.0
+
+[sub_resource type="Resource" id="set_respawn"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v10"), ExtResource("v28"), ExtResource("v47"), ExtResource("v48"), ExtResource("v59"), ExtResource("v60"), ExtResource("v61"), ExtResource("v62"), ExtResource("v63"), ExtResource("v50")])
+chance = 0.35
+cooldown = 8.0
+priority = 1
+wait_turn = true
+normal_chance = 0.0
+
+[sub_resource type="Resource" id="set_slip"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v14"), ExtResource("v15"), ExtResource("v16"), ExtResource("v29")])
+chance = 0.6
+cooldown = 6.0
+priority = 1
+wait_turn = false
+normal_chance = 0.0
+
+[sub_resource type="Resource" id="set_stage_start"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v42"), ExtResource("v43"), ExtResource("v44")])
+chance = 0.5
+cooldown = 0.0
+priority = 1
+wait_turn = false
+normal_chance = 0.0
+
+[sub_resource type="Resource" id="set_checkpoint"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v46"), ExtResource("v51"), ExtResource("v64"), ExtResource("v65")])
+chance = 0.7
+cooldown = 0.0
+priority = 2
+wait_turn = false
+normal_chance = 0.0
+
+[sub_resource type="Resource" id="set_goal"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v20"), ExtResource("v21"), ExtResource("v30"), ExtResource("v41")])
+chance = 1.0
+cooldown = 0.0
+priority = 4
+wait_turn = false
+
+[sub_resource type="Resource" id="set_memory"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v32"), ExtResource("v33")])
+chance = 1.0
+cooldown = 0.0
+priority = 4
+wait_turn = false
+
+[sub_resource type="Resource" id="set_memory_last"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v35"), ExtResource("v36")])
+chance = 1.0
+cooldown = 0.0
+priority = 5
+wait_turn = false
+
+[sub_resource type="Resource" id="set_tutorial_start"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v45")])
+chance = 1.0
+cooldown = 0.0
+priority = 2
+wait_turn = false
+
+[sub_resource type="Resource" id="set_tutorial_end"]
+script = ExtResource("set_script")
+streams = Array[AudioStream]([ExtResource("v13")])
+chance = 1.0
+cooldown = 0.0
+priority = 4
+wait_turn = true
+
+[resource]
+script = ExtResource("bank_script")
+jump = SubResource("set_jump")
+super_jump = SubResource("set_super_jump")
+fall = SubResource("set_fall")
+hazard = SubResource("set_hazard")
+respawn = SubResource("set_respawn")
+slip = SubResource("set_slip")
+stage_start = SubResource("set_stage_start")
+checkpoint = SubResource("set_checkpoint")
+goal = SubResource("set_goal")
+memory = SubResource("set_memory")
+memory_last = SubResource("set_memory_last")
+tutorial_start = SubResource("set_tutorial_start")
+tutorial_end = SubResource("set_tutorial_end")

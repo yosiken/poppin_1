@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3]
+
+[ext_resource type="Shader" path="res://resources/shader/cloud_flow.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" path="res://resources/texture/pattern/cloud_sky_seamless.png" id="2_cloud"]
+
+[resource]
+shader = ExtResource("1_shader")
+shader_parameter/cloud_texture = ExtResource("2_cloud")
+shader_parameter/texture_scale = 1.0
+shader_parameter/texture_offset = Vector2(0, 0)
+shader_parameter/flow_speed = Vector2(-6, 0)
+shader_parameter/edge_breakup = 0.5
+shader_parameter/sky_cutout = 0.0
+shader_parameter/opacity = 1.0
+shader_parameter/tint = Color(1, 1, 1, 1)

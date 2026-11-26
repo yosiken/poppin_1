@@ -1,0 +1,68 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/title_splash.gd" id="1_splash"]
+[ext_resource type="PackedScene" path="res://scenes/TitleLogo.tscn" id="2_logo"]
+[ext_resource type="Shader" path="res://resources/shader/title_sunburst.gdshader" id="4_bg"]
+[ext_resource type="AudioStream" path="res://resources/sound/opening-drink-can.mp3" id="11_press"]
+
+[sub_resource type="ShaderMaterial" id="bg_material"]
+shader = ExtResource("4_bg")
+
+[sub_resource type="LabelSettings" id="press_settings"]
+font_size = 56
+font_color = Color(1, 0.97, 0.86, 1)
+outline_size = 14
+outline_color = Color(0.29, 0.14, 0.06, 1)
+shadow_size = 8
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_offset = Vector2(0, 5)
+
+[node name="TitleSplash" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_splash")
+press_sound = ExtResource("11_press")
+
+[node name="Background" type="ColorRect" parent="."]
+material = SubResource("bg_material")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Logo" parent="." instance=ExtResource("2_logo")]
+
+[node name="PressStart" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -190.0
+offset_right = 300.0
+offset_bottom = -100.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Press START"
+label_settings = SubResource("press_settings")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Fade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)

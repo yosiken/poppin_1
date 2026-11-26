@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://db1bji5yfadit"]
 
-[ext_resource type="PackedScene" path="res://scenes/Main.tscn" id="1_main"]
-[ext_resource type="Script" path="res://scripts/autoplay_debug.gd" id="2_debug"]
+[ext_resource type="PackedScene" uid="uid://b3tf8b44sn8la" path="res://scenes/Main.tscn" id="1_main"]
+[ext_resource type="Script" uid="uid://c0fsi51t73qf1" path="res://scripts/autoplay_debug.gd" id="2_debug"]
 
-[node name="AutoplayDebug" type="Node2D"]
+[node name="AutoplayDebug" type="Node2D" unique_id=2027261556]
 script = ExtResource("2_debug")
 
-[node name="Main" parent="." instance=ExtResource("1_main")]
+[node name="Main" parent="." unique_id=1332413009 instance=ExtResource("1_main")]

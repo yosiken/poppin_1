@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TerrainLook" format=3 uid="uid://dk41p153nqn0x"]
+
+[ext_resource type="Script" uid="uid://bmcs38nn6qv7" path="res://scripts/terrain_look.gd" id="1_look"]
+
+[resource]
+script = ExtResource("1_look")
+color = Color(0.427863, 0.6906859, 0.41969305, 0.9019608)
+striped = true
+color2 = Color(0.13006464, 0.53463125, 0.43734783, 0.9019608)

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="GroundPattern" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ground_pattern.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cnchxmnodr5bc" path="res://resources/texture/pattern/ground_grass_pixel.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+texture = ExtResource("2_tex")
+size = Vector2(1024, 1024)
+mirror_tiling = false
+parallax_strength = 0.06
+parallax_smoothing = 3.0

@@ -1,0 +1,724 @@
+class_name Title
+extends Control
+##
+## メインメニュー。上にタイトルロゴ（TitleLogo.tscn。起動直後の画面と同じもの）、
+## その下にメニューを並べる。
+##
+## メニュー: TUTORIAL / NEW GAME / CONTINUE / オプション / スコアランキング /
+##           スタッフクレジット
+##
+## CONTINUE はセーブ (SaveGame) があるときだけ押せる。
+## NEW GAME はセーブを消すので、消す前に確認を挟む。
+## TUTORIAL は「操作を覚える面から始める NEW GAME」で、チュートリアル面を
+## クリアするとそのまま本編のステージ1へ繋がる。本編を最初から始める点は
+## NEW GAME と同じなので、同じ確認を挟む
+## オプション: BGMボリューム / SEボリューム / プレイヤー名
+##
+## イベント版（プロジェクト設定 popping/event_version が true）では、起動画面
+## （TitleSplash）からメニューに入ったときに名前入力のパネルを出す。会場で遊ぶ人が
+## 入れ替わるたび、ランキングに載る名前を入れてもらうため。ゲームから戻ってきた
+## ときは出さない。
+##
+## Settings.test_mode（オープニング等のデモ短縮・スコア送信抑制）は開発用の
+## 隠しスイッチとして残しているが、この画面からは操作できない。
+## タイトル自体をスキップする効果は過去に持たせていたが、一度ONにすると
+## オプション画面（OFFに戻す唯一の手段）へも二度とたどり着けなくなる事故が
+## 実際に起きたため廃止した。会話を飛ばしたいだけなら Enter でその場の
+## カットシーンをスキップできる（cutscene.gd）のでそちらを使うこと
+
+const MAIN_SCENE := "res://scenes/Main.tscn"
+## タイトルから見せるスタッフクレジット。Main.tscn の Game にも同じものを
+## 割り当ててあり、ED のあとに出るものと中身は同じ。
+## 押されるまで読まない（背景画像と曲を抱えているので、タイトルの起動を重くしない）
+const CREDITS_PATH := "res://resources/credits.tres"
+const REPLAY_SCENE := "res://scenes/ReplayViewer.tscn"
+## タイトルロゴ（起動直後の画面 TitleSplash と同じもの）
+const TITLE_LOGO := preload("res://scenes/TitleLogo.tscn")
+## ロゴの中心の高さと、ロゴが使ってよい高さ・横幅（画面の割合）
+const LOGO_CENTER_Y := 190.0
+const LOGO_MAX_HEIGHT := 300.0
+const LOGO_MAX_WIDTH := 0.6
+## メニューの上端。ロゴの下に来るようにする
+const MENU_TOP := 360.0
+## イベント版かどうかのプロジェクト設定（project.godot の [popping]）
+const EVENT_VERSION_SETTING := "popping/event_version"
+const PANEL_COLOR := Color(0.06, 0.07, 0.11, 0.92)
+const BORDER_COLOR := Color(0.55, 0.65, 0.85, 0.7)
+const ACCENT_COLOR := Color(1.0, 0.92, 0.4)
+
+## タイトルでキャラクターを踊らせるか。
+## 今は非表示にしている。戻したくなったら true にするだけでよい
+## （表示まわりの実装は _add_dancer() にそのまま残してある）
+const SHOW_DANCER := false
+
+## タイトルで踊らせるモデルとモーション。本編と同じプレイヤーを使う。
+## モーションは別リグ由来だが、PlayerVisual が載せ替えてくれる
+const DANCER_MODEL := preload("res://resources/model/player_8.blend")
+const DANCER_POSE := preload("res://resources/pogo_pose_default.tres")
+## モーション素材はリポジトリに含めていない（.gitignore 参照）ので実行時に読む。
+## preload だと無いときにこのスクリプトごとコンパイルできなくなる
+const DANCER_CLIP_PATH := "res://resources/model/Twist Dance.fbx"
+## 本編と同じ見え方にするため、ゲーム側の調整値をそのまま借りる
+const DANCER_STATS := preload("res://resources/pogo_visual_default.tres")
+## タイトルでの表示サイズ。camera_view_units ぶんを何pxで描くか
+const DANCER_HEIGHT_PX := 840.0
+## 画面右端からキャラクター中心までの距離 (px)
+const DANCER_MARGIN_X := 340.0
+## 画面中央からの上下のずらし (px)。カメラは足元より上を見ているので少し上げる
+const DANCER_OFFSET_Y := 10.0
+
+const RANKING_MAX := 10
+## ページ送りで切り替えるリーダーボード。先頭が既定表示
+const RANKING_BOARDS: Array[String] = ["total", "stage01", "stage02", "stage03", "stage04",
+	"stage05", "stage06", "stage07", "stage08", "stage09", "stage10"]
+const RANKING_LABELS: Array[String] = ["TOTAL", "STAGE 1", "STAGE 2", "STAGE 3", "STAGE 4",
+	"STAGE 5", "STAGE 6", "STAGE 7", "STAGE 8", "STAGE 9", "STAGE 10"]
+
+## 起動画面（TitleSplash）から来たとき true。メニューを開いたら false に戻す
+static var from_splash := false
+
+var _menu: VBoxContainer
+var _name_edit: LineEdit
+var _name_prompt: Control
+var _name_prompt_edit: LineEdit
+var _logo: TitleLogo
+var _options: Control
+var _ranking: Control
+var _ranking_status: Label
+var _ranking_list: VBoxContainer
+var _ranking_page_label: Label
+var _ranking_board_index := 0
+## 再読み込みのすれ違い防止。ページ送り連打時に古い結果で上書きしない
+var _ranking_load_gen := 0
+## クレジットの画面。初回に押されたときだけ作る
+var _credits: Credits
+
+
+func _ready() -> void:
+	# 起動画面から来たときは、もう鳴っている曲をそのまま続ける
+	TitleMusic.ensure(get_tree())
+	_build_ui()
+	var came_from_splash := from_splash
+	from_splash = false
+	if came_from_splash and is_event_version():
+		_show_name_prompt()
+
+
+## イベント版か（最初のリリースはイベント版）
+static func is_event_version() -> bool:
+	return bool(ProjectSettings.get_setting(EVENT_VERSION_SETTING, false))
+
+
+# ═══════════════════════════════ 組み立て
+
+func _build_ui() -> void:
+	set_anchors_preset(Control.PRESET_FULL_RECT)
+
+	var back := ColorRect.new()
+	back.color = Color(0.08, 0.09, 0.14, 1.0)
+	back.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(back)
+
+	# タイトルロゴ。起動直後の画面とは違い、落ちてこずに最初からそこにいる。
+	# 小さく出すので、跳ねる高さも控えめにして画面の上にはみ出さないようにする
+	_logo = TITLE_LOGO.instantiate() as TitleLogo
+	_logo.drop_in = false
+	_logo.jump_height = 70.0
+	add_child(_logo)
+	resized.connect(_fit_logo)
+	_fit_logo()
+
+	if SHOW_DANCER:
+		_add_dancer()
+
+	_menu = VBoxContainer.new()
+	_menu.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_menu.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_menu.offset_top = MENU_TOP
+	_menu.add_theme_constant_override("separation", 20)
+	add_child(_menu)
+
+	_add_menu_button("TUTORIAL", _start_tutorial)
+	_add_menu_button("NEW GAME", _new_game)
+	var cont := _add_menu_button("CONTINUE", _continue_game)
+	if SaveGame.has_save():
+		cont.text = "CONTINUE  —  %s" % SaveGame.summary()
+	else:
+		cont.disabled = true
+		# 押せないボタンに W/S のフォーカスが止まらないようにする
+		cont.focus_mode = Control.FOCUS_NONE
+	_add_menu_button("OPTIONS", _show_options)
+	_add_menu_button("RANKING", _show_ranking)
+	_add_menu_button("CREDITS", _show_credits)
+
+	# ボタン群と名前欄はひとまとまりに見えないよう間を空ける
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 28)
+	_menu.add_child(gap)
+	_add_name_row(_menu)
+
+	_options = _build_options_panel()
+	add_child(_options)
+	_options.visible = false
+
+	_ranking = _build_ranking_panel()
+	add_child(_ranking)
+	_ranking.visible = false
+
+	_name_prompt = _build_name_prompt()
+	add_child(_name_prompt)
+	_name_prompt.visible = false
+
+	_grab_first_focus(_menu)
+
+
+## ロゴを画面の上の真ん中に、決めた大きさに収めて置く
+func _fit_logo() -> void:
+	var art := TitleSplash.LOGO_ART_SIZE
+	var s := minf(size.x * LOGO_MAX_WIDTH / art.x, LOGO_MAX_HEIGHT / art.y)
+	_logo.scale = Vector2(s, s)
+	_logo.position = Vector2(size.x * 0.5, LOGO_CENTER_Y)
+
+
+## W/Sでフォーカス移動。決定(Space/Enter)はGodot組み込みのui_acceptで
+## フォーカス中のボタンに既に効くので、ここでは上下移動だけ見る
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		var key := (event as InputEventKey).keycode
+		if key == KEY_W:
+			_move_focus(-1)
+			get_viewport().set_input_as_handled()
+		elif key == KEY_S:
+			_move_focus(1)
+			get_viewport().set_input_as_handled()
+
+
+func _move_focus(direction: int) -> void:
+	var focused := get_viewport().gui_get_focus_owner()
+	if focused == null:
+		return
+	var next := focused.find_next_valid_focus() if direction > 0 else focused.find_prev_valid_focus()
+	if next:
+		next.grab_focus()
+
+
+## container 内で最初に見つかったフォーカス可能なControlへフォーカスを移す
+func _grab_first_focus(container: Node) -> void:
+	var target := _find_focusable(container)
+	if target:
+		target.grab_focus()
+
+
+func _find_focusable(node: Node) -> Control:
+	if node is Control:
+		var c := node as Control
+		if c.focus_mode != Control.FOCUS_NONE:
+			return c
+	for child in node.get_children():
+		var found := _find_focusable(child)
+		if found:
+			return found
+	return null
+
+
+## 踊るキャラクターを出す。3Dを SubViewport へ描いて、その絵を2Dとして貼る。
+## ゲーム本編の PlayerVisual と同じ考え方で、シーンに3Dノードを積まずに済ませる
+func _add_dancer() -> void:
+	# Sprite2D は Control の座標で描かれるので、位置合わせ用の空の Control を挟む。
+	# こうしておけば解像度が変わってもアンカーが面倒を見てくれる
+	var holder := Control.new()
+	holder.name = "Dancer"
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+	holder.offset_left = -DANCER_MARGIN_X
+	holder.offset_right = -DANCER_MARGIN_X
+	holder.offset_top = DANCER_OFFSET_Y
+	holder.offset_bottom = DANCER_OFFSET_Y
+	add_child(holder)
+
+	# 本編のプレイヤー表示をそのまま流用する。トゥーン・輪郭線・ライトが
+	# ゲーム中と揃うので、タイトルだけ別の見た目になる心配がない
+	var visual := PlayerVisual.new()
+	visual.name = "DancerVisual"
+	visual.model = DANCER_MODEL
+	visual.pose = DANCER_POSE
+	# world_height_px だけ変えたいので、ゲーム側の調整値は複製して触る
+	var stats := DANCER_STATS.duplicate() as PogoVisualStats
+	stats.world_height_px = DANCER_HEIGHT_PX
+	visual.visual_stats = stats
+	visual.view_size = Vector2i(768, 768)
+	if ResourceLoader.exists(DANCER_CLIP_PATH):
+		visual.clip_source = load(DANCER_CLIP_PATH) as PackedScene
+	visual.show_ball = false          # タイトルではキャラクターだけ見せる
+	holder.add_child(visual)          # ここで _ready が走り、ビューポートが組み上がる
+	visual.play_clip()
+
+
+func _add_menu_button(text: String, callback: Callable) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.custom_minimum_size = Vector2(280, 56)
+	b.add_theme_font_size_override("font_size", 26)
+	b.pressed.connect(callback)
+	_menu.add_child(b)
+	return b
+
+
+func _build_options_panel() -> Control:
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.custom_minimum_size = Vector2(560, 360)
+	# 中身が最小サイズより大きくなったとき、上下左右へ均等に広げる。
+	# 既定だと右と下へだけ広がり、パネルが画面の右下へずれる
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
+	panel.add_theme_stylebox_override("panel", _panel_style())
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 20)
+	panel.add_child(box)
+
+	_add_panel_title(box, "OPTIONS")
+	_add_slider_row(box, "BGM VOLUME", Settings.bgm_volume,
+		func(v: float) -> void: Settings.bgm_volume = v)
+	_add_slider_row(box, "SE VOLUME", Settings.se_volume,
+		func(v: float) -> void: Settings.se_volume = v)
+	_add_slider_row(box, "VOICE VOLUME", Settings.voice_volume,
+		func(v: float) -> void: Settings.voice_volume = v)
+	_add_choice_row(box, "VOICE", ["CHATTY", "NORMAL", "OFF"], int(Settings.voice_mode),
+		func(i: int) -> void: Settings.set(&"voice_mode", i))
+	_add_slider_row(box, "RANKING FONT SIZE", Settings.ranking_font_size,
+		func(v: float) -> void: Settings.ranking_font_size = v, 10.0, 32.0, 1.0)
+	_add_back_row(box, func() -> void:
+		Settings.save()
+		_close_panels())
+
+	return panel
+
+
+## ランキングに載る名前。タイトル画面に置いて、遊び始める前に必ず目に入るようにする
+func _add_name_row(box: VBoxContainer) -> void:
+	var row := VBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	box.add_child(row)
+
+	var label := Label.new()
+	label.text = "PLAYER NAME (shown in ranking)"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 18)
+	label.add_theme_color_override("font_color", Color(0.6, 0.65, 0.75))
+	row.add_child(label)
+
+	var edit := LineEdit.new()
+	_name_edit = edit
+	edit.text = Settings.player_name
+	edit.max_length = 16
+	edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	edit.custom_minimum_size = Vector2(280, 40)
+	edit.add_theme_font_size_override("font_size", 20)
+	edit.text_changed.connect(func(v: String) -> void: Settings.player_name = v)
+	row.add_child(edit)
+
+
+## イベント版で、起動画面から入ってきたときに出す名前入力。
+## 欄は空で始め、いまの名前を薄く見せる。空のまま決めたら、いまの名前のまま
+func _build_name_prompt() -> Control:
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.custom_minimum_size = Vector2(560, 0)
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
+	# ロゴの下、メニューのあたりに出す（中心から下へずらしたところを中心に広がる）
+	panel.offset_top = 50.0
+	panel.offset_bottom = 50.0
+	panel.add_theme_stylebox_override("panel", _panel_style())
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 18)
+	panel.add_child(box)
+
+	_add_panel_title(box, "ENTER YOUR NAME")
+
+	var note := Label.new()
+	note.text = "ランキングに載る名前を入れてね"
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	note.add_theme_font_size_override("font_size", 20)
+	note.add_theme_color_override("font_color", Color(0.8, 0.84, 0.92))
+	box.add_child(note)
+
+	var edit := LineEdit.new()
+	_name_prompt_edit = edit
+	edit.max_length = 16
+	edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	edit.custom_minimum_size = Vector2(360, 56)
+	edit.add_theme_font_size_override("font_size", 28)
+	edit.text_submitted.connect(func(_v: String) -> void: _submit_name())
+	box.add_child(edit)
+
+	var ok := Button.new()
+	ok.text = "OK"
+	ok.custom_minimum_size = Vector2(160, 48)
+	ok.add_theme_font_size_override("font_size", 24)
+	ok.pressed.connect(_submit_name)
+	box.add_child(ok)
+	return panel
+
+
+func _show_name_prompt() -> void:
+	_menu.visible = false
+	_name_prompt_edit.text = ""
+	_name_prompt_edit.placeholder_text = Settings.player_name
+	_name_prompt.visible = true
+	_name_prompt_edit.grab_focus.call_deferred()
+
+
+func _submit_name() -> void:
+	var entered := _name_prompt_edit.text.strip_edges()
+	if entered != "":
+		Settings.player_name = entered
+		Settings.save()
+	if _name_edit:
+		_name_edit.text = Settings.player_name
+	_close_panels()
+
+
+func _build_ranking_panel() -> Control:
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.custom_minimum_size = Vector2(560, 440)
+	panel.add_theme_stylebox_override("panel", _panel_style())
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 14)
+	panel.add_child(box)
+
+	_add_panel_title(box, "RANKING")
+	_add_ranking_page_row(box)
+
+	_ranking_status = Label.new()
+	_ranking_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_ranking_status.add_theme_font_size_override("font_size", 18)
+	_ranking_status.add_theme_color_override("font_color", Color(0.8, 0.85, 0.95))
+	box.add_child(_ranking_status)
+
+	_ranking_list = VBoxContainer.new()
+	_ranking_list.add_theme_constant_override("separation", 4)
+	box.add_child(_ranking_list)
+
+	_add_back_row(box, _close_panels)
+
+	return panel
+
+
+func _panel_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = PANEL_COLOR
+	style.border_color = BORDER_COLOR
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(10)
+	style.set_content_margin_all(28)
+	return style
+
+
+func _add_panel_title(box: VBoxContainer, text: String) -> void:
+	var label := Label.new()
+	label.text = text
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 30)
+	label.add_theme_color_override("font_color", ACCENT_COLOR)
+	box.add_child(label)
+
+
+func _add_slider_row(box: VBoxContainer, label_text: String, value: float,
+		on_change: Callable, min_value := 0.0, max_value := 1.0, step := 0.01) -> void:
+	var row := VBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	box.add_child(row)
+
+	var label := Label.new()
+	label.text = label_text
+	label.add_theme_font_size_override("font_size", 20)
+	row.add_child(label)
+
+	var slider := HSlider.new()
+	slider.min_value = min_value
+	slider.max_value = max_value
+	slider.step = step
+	slider.value = value
+	slider.custom_minimum_size = Vector2(460, 24)
+	slider.value_changed.connect(func(v: float) -> void: on_change.call(v))
+	row.add_child(slider)
+
+
+## 見出し＋並んだボタンから1つ選ぶ行（ボイスの量など）
+func _add_choice_row(box: VBoxContainer, label_text: String, choices: Array,
+		current: int, on_change: Callable) -> void:
+	var row := VBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	box.add_child(row)
+
+	var label := Label.new()
+	label.text = label_text
+	label.add_theme_font_size_override("font_size", 20)
+	row.add_child(label)
+
+	var buttons := HBoxContainer.new()
+	buttons.add_theme_constant_override("separation", 8)
+	row.add_child(buttons)
+	var group := ButtonGroup.new()
+	for i in choices.size():
+		var b := Button.new()
+		b.text = choices[i]
+		b.toggle_mode = true
+		b.button_group = group
+		b.button_pressed = i == current
+		b.custom_minimum_size = Vector2(148, 40)
+		b.add_theme_font_size_override("font_size", 18)
+		# 選んでいるものが分かるように、押された状態の文字を見出しの色にする
+		b.add_theme_color_override("font_pressed_color", Color(1.0, 0.86, 0.3))
+		b.add_theme_color_override("font_hover_pressed_color", Color(1.0, 0.9, 0.45))
+		b.pressed.connect(func() -> void: on_change.call(i))
+		buttons.add_child(b)
+
+
+## 「◀ 合計 ▶」のようなページ送り行。合計/ステージ別リーダーボードを切り替える
+func _add_ranking_page_row(box: VBoxContainer) -> void:
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 16)
+	box.add_child(row)
+
+	var prev := Button.new()
+	prev.text = "<"
+	prev.custom_minimum_size = Vector2(44, 40)
+	prev.pressed.connect(func() -> void: _change_ranking_page(-1))
+	row.add_child(prev)
+
+	_ranking_page_label = Label.new()
+	_ranking_page_label.custom_minimum_size = Vector2(140, 0)
+	_ranking_page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_ranking_page_label.add_theme_font_size_override("font_size", 20)
+	row.add_child(_ranking_page_label)
+
+	var next := Button.new()
+	next.text = ">"
+	next.custom_minimum_size = Vector2(44, 40)
+	next.pressed.connect(func() -> void: _change_ranking_page(1))
+	row.add_child(next)
+
+
+func _change_ranking_page(direction: int) -> void:
+	_ranking_board_index = wrapi(_ranking_board_index + direction, 0, RANKING_BOARDS.size())
+	_load_ranking()
+
+
+func _add_back_row(box: VBoxContainer, callback: Callable) -> void:
+	var b := Button.new()
+	b.text = "BACK"
+	b.custom_minimum_size = Vector2(160, 44)
+	b.pressed.connect(callback)
+	box.add_child(b)
+
+
+# ═══════════════════════════════ 画面遷移
+
+## 操作を覚えるところから始める。チュートリアル面をクリアすると、
+## そのまま OP を挟んで本編のステージ1へ繋がる。
+## 本編を最初から始めることに変わりはないので、NEW GAME と同じ確認を挟む
+func _start_tutorial() -> void:
+	_confirm_erase_save("TUTORIAL",
+		"セーブ（%s）を消して、チュートリアルから始めます。\nよろしいですか？",
+		func() -> void: _start_new(true))
+
+
+## 最初から始める。セーブがあれば消してよいか訊いてから
+func _new_game() -> void:
+	_confirm_erase_save("NEW GAME",
+		"セーブ（%s）を消して最初から始めます。\nよろしいですか？",
+		func() -> void: _start_new(false))
+
+
+## セーブがあるときだけ確認を出す。無ければそのまま始める。
+## text は %s にセーブの要約が入る書式
+func _confirm_erase_save(title_text: String, text: String, on_ok: Callable) -> void:
+	if not SaveGame.has_save():
+		on_ok.call()
+		return
+	var dlg := ConfirmationDialog.new()
+	dlg.title = title_text
+	dlg.dialog_text = text % SaveGame.summary()
+	dlg.ok_button_text = "はじめる"
+	dlg.cancel_button_text = "やめる"
+	dlg.confirmed.connect(on_ok)
+	# 決定でも取り消しでも、閉じたら片付ける
+	dlg.canceled.connect(dlg.queue_free)
+	dlg.close_requested.connect(dlg.queue_free)
+	dlg.confirmed.connect(dlg.queue_free)
+	add_child(dlg)
+	dlg.popup_centered()
+
+
+func _start_new(with_tutorial: bool) -> void:
+	SaveGame.erase()
+	SaveGame.continue_requested = false
+	SaveGame.tutorial_requested = with_tutorial
+	get_tree().change_scene_to_file(MAIN_SCENE)
+
+
+## セーブの続きから始める
+func _continue_game() -> void:
+	if not SaveGame.has_save():
+		return
+	SaveGame.continue_requested = true
+	SaveGame.tutorial_requested = false
+	get_tree().change_scene_to_file(MAIN_SCENE)
+
+
+func _start_replay(stage_index: int, replay_data: Dictionary) -> void:
+	Settings.pending_replay_stage_index = stage_index
+	Settings.pending_replay_data = replay_data
+	get_tree().change_scene_to_file(REPLAY_SCENE)
+
+
+func _show_options() -> void:
+	_menu.visible = false
+	_logo.visible = false
+	_options.visible = true
+	_grab_first_focus(_options)
+
+
+func _show_ranking() -> void:
+	_menu.visible = false
+	_logo.visible = false
+	_ranking.visible = true
+	_load_ranking()
+	_grab_first_focus(_ranking)
+
+
+## スタッフクレジットをその場で流す。別の画面へは移らない。
+##
+## 再生中は Credits がツリー全体を止める（Credits 自身だけ PROCESS_MODE_ALWAYS）
+## ので、裏のメニューは操作できない。クレジットの一番下は不透明な黒なので
+## 隠す処理も要らない。Space/クリックで送り、Enter で全部飛ばせる
+func _show_credits() -> void:
+	if _credits and _credits.is_playing():
+		return
+	var data := load(CREDITS_PATH) as CreditsData
+	if data == null:
+		push_warning("Title: クレジット(%s)が読めません" % CREDITS_PATH)
+		return
+
+	var focused := get_viewport().gui_get_focus_owner()
+	_ensure_credits_ui()
+	await _credits.play(data)
+
+	# 止めている間にフォーカスが外れることがある。W/S がまた効くように戻す
+	if focused and is_instance_valid(focused) and focused.is_inside_tree():
+		focused.grab_focus()
+	else:
+		_grab_first_focus(_menu)
+
+
+func _ensure_credits_ui() -> void:
+	if _credits and is_instance_valid(_credits):
+		return
+	_credits = Credits.new()
+	_credits.name = "Credits"
+	add_child(_credits)
+
+
+## SilentWolfの現在選択中のリーダーボード（合計 or ステージ別）を取得して表示する
+func _load_ranking() -> void:
+	var board := RANKING_BOARDS[_ranking_board_index]
+	_ranking_page_label.text = RANKING_LABELS[_ranking_board_index]
+
+	for c in _ranking_list.get_children():
+		_ranking_list.remove_child(c)
+		c.queue_free()
+	_ranking_status.text = "Loading..."
+
+	_ranking_load_gen += 1
+	var gen := _ranking_load_gen
+	var sw_result: Dictionary = await SilentWolf.Scores.get_scores(
+		RANKING_MAX, board).sw_get_scores_complete
+	if gen != _ranking_load_gen:
+		return          # ページ送りで待っている間に別のページへ切り替わった
+
+	if not sw_result.get("success", false):
+		_ranking_status.text = "Failed to load"
+		return
+
+	var scores: Array = sw_result.get("scores", [])
+	if scores.is_empty():
+		_ranking_status.text = "No records yet"
+		return
+
+	# タイム(秒)なので短いほど上位
+	scores.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.score < b.score)
+	_ranking_status.text = ""
+	for i in range(scores.size()):
+		_add_ranking_row(i + 1, scores.size(), scores[i])
+
+
+## 1位: 黄色、2位: 水色、それ以降は水色から白へ順にグラデーションする
+func _rank_color(rank: int, total: int) -> Color:
+	if rank <= 1:
+		return ACCENT_COLOR
+	var mizuiro := Color(0.6, 0.9, 1.0)
+	var span := maxf(float(maxi(total, 2) - 2), 1.0)
+	var t := clampf(float(rank - 2) / span, 0.0, 1.0)
+	return mizuiro.lerp(Color.WHITE, t)
+
+
+func _add_ranking_row(rank: int, total: int, score: Dictionary) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	_ranking_list.add_child(row)
+
+	var font_size := int(Settings.ranking_font_size)
+	var color := _rank_color(rank, total)
+
+	var rank_label := Label.new()
+	rank_label.text = "%2d." % rank
+	rank_label.custom_minimum_size = Vector2(36, 0)
+	rank_label.add_theme_font_size_override("font_size", font_size)
+	rank_label.add_theme_color_override("font_color", color)
+	row.add_child(rank_label)
+
+	var name_label := Label.new()
+	name_label.text = str(score.get("player_name", "?"))
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.add_theme_font_size_override("font_size", font_size)
+	name_label.add_theme_color_override("font_color", color)
+	row.add_child(name_label)
+
+	var falls := 0
+	var metadata = score.get("metadata")
+	if metadata is Dictionary and metadata.has("falls"):
+		falls = int(metadata["falls"])
+
+	var time_label := Label.new()
+	time_label.text = "%.2fs  (falls %d)" % [float(score.get("score", 0.0)), falls]
+	time_label.add_theme_font_size_override("font_size", font_size)
+	time_label.add_theme_color_override("font_color", color)
+	row.add_child(time_label)
+
+	# "total" にはリプレイが無いので、ステージ別ページでのみボタンを出す
+	if _ranking_board_index >= 1 and metadata is Dictionary and metadata.has("replay"):
+		var stage_index := _ranking_board_index - 1
+		var replay_data: Dictionary = metadata["replay"]
+		var play_btn := Button.new()
+		play_btn.text = "PLAY"
+		play_btn.custom_minimum_size = Vector2(36, 28)
+		play_btn.pressed.connect(func() -> void: _start_replay(stage_index, replay_data))
+		row.add_child(play_btn)
+
+
+func _close_panels() -> void:
+	_options.visible = false
+	_ranking.visible = false
+	if _name_prompt:
+		_name_prompt.visible = false
+	_menu.visible = true
+	_logo.visible = true
+	_grab_first_focus(_menu)
