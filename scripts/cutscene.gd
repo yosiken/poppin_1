@@ -1331,11 +1331,14 @@ func _apply_audio(line: CutsceneLine) -> void:
 	# 声は前のコマのものを止めてから。送ったのに前の声が続くと、
 	# 本文と声が食い違って見える
 	_stop_line_voice()
-	_line_has_voice = line.voice != null
+	# ボイスを「オフ」にしているときは、声を鳴らさず文字送りの音に戻す
+	var settings := get_node_or_null(^"/root/Settings")
+	var voice_off := settings != null and int(settings.get(&"voice_mode")) == 2
+	_line_has_voice = line.voice != null and not voice_off
 	# 前のコマの「しゃべっているふうの音」が尾を引いていれば切る。声と重なる
 	if _line_has_voice and _voice_sfx and _voice_sfx.playing:
 		_voice_sfx.stop()
-	if line.voice and _line_voice:
+	if _line_has_voice and _line_voice:
 		_line_voice.stream = line.voice
 		_line_voice.play()
 	var fade: float = line.bgm_fade if line.bgm_fade > 0.0 else bgm_fade_time

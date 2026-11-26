@@ -234,6 +234,10 @@ func _build_options_panel() -> Control:
 	var panel := PanelContainer.new()
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.custom_minimum_size = Vector2(560, 360)
+	# 中身が最小サイズより大きくなったとき、上下左右へ均等に広げる。
+	# 既定だと右と下へだけ広がり、パネルが画面の右下へずれる
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	panel.add_theme_stylebox_override("panel", _panel_style())
 
 	var box := VBoxContainer.new()
@@ -247,6 +251,8 @@ func _build_options_panel() -> Control:
 		func(v: float) -> void: Settings.se_volume = v)
 	_add_slider_row(box, "VOICE VOLUME", Settings.voice_volume,
 		func(v: float) -> void: Settings.voice_volume = v)
+	_add_choice_row(box, "VOICE", ["CHATTY", "NORMAL", "OFF"], int(Settings.voice_mode),
+		func(i: int) -> void: Settings.set(&"voice_mode", i))
 	_add_slider_row(box, "RANKING FONT SIZE", Settings.ranking_font_size,
 		func(v: float) -> void: Settings.ranking_font_size = v, 10.0, 32.0, 1.0)
 	_add_back_row(box, func() -> void:
@@ -345,6 +351,37 @@ func _add_slider_row(box: VBoxContainer, label_text: String, value: float,
 	slider.custom_minimum_size = Vector2(460, 24)
 	slider.value_changed.connect(func(v: float) -> void: on_change.call(v))
 	row.add_child(slider)
+
+
+## 見出し＋並んだボタンから1つ選ぶ行（ボイスの量など）
+func _add_choice_row(box: VBoxContainer, label_text: String, choices: Array,
+		current: int, on_change: Callable) -> void:
+	var row := VBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	box.add_child(row)
+
+	var label := Label.new()
+	label.text = label_text
+	label.add_theme_font_size_override("font_size", 20)
+	row.add_child(label)
+
+	var buttons := HBoxContainer.new()
+	buttons.add_theme_constant_override("separation", 8)
+	row.add_child(buttons)
+	var group := ButtonGroup.new()
+	for i in choices.size():
+		var b := Button.new()
+		b.text = choices[i]
+		b.toggle_mode = true
+		b.button_group = group
+		b.button_pressed = i == current
+		b.custom_minimum_size = Vector2(148, 40)
+		b.add_theme_font_size_override("font_size", 18)
+		# 選んでいるものが分かるように、押された状態の文字を見出しの色にする
+		b.add_theme_color_override("font_pressed_color", Color(1.0, 0.86, 0.3))
+		b.add_theme_color_override("font_hover_pressed_color", Color(1.0, 0.9, 0.45))
+		b.pressed.connect(func() -> void: on_change.call(i))
+		buttons.add_child(b)
 
 
 ## 「◀ 合計 ▶」のようなページ送り行。合計/ステージ別リーダーボードを切り替える

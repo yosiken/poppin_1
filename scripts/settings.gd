@@ -39,6 +39,19 @@ var se_volume := 0.8:
 		_apply_bus_volume("SE", se_volume)
 		_queue_save()
 
+## ボイスの量。OPTIONS の VOICE で選ぶ
+##   CHATTY … たくさん。プレイ中のリアクションを全部鳴らす
+##   NORMAL … ふつう。ゴールや記憶などの節目だけ。何度も起きる場面はほぼ黙る
+##            （場面ごとの確率は VoiceSet の normal_chance / normal_cooldown）
+##   OFF    … 鳴らさない。イベントの声も消え、文字送りの音に戻る
+## 音量 0 とは別物。0 にするとイベントのコマが無音になるが、OFF なら文字送りの音が鳴る
+enum VoiceMode { CHATTY, NORMAL, OFF }
+
+var voice_mode := VoiceMode.CHATTY:
+	set(value):
+		voice_mode = clampi(value, VoiceMode.CHATTY, VoiceMode.OFF) as VoiceMode
+		_queue_save()
+
 ## プレイ中のボイス（Voice）の音量。「声だけ切りたい・上げたい」に応える
 var voice_volume := 0.8:
 	set(value):
@@ -133,6 +146,7 @@ func save() -> void:
 	cfg.set_value("audio", "bgm_volume", bgm_volume)
 	cfg.set_value("audio", "se_volume", se_volume)
 	cfg.set_value("audio", "voice_volume", voice_volume)
+	cfg.set_value("audio", "voice_mode", int(voice_mode))
 	cfg.set_value("debug", "test_mode", test_mode)
 	cfg.set_value("profile", "player_name", player_name)
 	cfg.set_value("ui", "ranking_font_size", ranking_font_size)
@@ -149,6 +163,7 @@ func _load() -> void:
 		bgm_volume = cfg.get_value("audio", "bgm_volume", bgm_volume)
 		se_volume = cfg.get_value("audio", "se_volume", se_volume)
 		voice_volume = cfg.get_value("audio", "voice_volume", voice_volume)
+		voice_mode = int(cfg.get_value("audio", "voice_mode", int(voice_mode))) as VoiceMode
 		test_mode = cfg.get_value("debug", "test_mode", test_mode)
 		player_name = cfg.get_value("profile", "player_name", player_name)
 		ranking_font_size = cfg.get_value("ui", "ranking_font_size", ranking_font_size)

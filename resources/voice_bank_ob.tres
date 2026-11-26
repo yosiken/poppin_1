@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="VoiceBank" load_steps=59 format=3]
+[gd_resource type="Resource" script_class="VoiceBank" load_steps=60 format=3]
 
 [ext_resource type="Script" path="res://scripts/voice_bank.gd" id="bank_script"]
 [ext_resource type="Script" path="res://scripts/voice_set.gd" id="set_script"]
@@ -45,6 +45,7 @@
 [ext_resource type="AudioStream" path="res://resources/sound/voice/65_なるほどね２.ogg" id="v65"]
 [ext_resource type="AudioStream" path="res://resources/sound/voice/13_はい、ここまでが練習でした.ogg" id="v13"]
 [ext_resource type="AudioStream" path="res://resources/sound/voice/45_それでは始めたいと思います.ogg" id="v45"]
+[ext_resource type="AudioStream" uid="uid://djdn2a7fvw66v" path="res://resources/sound/voice/50-無題.ogg" id="v50"]
 
 [sub_resource type="Resource" id="set_jump"]
 script = ExtResource("set_script")
@@ -53,6 +54,7 @@ chance = 0.3
 cooldown = 2.0
 priority = 1
 wait_turn = false
+normal_chance = 0.0
 
 [sub_resource type="Resource" id="set_super_jump"]
 script = ExtResource("set_script")
@@ -69,6 +71,8 @@ chance = 1.0
 cooldown = 0.0
 priority = 3
 wait_turn = false
+normal_chance = 0.25
+normal_cooldown = 20.0
 
 [sub_resource type="Resource" id="set_hazard"]
 script = ExtResource("set_script")
@@ -77,14 +81,17 @@ chance = 1.0
 cooldown = 0.0
 priority = 3
 wait_turn = false
+normal_chance = 0.4
+normal_cooldown = 20.0
 
 [sub_resource type="Resource" id="set_respawn"]
 script = ExtResource("set_script")
-streams = Array[AudioStream]([ExtResource("v10"), ExtResource("v28"), ExtResource("v47"), ExtResource("v48"), ExtResource("v59"), ExtResource("v60"), ExtResource("v61"), ExtResource("v62"), ExtResource("v63")])
+streams = Array[AudioStream]([ExtResource("v10"), ExtResource("v28"), ExtResource("v47"), ExtResource("v48"), ExtResource("v59"), ExtResource("v60"), ExtResource("v61"), ExtResource("v62"), ExtResource("v63"), ExtResource("v50")])
 chance = 0.35
 cooldown = 8.0
 priority = 1
 wait_turn = true
+normal_chance = 0.0
 
 [sub_resource type="Resource" id="set_slip"]
 script = ExtResource("set_script")
@@ -93,6 +100,7 @@ chance = 0.6
 cooldown = 6.0
 priority = 1
 wait_turn = false
+normal_chance = 0.0
 
 [sub_resource type="Resource" id="set_stage_start"]
 script = ExtResource("set_script")
@@ -101,6 +109,7 @@ chance = 0.5
 cooldown = 0.0
 priority = 1
 wait_turn = false
+normal_chance = 0.0
 
 [sub_resource type="Resource" id="set_checkpoint"]
 script = ExtResource("set_script")
@@ -109,6 +118,7 @@ chance = 0.7
 cooldown = 0.0
 priority = 2
 wait_turn = false
+normal_chance = 0.0
 
 [sub_resource type="Resource" id="set_goal"]
 script = ExtResource("set_script")

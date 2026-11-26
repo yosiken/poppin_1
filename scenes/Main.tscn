@@ -53,7 +53,6 @@ opening = ExtResource("17_op")
 ending = ExtResource("18_ed")
 credits = ExtResource("18_credits")
 stage_bgm = Array[AudioStream]([ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("22_bgm1"), ExtResource("24_bgm3"), ExtResource("23_bgm2")])
-show_cutscene_notes = true
 player = NodePath("Player")
 stage_host = NodePath("StageHost")
 sfx_fall = NodePath("SfxFall")

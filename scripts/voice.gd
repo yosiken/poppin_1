@@ -11,6 +11,8 @@ extends Node
 ##     そうでなければ捨てる。wait_turn の場面だけは鳴り終わるのを待つ
 ##   - 同じ場面で直前と同じ声は選ばない
 ##   - 確率（chance）と間隔（cooldown）で、聞き飽きないようにする
+##   - OPTIONS の VOICE（たくさん／ふつう／オフ）で量が変わる。
+##     ふつうは VoiceSet の normal_chance / normal_cooldown を使い、オフは鳴らさない
 ##   - VOICE バスで鳴らす（OPTIONS の VOICE VOLUME で別に調整できる）
 ##
 ## 落下からの復帰中はツリーが止まるので、この係は止まらないようにしてある。
@@ -78,17 +80,19 @@ func _say(category: StringName) -> bool:
 	var vs := bank.get_set(category)
 	if vs == null or vs.streams.is_empty():
 		return false
+	var mode := _mode()
 	var now := Time.get_ticks_msec() / 1000.0
 	if now < float(_ready_at.get(category, 0.0)):
 		return false
-	if randf() > vs.chance:
+	var chance := vs.chance_for(mode)
+	if chance <= 0.0 or randf() > chance:
 		return false
 	if _player.playing and vs.priority <= _playing_priority:
 		if vs.wait_turn:
 			_queued = category
 			# 待つと決めた時点で間隔を数え始める。待っている間にもう一度
 			# 呼ばれても二重に並ばないように
-			_ready_at[category] = now + vs.cooldown
+			_ready_at[category] = now + vs.cooldown_for(mode)
 			return true
 		return false
 	_play(category, vs, now)
@@ -103,10 +107,16 @@ func _play(category: StringName, vs: VoiceSet, now: float) -> void:
 	_player.play()
 	_playing_priority = vs.priority
 	_last[category] = stream
-	_ready_at[category] = now + vs.cooldown
+	_ready_at[category] = now + vs.cooldown_for(_mode())
 	# 上書きして鳴らした場合、待っていたものは捨てる（話が繋がらなくなるので）
 	if _queued != category:
 		_queued = &""
+
+
+## ボイスの量（Settings.voice_mode）。設定が読めない環境では「たくさん」
+func _mode() -> int:
+	var settings := get_node_or_null(^"/root/Settings")
+	return int(settings.get(&"voice_mode")) if settings else 0
 
 
 ## 直前と同じものを避けて1本選ぶ
