@@ -43,7 +43,7 @@ fade_sec = 3.0
 [sub_resource type="Resource" id="Resource_br8eg"]
 script = ExtResource("1_x8fab")
 speaker = "カニエナガ"
-text = "やっとちゃんとした記憶が戻ったな"
+text = "やっと、ちゃんとした記憶が戻ったね"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_8p4s8"]
@@ -59,7 +59,7 @@ popup = ExtResource("6_qbr27")
 [sub_resource type="Resource" id="Resource_qbr27"]
 script = ExtResource("1_x8fab")
 speaker = "カニエナガ"
-text = "それや"
+text = "それそれ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_l5hxo"]

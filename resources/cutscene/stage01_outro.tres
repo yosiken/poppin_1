@@ -41,7 +41,7 @@ shake_time = 1.0
 [sub_resource type="Resource" id="Resource_h1pga"]
 script = ExtResource("1_ygqeh")
 speaker = "カニエナガ"
-text = "ラベル、読んでみ"
+text = "ラベル、読んでみて"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_hbbsx"]
@@ -83,7 +83,7 @@ voice = ExtResource("voice_41")
 [sub_resource type="Resource" id="Resource_8fbim"]
 script = ExtResource("1_ygqeh")
 speaker = "カニエナガ"
-text = "本能だけ戻ったな"
+text = "本能だけ戻ったね"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_5c2cr"]
@@ -97,7 +97,7 @@ fade = 5
 [sub_resource type="Resource" id="Resource_g1inb"]
 script = ExtResource("1_ygqeh")
 speaker = "カニエナガ"
-text = "よし、記憶が一つ戻ったで"
+text = "よし、記憶が一つ戻ったよ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_nceck"]

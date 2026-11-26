@@ -23,7 +23,7 @@ fade = 5
 [sub_resource type="Resource" id="Resource_giu38"]
 script = ExtResource("1_6fv87")
 speaker = "カニエナガ"
-text = "やっぱりそうなるか"
+text = "やっぱりそうなるよね"
 speaking = 1
 left = ExtResource("3_m8t05")
 background = ExtResource("4_nw7jn")
@@ -44,7 +44,7 @@ bgm = ExtResource("6_5m2qt")
 [sub_resource type="Resource" id="Resource_4l7bd"]
 script = ExtResource("1_6fv87")
 speaker = "カニエナガ"
-text = "高級品やぞ。味わって食えよ"
+text = "高級品だからね。味わって食べなよ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_nw7jn"]
@@ -63,7 +63,7 @@ speaking = 1
 [sub_resource type="Resource" id="Resource_5m2qt"]
 script = ExtResource("1_6fv87")
 speaker = "カニエナガ"
-text = "…………なあ"
+text = "…………ねえ"
 speaking = 1
 note = "演出：OBは無言でタラバガニを食べ続ける"
 
@@ -76,7 +76,7 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_2ms3e"]
 script = ExtResource("1_6fv87")
 speaker = "カニエナガ"
-text = "喋らんの？"
+text = "喋らないの？"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_hb4dt"]

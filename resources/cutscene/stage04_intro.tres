@@ -9,11 +9,12 @@
 [ext_resource type="Texture2D" uid="uid://d1f6nrewu4dhj" path="res://resources/texture/BG/event/BG-06.png" id="5_nte6m"]
 [ext_resource type="Texture2D" uid="uid://b0vc3462dhr3h" path="res://resources/texture/event/popup/POP-09.png" id="6_bvgev"]
 [ext_resource type="Texture2D" uid="uid://crp173i7rxh13" path="res://resources/texture/OB_b.png" id="7_nte6m"]
+[ext_resource type="AudioStream" uid="uid://djdn2a7fvw66v" path="res://resources/sound/voice/50-無題.ogg" id="voice_50"]
 
 [sub_resource type="Resource" id="Resource_j43ma"]
 script = ExtResource("1_j43ma")
 speaker = "カニエナガ"
-text = "四つ目や"
+text = "四つ目だよ"
 speaking = 1
 left = ExtResource("2_ias4w")
 background = ExtResource("2_ff3xa")
@@ -45,7 +46,7 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_nte6m"]
 script = ExtResource("1_j43ma")
 speaker = "カニエナガ"
-text = "お、ええ線いっとる"
+text = "お、いい線いってる"
 speaking = 1
 shake = 20.0
 
@@ -66,13 +67,14 @@ speaking = 1
 [sub_resource type="Resource" id="Resource_vdigm"]
 script = ExtResource("1_j43ma")
 speaker = "OB"
-text = "うーん……"
+text = "うーん……こうかなー？"
 speaking = 2
+voice = ExtResource("voice_50")
 
 [sub_resource type="Resource" id="Resource_jecnb"]
 script = ExtResource("1_j43ma")
 speaker = "カニエナガ"
-text = "ちなみにそいつ、名前がついとるで"
+text = "ちなみにそれ、名前がついてるんだよ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_pkugk"]
@@ -84,7 +86,7 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_a47x1"]
 script = ExtResource("1_j43ma")
 speaker = "カニエナガ"
-text = "お前が付けたんやけどな"
+text = "OBが付けたんだけどね"
 speaking = 1
 fade_sec = 3.0
 

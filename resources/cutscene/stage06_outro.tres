@@ -24,7 +24,7 @@ shake_time = 1.0
 [sub_resource type="Resource" id="Resource_fixnd"]
 script = ExtResource("1_1bfqb")
 speaker = "カニエナガ"
-text = "思い出したか"
+text = "思い出した？"
 speaking = 1
 left = ExtResource("3_1k4lx")
 
@@ -39,7 +39,7 @@ popup = ExtResource("6_1lnn4")
 [sub_resource type="Resource" id="Resource_iuxvc"]
 script = ExtResource("1_1bfqb")
 speaker = "カニエナガ"
-text = "せや"
+text = "そう"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_a8qcy"]
@@ -51,7 +51,7 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_1lnn4"]
 script = ExtResource("1_1bfqb")
 speaker = "カニエナガ"
-text = "そうや"
+text = "そうだよ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_lq4m1"]
@@ -104,7 +104,7 @@ background = ExtResource("2_iuxvc")
 [sub_resource type="Resource" id="Resource_8w3sa"]
 script = ExtResource("1_1bfqb")
 speaker = "カニエナガ"
-text = "もう後半や。必ず帰れるで"
+text = "もう後半だよ。必ず帰れるから"
 speaking = 1
 fade_sec = 3.0
 bgm_fade = 1.0

@@ -15,7 +15,7 @@
 [sub_resource type="Resource" id="Resource_x30e5"]
 script = ExtResource("1_fhe7r")
 speaker = "カニエナガ"
-text = "八つ目や"
+text = "八つ目だよ"
 speaking = 1
 left = ExtResource("2_x30e5")
 background = ExtResource("2_x22lb")
@@ -31,7 +31,7 @@ right = ExtResource("3_x30e5")
 [sub_resource type="Resource" id="Resource_88ss5"]
 script = ExtResource("1_fhe7r")
 speaker = "カニエナガ"
-text = "紙や"
+text = "紙だよ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_x22lb"]
@@ -45,7 +45,7 @@ bg_hide = 1.0
 [sub_resource type="Resource" id="Resource_3tgp8"]
 script = ExtResource("1_fhe7r")
 speaker = "カニエナガ"
-text = "ちゃう。一枚あったら、酒もカニも買える紙や"
+text = "違うよ。一枚あったら、お酒もカニも買える紙"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_7ifoj"]
@@ -62,7 +62,7 @@ sfx = ExtResource("8_y7078")
 [sub_resource type="Resource" id="Resource_8m0od"]
 script = ExtResource("1_fhe7r")
 speaker = "カニエナガ"
-text = "おい"
+text = "ちょっと"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_y7078"]
@@ -75,7 +75,7 @@ voice = ExtResource("voice_46")
 [sub_resource type="Resource" id="Resource_pcmwx"]
 script = ExtResource("1_fhe7r")
 speaker = "カニエナガ"
-text = "言うな。ゴールまで言うな"
+text = "言わないで。ゴールまで言わないで"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_xibnu"]
@@ -103,7 +103,7 @@ background = ExtResource("2_x22lb")
 [sub_resource type="Resource" id="Resource_wk6qd"]
 script = ExtResource("1_fhe7r")
 speaker = "カニエナガ"
-text = "その顔やめろ！　目が＄になっとるぞ"
+text = "その顔やめて！　目が＄になってるよ"
 speaking = 1
 fade_sec = 3.0
 popup = ExtResource("6_7ifoj")

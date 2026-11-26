@@ -14,7 +14,7 @@
 [sub_resource type="Resource" id="Resource_mh7c8"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
-text = "七つ目のヒントや"
+text = "七つ目のヒントだよ"
 speaking = 1
 left = ExtResource("2_d1rpl")
 background = ExtResource("2_jrclr")
@@ -31,7 +31,7 @@ right = ExtResource("3_ljqqe")
 [sub_resource type="Resource" id="Resource_ljqqe"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
-text = "四角い。重い。鍵がかかっとる"
+text = "四角い。重い。鍵がかかってる"
 speaking = 1
 background = ExtResource("5_jrclr")
 bg_hide = 1.0
@@ -45,7 +45,7 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_qeown"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
-text = "おい"
+text = "ちょっと"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_woajy"]
@@ -73,7 +73,7 @@ shake_time = 2.0
 [sub_resource type="Resource" id="Resource_g8f0t"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
-text = "一回落ち着け！　言うとくけど、この世界のそれにはミミックもおる"
+text = "一回落ち着いて！　言っとくけど、この世界にはミミックもいるからね"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_pr3q1"]
@@ -86,7 +86,7 @@ popup = ExtResource("6_jrclr")
 [sub_resource type="Resource" id="Resource_f6m3d"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
-text = "噛みついてくるから気ぃつけや"
+text = "噛みついてくるから、気をつけてね"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_kbpjl"]
@@ -98,7 +98,7 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_gvlfi"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
-text = "なんや？"
+text = "なに？"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_umlfc"]
@@ -111,7 +111,7 @@ background = ExtResource("2_jrclr")
 [sub_resource type="Resource" id="Resource_dlepo"]
 script = ExtResource("1_mh7c8")
 speaker = "カニエナガ"
-text = "そうやけど"
+text = "そうだけど"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_otxmp"]

@@ -28,7 +28,7 @@ sfx = ExtResource("6_1gdar")
 [sub_resource type="Resource" id="Resource_st6c1"]
 script = ExtResource("1_c8ka2")
 speaker = "カニエナガ"
-text = "やっぱり当たっとったか"
+text = "やっぱり当たってたね"
 speaking = 1
 left = ExtResource("3_uxxq4")
 
@@ -51,12 +51,11 @@ text = "お金のためならどんな回り道でもするわ"
 speaking = 2
 background = ExtResource("5_uxxq4")
 fade = 5
-voice = ExtResource("voice_12")
 
 [sub_resource type="Resource" id="Resource_1gdar"]
 script = ExtResource("1_c8ka2")
 speaker = "カニエナガ"
-text = "そのバイタリティーがあれば大丈夫やな"
+text = "そのバイタリティーがあれば大丈夫だね"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_5gnj2"]
@@ -81,7 +80,7 @@ background = ExtResource("2_uxxq4")
 [sub_resource type="Resource" id="Resource_5knkk"]
 script = ExtResource("1_c8ka2")
 speaker = "カニエナガ"
-text = "まあ…モチベは大事やしな"
+text = "まあ…モチベは大事だもんね"
 speaking = 1
 fade_sec = 3.0
 
@@ -92,6 +91,13 @@ fade_sec = 3.0
 bgm_stop = true
 inserted = true
 
+[sub_resource type="Resource" id="Resource_adj01"]
+script = ExtResource("1_c8ka2")
+speaker = "OB"
+text = "私は諦めの悪い女……！"
+speaking = 2
+voice = ExtResource("voice_12")
+
 [resource]
 script = ExtResource("4_hlwc3")
-lines = Array[ExtResource("1_c8ka2")]([SubResource("Resource_c8ka2"), SubResource("Resource_st6c1"), SubResource("Resource_uxxq4"), SubResource("Resource_hlwc3"), SubResource("Resource_lci6h"), SubResource("Resource_1gdar"), SubResource("Resource_5gnj2"), SubResource("Resource_rhu0i"), SubResource("Resource_tt106"), SubResource("Resource_5knkk"), SubResource("Resource_h8pn8")])
+lines = Array[ExtResource("1_c8ka2")]([SubResource("Resource_c8ka2"), SubResource("Resource_st6c1"), SubResource("Resource_uxxq4"), SubResource("Resource_hlwc3"), SubResource("Resource_lci6h"), SubResource("Resource_adj01"), SubResource("Resource_1gdar"), SubResource("Resource_5gnj2"), SubResource("Resource_rhu0i"), SubResource("Resource_tt106"), SubResource("Resource_5knkk"), SubResource("Resource_h8pn8")])

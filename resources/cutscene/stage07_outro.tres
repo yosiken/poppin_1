@@ -7,8 +7,8 @@
 [ext_resource type="Script" uid="uid://chyw4up7w6ec2" path="res://scripts/cutscene_data.gd" id="4_l54um"]
 [ext_resource type="Texture2D" uid="uid://cvdydb7e4ypt0" path="res://resources/texture/BG/event/BG-09.png" id="5_7xgor"]
 [ext_resource type="Texture2D" uid="uid://dij1082f463mb" path="res://resources/texture/event/popup/POP-18.png" id="7_s10vh"]
-[ext_resource type="AudioStream" uid="uid://bkw6gcvc1kqnr" path="res://resources/sound/voice/58_びゃあーまずいー!.ogg" id="voice_58"]
 [ext_resource type="AudioStream" uid="uid://wgnw0bbypx7j" path="res://resources/sound/voice/07_うわぁぁぁぁ（棒読み）.ogg" id="voice_07"]
+[ext_resource type="AudioStream" uid="uid://bkw6gcvc1kqnr" path="res://resources/sound/voice/58_びゃあーまずいー!.ogg" id="voice_58"]
 
 [sub_resource type="Resource" id="Resource_0cpef"]
 script = ExtResource("1_0cpef")
@@ -24,7 +24,7 @@ note = "演出：宝箱がミミックだった。OBが噛みつかれる"
 [sub_resource type="Resource" id="Resource_3ffe1"]
 script = ExtResource("1_0cpef")
 speaker = "OB"
-text = "……"
+text = "びゃあー！　まずいー！"
 speaking = 2
 right = ExtResource("2_3ffe1")
 voice = ExtResource("voice_58")
@@ -47,12 +47,11 @@ speaking = 2
 shake = 40.0
 shake_time = 2.0
 popup = ExtResource("7_s10vh")
-voice = ExtResource("voice_07")
 
 [sub_resource type="Resource" id="Resource_shg23"]
 script = ExtResource("1_0cpef")
 speaker = "カニエナガ"
-text = "この場に及んでまだ宝が欲しいんか"
+text = "この期に及んで、まだ宝が欲しいの？"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_7xgor"]
@@ -77,7 +76,7 @@ background = ExtResource("5_7xgor")
 [sub_resource type="Resource" id="Resource_5oyo5"]
 script = ExtResource("1_0cpef")
 speaker = "カニエナガ"
-text = "お前は一生治らんな"
+text = "OBは一生治らないね"
 speaking = 1
 fade_sec = 3.0
 
@@ -88,6 +87,19 @@ fade_sec = 3.0
 bgm_stop = true
 inserted = true
 
+[sub_resource type="Resource" id="Resource_adj01"]
+script = ExtResource("1_0cpef")
+speaker = "OB"
+text = "うわぁぁぁぁ"
+speaking = 2
+voice = ExtResource("voice_07")
+
+[sub_resource type="Resource" id="Resource_adj02"]
+script = ExtResource("1_0cpef")
+speaker = "カニエナガ"
+text = "……なんで棒読みなの"
+speaking = 1
+
 [resource]
 script = ExtResource("4_l54um")
-lines = Array[ExtResource("1_0cpef")]([SubResource("Resource_0cpef"), SubResource("Resource_3ffe1"), SubResource("Resource_br2v1"), SubResource("Resource_l54um"), SubResource("Resource_shg23"), SubResource("Resource_7xgor"), SubResource("Resource_s10vh"), SubResource("Resource_jplqy"), SubResource("Resource_5oyo5"), SubResource("Resource_b60eq")])
+lines = Array[ExtResource("1_0cpef")]([SubResource("Resource_0cpef"), SubResource("Resource_3ffe1"), SubResource("Resource_br2v1"), SubResource("Resource_adj01"), SubResource("Resource_adj02"), SubResource("Resource_l54um"), SubResource("Resource_shg23"), SubResource("Resource_7xgor"), SubResource("Resource_s10vh"), SubResource("Resource_jplqy"), SubResource("Resource_5oyo5"), SubResource("Resource_b60eq")])

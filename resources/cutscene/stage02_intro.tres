@@ -12,7 +12,7 @@
 [sub_resource type="Resource" id="Resource_23evt"]
 script = ExtResource("1_23evt")
 speaker = "カニエナガ"
-text = "次のヒントや"
+text = "次のヒントだよ"
 speaking = 1
 left = ExtResource("2_otxka")
 background = ExtResource("2_3ft0g")
@@ -28,7 +28,7 @@ right = ExtResource("3_x6aby")
 [sub_resource type="Resource" id="Resource_x6aby"]
 script = ExtResource("1_23evt")
 speaker = "カニエナガ"
-text = "キンキンに冷えとる。金色で、泡が出る"
+text = "キンキンに冷えてる。金色で、泡が出る"
 speaking = 1
 background = ExtResource("5_8aqdv")
 bg_hide = 1.0
@@ -59,7 +59,7 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_mntkg"]
 script = ExtResource("1_23evt")
 speaker = "カニエナガ"
-text = "お前が配信終わりに必ず一本あけとったやつや"
+text = "OBが配信終わりに、必ず一本あけてたやつだよ"
 speaking = 1
 
 [sub_resource type="Resource" id="Resource_rl6cv"]
@@ -71,7 +71,7 @@ speaking = 2
 [sub_resource type="Resource" id="Resource_8ojgj"]
 script = ExtResource("1_23evt")
 speaker = "カニエナガ"
-text = "ゴールであの缶を開ける音を聞いたら、イヤでも思い出すわ"
+text = "ゴールであの缶を開ける音を聞いたら、イヤでも思い出すよ"
 speaking = 1
 background = ExtResource("2_3ft0g")
 fade_sec = 3.0
